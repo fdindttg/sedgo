@@ -1,0 +1,35 @@
+# 敏感配置文件
+.env
+.env.local
+.env.*.local
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# 编译后的Python文件
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE配置
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 日志文件
+*.log
+
+# 归档文件
+归档/
+
+# 上传文件（可选）
+# static/uploads/
