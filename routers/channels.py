@@ -98,11 +98,31 @@ def update_channel(
     admin: User = Depends(get_admin_user),
     db: Session = Depends(get_db)
 ):
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    
     from services.auth_service import encrypt_value
     
     channel = db.query(Channel).filter(Channel.id == channel_id).first()
     if not channel:
         raise HTTPException(status_code=404, detail="Channel not found")
+    
+    # 调试输出 - 使用 print 确保能看到
+    print(f"[DEBUG update_channel] channel_id={channel_id}")
+    print(f"[DEBUG update_channel] data.name={data.name}")
+    print(f"[DEBUG update_channel] data.api_key={data.api_key!r} (type={type(data.api_key).__name__}, is None={data.api_key is None})")
+    print(f"[DEBUG update_channel] data.ak={data.ak!r}")
+    print(f"[DEBUG update_channel] data.sk={data.sk!r}")
+    print(f"[DEBUG update_channel] Full data dict: {data.dict()}")
+    
+    # 调试日志：记录收到的所有参数
+    logger.info(f"[update_channel] channel_id={channel_id}")
+    logger.info(f"[update_channel] data.name={data.name}")
+    logger.info(f"[update_channel] data.api_key={data.api_key!r} (type={type(data.api_key).__name__}, is None={data.api_key is None}, is empty={data.api_key == '' if data.api_key is not None else 'N/A'})")
+    logger.info(f"[update_channel] data.ak={data.ak!r} (type={type(data.ak).__name__}, is None={data.ak is None})")
+    logger.info(f"[update_channel] data.sk={data.sk!r} (type={type(data.sk).__name__}, is None={data.sk is None})")
+    logger.info(f"[update_channel] Full data model: {data.dict(exclude_none=True)}")
     
     if data.name is not None:
         channel.name = data.name
@@ -114,10 +134,15 @@ def update_channel(
         channel.task_url = data.task_url
     if data.ak is not None:
         channel.ak_encrypted = encrypt_value(data.ak)
+        logger.info(f"[update_channel] Updated ak_encrypted: {channel.ak_encrypted is not None}")
     if data.sk is not None:
         channel.sk_encrypted = encrypt_value(data.sk)
+        logger.info(f"[update_channel] Updated sk_encrypted: {channel.sk_encrypted is not None}")
     if data.api_key is not None:
-        channel.api_key_encrypted = encrypt_value(data.api_key)
+        # 处理可能的空白字符串
+        api_key_stripped = data.api_key.strip() if data.api_key else None
+        channel.api_key_encrypted = encrypt_value(api_key_stripped) if api_key_stripped else None
+        logger.info(f"[update_channel] Original api_key={data.api_key!r}, stripped={api_key_stripped!r}, encrypted set: {channel.api_key_encrypted is not None}")
     if data.project_id is not None:
         channel.project_id = data.project_id
     if data.portrait_group_id is not None:
@@ -131,8 +156,14 @@ def update_channel(
     if data.is_active is not None:
         channel.is_active = data.is_active
     
-    db.commit()
-    return {"id": channel.id, "name": channel.name, "message": "Channel updated"}
+    try:
+        db.commit()
+        logger.info(f"[update_channel] Channel {channel_id} updated successfully")
+        return {"id": channel.id, "name": channel.name, "message": "Channel updated"}
+    except Exception as e:
+        db.rollback()
+        logger.error(f"[update_channel] Failed to update channel {channel_id}: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to update channel: {str(e)}")
 
 
 @router.delete("/{channel_id}")

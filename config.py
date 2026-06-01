@@ -13,8 +13,11 @@ DATABASE_URL = os.getenv("SD_DATABASE_URL")
 if not DATABASE_URL:
     raise ValueError("环境变量 SD_DATABASE_URL 必须设置！")
 
-DATABASE_POOL_SIZE = int(os.getenv("SD_DB_POOL_SIZE", "5"))
-DATABASE_MAX_OVERFLOW = int(os.getenv("SD_DB_MAX_OVERFLOW", "10"))
+DATABASE_POOL_SIZE = int(os.getenv("SD_DB_POOL_SIZE", "200"))
+DATABASE_MAX_OVERFLOW = int(os.getenv("SD_DB_MAX_OVERFLOW", "500"))
+DATABASE_POOL_TIMEOUT = int(os.getenv("SD_DB_POOL_TIMEOUT", "60"))
+DATABASE_POOL_RECYCLE = int(os.getenv("SD_DB_POOL_RECYCLE", "180"))
+DATABASE_ECHO = os.getenv("SD_DB_ECHO", "false").lower() == "true"
 
 # ============== 基础配置 ==============
 SECRET_KEY = os.getenv("SD_SECRET_KEY", "seedance-super-secret-key-change-in-production")

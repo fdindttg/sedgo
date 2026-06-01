@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 from sqlalchemy.sql import func
 import enum
 from datetime import datetime, timezone, timedelta
-from config import DATABASE_URL, DATABASE_POOL_SIZE, DATABASE_MAX_OVERFLOW
+from config import DATABASE_URL, DATABASE_POOL_SIZE, DATABASE_MAX_OVERFLOW, DATABASE_POOL_TIMEOUT, DATABASE_POOL_RECYCLE, DATABASE_ECHO
 
 CST = timezone(timedelta(hours=8))
 
@@ -24,10 +24,15 @@ else:
         DATABASE_URL,
         pool_size=DATABASE_POOL_SIZE,
         max_overflow=DATABASE_MAX_OVERFLOW,
+        pool_timeout=DATABASE_POOL_TIMEOUT,
+        pool_recycle=DATABASE_POOL_RECYCLE,
         pool_pre_ping=True,
+        pool_use_lifo=True,  # 使用LIFO策略，减少连接回收频率
         connect_args=_connect_args,
+        echo=DATABASE_ECHO,
+        max_identifier_length=128,  # MySQL支持的最大标识符长度
     )
-SessionLocal = sessionmaker(bind=engine)
+SessionLocal = sessionmaker(bind=engine, autoflush=False)
 Base = declarative_base()
 
 
@@ -37,6 +42,11 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def get_db_session():
+    """获取数据库会话（用于后台任务）"""
+    return SessionLocal()
 
 
 class UserRole(str, enum.Enum):

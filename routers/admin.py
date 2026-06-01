@@ -748,6 +748,11 @@ def api_admin_update_channel(
         channel.ak_encrypted = encrypt_value(data["ak"])
     if data.get("sk"):
         channel.sk_encrypted = encrypt_value(data["sk"])
+    
+    # 处理 API Key（支持空字符串清除）
+    if "api_key" in data:
+        api_key_value = data["api_key"].strip() if data["api_key"] else None
+        channel.api_key_encrypted = encrypt_value(api_key_value) if api_key_value else None
 
     db.commit()
     return {"success": True}

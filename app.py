@@ -26,6 +26,10 @@ LIST_FILES_URL = DEFAULT_LIST_URL
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
     _seed_defaults()
+    # 启动高并发任务轮询服务
+    from services.poll_service import ensure_poll_service_started
+    ensure_poll_service_started()
+    print(f"[Seed] High-concurrency poll service started")
     yield
     engine.dispose()
 

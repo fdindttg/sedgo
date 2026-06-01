@@ -8,6 +8,8 @@
 
 用户套餐限制：
 - 根据订阅套餐的 max_concurrent_tasks 字段限制单用户并发
+
+注意：实际生产环境需根据上游服务商限制调整配置
 """
 
 import time
@@ -26,8 +28,8 @@ REDIS_KEY_PREFIX = f"{REDIS_PREFIX}:rate_limit"
 
 # 全局配置常量
 GLOBAL_CONFIG_KEY = "system_concurrency_limit"
-DEFAULT_GLOBAL_MAX_CONCURRENT = 100  # 火山引擎限制
-DEFAULT_GLOBAL_MAX_RPM = 6000        # 每分钟最大请求数
+DEFAULT_GLOBAL_MAX_CONCURRENT = 6000  # 支持6000并发任务
+DEFAULT_GLOBAL_MAX_RPM = 60000        # 每分钟最大请求数（提高10倍）
 
 # 时间窗口（秒）
 RATE_LIMIT_WINDOW = 60  # 1分钟窗口
@@ -211,9 +213,11 @@ def get_user_max_concurrent(db: Session, user_id: int) -> int:
         plan_id = sub.get("plan_id")
         plan = db.query(SubscriptionPlan).filter(SubscriptionPlan.id == plan_id).first()
         if plan:
+            logger.info(f"[concurrency] User {user_id} has plan '{plan.name}' with max_concurrent={plan.max_concurrent_tasks}")
             return plan.max_concurrent_tasks
     
-    # 默认免费用户限制
+    # 默认免费用户限制（无订阅或订阅过期）
+    logger.info(f"[concurrency] User {user_id} has no active subscription, using default limit of 1")
     return 1
 
 
@@ -233,6 +237,7 @@ def check_concurrency_limit(db: Session, user_id: int) -> tuple[bool, str]:
     # 3. 获取当前全局并发数
     global_current = get_current_global_concurrent(db)
     if global_current >= global_max:
+        logger.warning(f"[concurrency] Global limit exceeded: {global_current}/{global_max}")
         return False, f"系统当前任务繁忙，请稍后再试（当前并发：{global_current}/{global_max}）"
     
     # 4. 获取用户最大并发数
@@ -241,8 +246,10 @@ def check_concurrency_limit(db: Session, user_id: int) -> tuple[bool, str]:
     # 5. 获取用户当前并发数
     user_current = get_user_concurrent(db, user_id)
     if user_current >= user_max:
+        logger.warning(f"[concurrency] User {user_id} limit exceeded: {user_current}/{user_max}")
         return False, f"您的任务队列已满，请等待当前任务完成（当前并发：{user_current}/{user_max}）"
     
+    logger.debug(f"[concurrency] User {user_id} check passed: global={global_current}/{global_max}, user={user_current}/{user_max}")
     return True, ""
 
 

@@ -651,40 +651,25 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
     import json
     body_str = json.dumps(payload)
     
-    # 优先使用API Key认证（BytePlus推荐方式）
+    # 文生视频只使用 API Key 认证（AK/SK 仅用于素材上传）
     if channel.api_key_encrypted:
         try:
             api_key = decrypt_value(channel.api_key_encrypted)
             if api_key:
                 headers["Authorization"] = f"Bearer {api_key}"
-                logger.info(f"Channel {channel.name} - Using API Key authentication: Key={api_key[:10]}...")
+                logger.info(f"Channel {channel.name} - Using API Key authentication for video generation: Key={api_key[:10]}...")
             else:
-                logger.error(f"API Key for channel {channel.name} is empty")
-                return None
+                error_msg = f"API Key for channel '{channel.name}' is empty after decryption. Please reconfigure in admin panel."
+                logger.error(error_msg)
+                raise ValueError(error_msg)
         except Exception as e:
-            logger.error(f"Failed to decrypt API Key for channel {channel.name}: {e}")
-            return None
-    elif channel.ak_encrypted and channel.sk_encrypted:
-        try:
-            ak = decrypt_value(channel.ak_encrypted)
-            sk = decrypt_value(channel.sk_encrypted)
-            
-            if not ak or not sk:
-                logger.error(f"AK/SK for channel {channel.name} is empty")
-                return None
-                
-            signature = generate_signature(ak, sk, timestamp, "POST", api_path, body_str)
-            headers["X-Token-Ak"] = ak
-            headers["X-Token-Timestamp"] = timestamp
-            headers["X-Token-Signature"] = signature
-            
-            logger.info(f"Channel {channel.name} - Using AK/SK authentication: AK={ak[:10]}..., timestamp={timestamp}, signature={signature[:20]}...")
-        except Exception as e:
-            logger.error(f"Failed to decrypt credentials for channel {channel.name}: {e}")
-            return None
+            error_msg = f"Failed to decrypt API Key for channel '{channel.name}'. This usually happens when SD_SECRET_KEY has changed. Please reconfigure API Key in admin panel. Error: {e}"
+            logger.error(error_msg)
+            raise ValueError(error_msg)
     else:
-        logger.error(f"Channel {channel.name} has no credentials configured (API Key or AK/SK missing)")
-        return None
+        error_msg = f"Channel '{channel.name}' has no API Key configured. Video generation requires API Key. Please configure in admin panel."
+        logger.error(error_msg)
+        raise ValueError(error_msg)
 
     try:
         api_url = channel.task_url or (channel.api_base_url.rstrip('/') + '/contents/generations/tasks')
