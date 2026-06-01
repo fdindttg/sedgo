@@ -1,0 +1,25 @@
+# SedGo AI Robots.txt
+# https://sedgo.ai/robots.txt
+
+User-agent: *
+Allow: /
+
+# Disallow admin areas
+Disallow: /api/
+Disallow: /admin
+Disallow: /admin_login
+Disallow: /pages/admin
+Disallow: /pages/admin_login
+
+# Disallow backend paths
+Disallow: /static/uploads/
+Disallow: /static/avatars/
+Disallow: /.venv/
+Disallow: /__pycache__/
+Disallow: /.git/
+
+# Sitemap location
+Sitemap: https://sedgo.ai/sitemap.xml
+
+# Crawl-delay for polite bots
+Crawl-delay: 1

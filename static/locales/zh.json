@@ -1,0 +1,932 @@
+{
+  "nav": {
+    "video": "AI 视频",
+    "image": "AI 图片",
+    "guide": "指南",
+    "pricing": "定价",
+    "signin": "登录",
+    "home": "首页",
+    "features": "功能",
+    "api": "API",
+    "support": "支持",
+    "signup": "免费试用"
+  },
+  "hero": {
+    "badge": "现已推出 — Seedance 2.0 带音频",
+    "sub": "体验真正的多模态 AI 视频创作：图像、视频、音频和文本无缝协作。"
+  },
+  "tabs": {
+    "video": "视频生成",
+    "image": "AI 图片",
+    "video_agent": "视频智能体",
+    "drama": "短剧工作室",
+    "developing": "开发中"
+  },
+  "gen": {
+    "desc": "多模态输入，强大的参考能力",
+    "resolution": "分辨率",
+    "duration": "时长",
+    "ratio": "画面比例",
+    "ratio_auto": "自动",
+    "upload_label": "上传",
+    "upload_count": "0 / 1 (PNG/JPG/WEBP)",
+    "add_ref": "添加图片或视频参考",
+    "files": "个文件",
+    "real_people": "包含真人",
+    "last_frame": "返回末帧",
+    "advanced": "高级设置",
+    "prompt_placeholder": "描述你的视频... 使用 @image1、@video1 引用上传的文件。",
+    "generate": "生成 ✦",
+    "prompt_eg": "例如",
+    "prompt_example": "一段电影级场景...",
+    "hint1": "用 AI 助手与参考素材规划任意长度视频。",
+    "hint2": "上传 1-9 张参考图或视频并使用 @ 引用以创建互动。例如：用 @Image 1 作首帧、@Image 2 作尾帧，让他们像 @Video 1 那样跳舞。",
+    "hint3": "通过直接控制提示词快速生成单段片段。",
+    "reference": "参考",
+    "images": "图片",
+    "hint_video_1": "用 AI 助手与参考素材规划任意长度视频。",
+    "hint_video_2": "上传 1-9 张参考图或视频并使用 @ 引用以创建互动。例如：用 @Image 1 作首帧、@Image 2 作尾帧，让他们像 @Video 1 那样跳舞。",
+    "hint_aivideo_1": "通过直接控制提示词快速生成单段片段。",
+    "hint_aivideo_2": "上传 1-9 张参考图或视频并使用 @ 引用以创建互动。例如：用 @Image 1 作首帧、@Image 2 作尾帧，让他们像 @Video 1 那样跳舞。",
+    "hint_image_1": "从文字与参考图生成 AI 图片。",
+    "hint_image_2": "上传最多 14 张参考图，然后详细描述目标图片。",
+    "prompt_placeholder_video": "描述你的视频... 使用 @image1、@video1 引用上传的文件。",
+    "prompt_placeholder_aivideo": "描述你的视频...",
+    "prompt_placeholder_image": "描述你的图片...",
+    "prompt_placeholder_drama": "上传剧本、小说或输入你的故事想法，智能体会为你规划剧本并生成视频。",
+    "auto": "自动",
+    "custom": "自定义",
+    "upload_script": "上传剧本/小说",
+    "single_episode": "单集",
+    "series": "连续剧",
+    "pro_writer": "专业编剧",
+    "ai_enhance": "AI 优化提示词",
+    "ai_enhance_text": "AI优化",
+    "original_prompt": "原始描述",
+    "enhanced_prompt": "AI优化提示词",
+    "enhanced_badge": "AI生成",
+    "use_enhanced": "✓ 使用优化",
+    "use_enhanced_text": "使用优化",
+    "clear_enhanced": "✕ 清除",
+    "edit_enhanced": "编辑",
+    "save_edit": "保存",
+    "please_enter_prompt": "请先输入提示词",
+    "optimizing": "优化中...",
+    "optimize_success": "提示词优化成功！",
+    "optimize_fail": "提示词优化失败，请重试",
+    "upload": "上传文件",
+    "asset_library": "素材库",
+    "ref_mode": "参考模式",
+    "ref_mode_title": "参考模式",
+    "text2vid": "文生视频",
+    "first_last_frame": "首尾帧参考",
+    "multi_ref": "图片+视频+音频参考",
+    "text2vid_desc": "仅文字描述生成视频",
+    "ref_hint_text2vid": "提示：尾帧必填，首帧可选",
+    "ref_hint_first_last_frame": "当前模式按顺序使用首帧、尾帧参考。",
+    "ref_hint_multi_ref": "当前模式最多支持 9 张图片参考。",
+    "img2vid": "图片参考",
+    "img2vid_desc": "上传图片作为参考",
+    "vid2vid": "视频参考",
+    "vid2vid_desc": "上传视频作为参考",
+    "audio2vid": "音频参考",
+    "audio2vid_desc": "上传音频生成视频",
+    "ref_image": "图片参考",
+    "ref_video": "视频参考",
+    "ref_audio": "音频参考",
+    "ref_hint_img2vid": "提示：图片参考 ×9 + 视频参考 ×3 + 音频参考 ×3",
+    "ref_hint_vid2vid": "提示：视频参考 ×3",
+    "real_people_title": "真人素材",
+    "use_real_people": "真人素材",
+    "real_people_hint": "上传的图片将作为选定类型素材",
+    "avatar_id": "虚拟人ID",
+    "asset_library_id": "素材库ID",
+    "real_human_portrait_id": "真人肖像ID",
+    "action_id": "动作ID",
+    "background_id": "背景ID",
+    "voice_id": "声音ID",
+    "subtitle_removal_title": "字幕擦除",
+    "subtitle_removal": "字幕擦除",
+    "ref_image_placeholder": "上传图片或从素材库选择",
+    "ref_video_placeholder": "上传视频或从素材库选择",
+    "ref_audio_placeholder": "上传音频或从素材库选择"
+  },
+  "features": {
+    "label": "为什么选择 SedGo AI",
+    "title": "创作所需的一切",
+    "desc": "六大能力，统一在一个模型中。",
+    "f1_title": "多模态输入",
+    "f1_desc": "在一次生成请求中组合图像、视频、音频和文本提示，获得前所未有的创作控制力。",
+    "f2_title": "参考一切",
+    "f2_desc": "标记最多 9 张图片和 3 段视频作为参考，模型可高保真地提取风格、主体和动作。",
+    "f3_title": "卓越的一致性",
+    "f3_desc": "角色、环境和风格在跨帧和多次生成中保持一致。",
+    "f4_title": "精准运镜",
+    "f4_desc": "从参考视频中精确复制运动模式和镜头移动，帧级精准。",
+    "f5_title": "视频扩展与编辑",
+    "f5_desc": "扩展现有视频、修改场景，无需从头开始迭代。",
+    "f6_title": "内置音频生成",
+    "f6_desc": "与视频输出同步生成本地音频——音乐、音效或语音。"
+  },
+  "usecases": {
+    "label": "应用场景",
+    "title": "为每一位创作者打造",
+    "desc": "从独立创作者到企业工作室，Seedance 2.0 全面赋能。",
+    "ad": "广告",
+    "ad_desc": "高影响力品牌视频",
+    "edu": "教育",
+    "edu_desc": "引人入胜的讲解内容",
+    "story": "叙事",
+    "story_desc": "叙事驱动场景",
+    "social": "社交媒体",
+    "social_desc": "短视频爆款内容",
+    "dance": "动作/舞蹈",
+    "dance_desc": "编舞与动作捕捉",
+    "edit": "视频编辑",
+    "edit_desc": "AI 辅助后期制作",
+    "film": "电影预演",
+    "film_desc": "分镜脚本跃然屏上",
+    "realestate": "房地产",
+    "realestate_desc": "沉浸式房屋展示",
+    "music": "音乐同步",
+    "music_desc": "音频响应视频"
+  },
+  "how": {
+    "label": "如何使用",
+    "title": "三步生成视频",
+    "desc": "从创意到成品，只需几分钟。",
+    "s1_title": "上传素材",
+    "s1_desc": "添加图像、视频和音频作为参考——最多 12 个文件。",
+    "s2_title": "描述你的创意",
+    "s2_desc": "编写提示词，使用 <code>@image1</code>、<code>@video1</code> 标签引用上传文件。",
+    "s3_title": "生成与下载",
+    "s3_desc": "等待 AI 生成视频，下载后即可分享或编辑。"
+  },
+  "faq": {
+    "label": "常见问题",
+    "title": "常见问题解答",
+    "desc": "关于 SedGo AI 的一切。",
+    "q1": "最多可以上传多少个参考文件？",
+    "a1": "最多可上传 12 个文件：最多 9 张图片、3 段视频（≤15秒）和 3 个音频（≤15秒）。",
+    "q2": "支持多长的视频？",
+    "a2": "SedGo AI 支持 4 到 15 秒的视频生成，默认为 5 秒。",
+    "q3": "生成的视频有水印吗？",
+    "a3": "无水印，您对生成的内容拥有完整所有权。",
+    "q4": "支持哪些图片/视频格式？",
+    "a4": "图片：PNG、JPG、JPEG、WEBP。视频：MP4、MOV、WEBM。音频：MP3、WAV、AAC。",
+    "q5": "积分如何计算？",
+    "a5": "按生成视频的每秒消耗积分，费率取决于所选模型和分辨率。积分永不过期。",
+    "q6": "如何联系客服？",
+    "a6": "发送邮件至 support@sedgo.ai，工作日通常在 24 小时内回复。"
+  },
+  "pricing": {
+    "label": "定价",
+    "title": "选择最适合您的方案",
+    "desc": "所有方案均包含核心功能和技术支持。",
+    "trial": "免费试用",
+    "trial_desc": "新用户专享体验",
+    "pro": "专业版",
+    "pro_desc": "适合个人创作者",
+    "team": "团队版",
+    "team_desc": "适合团队协作",
+    "enterprise": "企业版",
+    "enterprise_desc": "定制化解决方案",
+    "monthly": "/月",
+    "monthly_annual": "/月（按年付）",
+    "yearly": "按年",
+    "annual": "按年",
+    "save": "省 40%",
+    "billed_yearly": "按年计费",
+    "points": "积分",
+    "points_per_month": "积分/月",
+    "minutes": "分钟",
+    "max_batch_size": "批量生成上限",
+    "max_concurrent_tasks": "并发任务数",
+    "full_hd": "全高清",
+    "hd": "高清",
+    "output_support": "输出支持",
+    "priority_support": "优先技术支持",
+    "custom_watermark": "自定义水印设置",
+    "seedance_video": "Seedance AI 影片",
+    "multi_models": "多 AI 影片模型",
+    "private_space": "私人影片空间",
+    "recommended": "推荐",
+    "annual_total": "年付总计",
+    "subscribe_now": "立即订阅",
+    "free_trial": "免费试用",
+    "start_free_trial": "开始免费试用",
+    "tab": {
+      "team": "套餐",
+      "credits": "积分包"
+    },
+    "credits": {
+      "basic": "新手套装",
+      "basic_desc": "适合初学者和个人用户",
+      "creator": "创作者套装",
+      "creator_desc": "适合大多数内容创作者",
+      "elite": "菁英套装",
+      "elite_desc": "适合专业用户",
+      "advanced": "进阶套装",
+      "advanced_desc": "适合大量需求用户",
+      "super": "超级套装",
+      "super_desc": "适合企业级用户",
+      "points_1k": "✓ 1,000 积分",
+      "points_3k": "✓ 3,000 积分",
+      "points_8k": "✓ 8,000 积分",
+      "points_30k": "✓ 30,000 积分",
+      "points_100k": "✓ 100,000 积分",
+      "all_features": "✓ 包含所有功能",
+      "no_expire": "✓ 积分永不过期",
+      "buy_now": "立即购买"
+    },
+    "plans": {
+      "name_1": "免费试用",
+      "desc_1": "新用户专享体验套餐",
+      "name_2": "团队版",
+      "desc_2": "适合中小型团队使用",
+      "name_3": "团队专业版",
+      "desc_3": "适合专业团队和企业"
+    },
+    "model_pricing": "Seedance 模型积分定价",
+    "points_per_second": "每秒钟生成消耗的积分数量",
+    "series": "Seedance 2.0 系列",
+    "series_v1": "Seedance 1.x 系列",
+    "table": {
+      "model": "模型",
+      "resolution": "分辨率",
+      "points_per_sec": "积分/秒",
+      "cost_5s": "5秒消耗",
+      "cost_10s": "10秒消耗",
+      "cost_15s": "15秒消耗"
+    }
+  },
+  "js": {
+    "created": "创建任务失败：",
+    "gen_failed": "生成失败：",
+    "server_error": "服务器内部错误，请稍后重试。",
+    "timeout": "超时，请稍后重试。",
+    "error": "错误：",
+    "download": "⬇ 下载",
+    "uploading": "⏳ 上传中…",
+    "attached": " 个文件已附加",
+    "signin_first": "请先登录。",
+    "signed_in": "已登录",
+    "signed_in_alt": "已登录 ✓",
+    "unknown_error": "未知错误",
+    "subscribe_success": "订阅成功",
+    "subscribe_failed": "订阅失败",
+    "select_endpoint": "请选择接入点",
+    "auto": "自动",
+    "no_endpoints": "暂无可用接入点",
+    "load_failed": "加载失败",
+    "no_description": "无描述",
+    "status_processing": "处理中",
+    "status_success": "成功",
+    "status_failed": "失败",
+    "status_pending": "等待中",
+    "status_unknown": "未知",
+    "time_just_now": "刚刚",
+    "time_minutes_ago": "分钟前",
+    "time_hours_ago": "小时前",
+    "generate_image": "生成图片",
+    "video_generation": "视频生成",
+    "no_data": "暂无数据",
+    "load_error": "加载失败",
+    "select_asset_first": "请先选择资产",
+    "cancel": "取消",
+    "confirm": "确认",
+    "retry_generate": "↺ 重新生成",
+    "status_cancelled": "已取消",
+    "status_error": "异常",
+    "task_cancelled": "任务已取消",
+    "network_error_retry": "网络请求失败，请手动重试",
+    "retry_failed": "重新生成失败",
+    "create_failed": "创建任务失败：",
+    "generate": "生成",
+    "generating": "生成中...",
+    "max_files": "最多上传 {n} 个文件",
+    "processing": "处理中…",
+    "upload_error": "上传出错",
+    "upload_failed": "上传失败",
+    "loading": "加载中...",
+    "confirm_select": "确认选择",
+    "no_uploads": "暂无上传文件",
+    "asset_unavailable": "该功能需要开通权限，请联系服务商",
+    "points_unit": "积分",
+    "type_consume": "消耗",
+    "type_earn": "获取",
+    "type_subscription": "订阅",
+    "type_admin_adjust": "管理员调整",
+    "sub_active": "有效",
+    "sub_expired": "已过期",
+    "sub_cancelled": "已取消",
+    "sub_pending": "待处理",
+    "billing_monthly": "月付",
+    "billing_annual": "年付",
+    "current_plan": "当前方案",
+    "unknown": "未知",
+    "expires_at": "有效期至",
+    "remaining_points": "剩余积分",
+    "upgrade_hint": "立即升级以获取更多积分和功能",
+    "no_description": "无描述",
+    "download": "↓ 下载",
+    "delete": "🗑 删除",
+    "type_image": "🖼️ 图片",
+    "type_long_video": "🎬 长视频",
+    "type_video": "🎬 视频",
+    "segment_progress": "片段 {done}/{total} · {pct}%",
+    "choose_topup": "选择充值套餐",
+    "payment_success": "支付成功！",
+    "payment_success_desc": "积分/订阅已到账",
+    "confirm": "确定",
+    "reply_empty": "请输入回复内容",
+    "ticket_closed": "工单已关闭",
+    "ticket_active": "进行中",
+    "admin_sender": "管理员",
+    "me_sender": "我",
+    "ticket_reply_placeholder": "继续回复...",
+    "send": "发送",
+    "no_tickets": "暂无工单记录",
+    "request_fail": "请求失败",
+    "ticket_closed_label": "已关闭",
+    "generating": "生成中..."
+  },
+  "modal": {
+    "description": "描述",
+    "status": "状态",
+    "created_at": "创建时间",
+    "points_consumed": "消耗积分",
+    "title": "任务详情"
+  },
+  "results": {
+    "title": "生成结果",
+    "refresh": "刷新",
+    "more": "更多 →",
+    "empty": "暂无生成结果",
+    "empty_hint": "点击上方按钮开始生成"
+  },
+  "lang": {
+    "zh": "中文",
+    "zh-TW": "繁體中文",
+    "en": "English",
+    "ja": "日本語",
+    "ko": "한국어",
+    "ru": "Русский",
+    "vi": "Tiếng Việt",
+    "es": "Español"
+  },
+  "auth": {
+    "login": "登录",
+    "register": "注册",
+    "email": "邮箱",
+    "password": "密码",
+    "confirm_password": "确认密码",
+    "display_name": "昵称",
+    "remember_me": "记住我",
+    "forgot_password": "忘记密码？",
+    "no_account": "没有账户？",
+    "already_have_account": "已有账户？",
+    "loginBtn": "登录",
+    "registerBtn": "注册",
+    "processing": "处理中…",
+    "google": "使用 Google 登录",
+    "download": "下载",
+    "copy_link": "复制链接",
+    "link_copied": "链接已复制到剪贴板",
+    "enter_video_desc": "请输入视频描述",
+    "enter_image_desc": "请输入图片描述",
+    "fillAll": "请填写所有必填项",
+    "passwordMismatch": "两次密码不一致",
+    "passwordTooShort": "密码至少6位",
+    "title": "欢迎",
+    "subtitle": "登录或注册以开始使用",
+    "or": "或",
+    "namePlaceholder": "您的昵称",
+    "confirmPassword": "确认密码",
+    "displayName": "昵称",
+    "agree": "我已阅读并同意",
+    "terms": "服务条款",
+    "and": "和",
+    "privacy": "隐私政策",
+    "please_login": "请先登录以使用 AI 优化功能",
+    "loginFailed": "登录失败",
+    "registerFailed": "注册失败",
+    "agreeRequired": "请先阅读并同意服务条款和隐私政策"
+  },
+  "user": {
+    "profile": "个人中心",
+    "apiKeys": "API 密钥",
+    "subscription": "订阅",
+    "logout": "退出登录",
+    "apiKeyHint": "用于 API 访问的密钥",
+    "currentSub": "当前订阅",
+    "noSub": "暂无订阅",
+    "points": "积分"
+  },
+  "footer": {
+    "txt2vid": "文生视频",
+    "img2vid": "图生视频",
+    "terms": "服务条款",
+    "privacy": "隐私政策",
+    "refund": "退款政策",
+    "contact": "联系我们"
+  },
+  "profile": {
+    "title": "用户中心 - SedGo AI",
+    "menu": {
+      "works": "我的创作",
+      "subscription": "订阅",
+      "team": "团队",
+      "credits": "信用历史",
+      "orders": "订单记录",
+      "profile": "个人资料",
+      "contact": "提交工单",
+      "logout": "登出"
+    },
+    "page": {
+      "works": {
+        "title": "我的创作",
+        "desc": "管理和浏览您所有已生成的影片和图片"
+      },
+      "subscription": {
+        "title": "订阅",
+        "desc": "管理您的订阅方案和账单信息"
+      },
+      "credits": {
+        "title": "积分历史",
+        "desc": "查看所有积分获取和使用记录"
+      },
+      "orders": {
+        "title": "订单记录",
+        "desc": "查看所有付款订单的历史记录"
+      },
+      "profile": {
+        "title": "个人资料",
+        "desc": "管理您的账户信息和偏好设置"
+      },
+      "contact": {
+        "title": "提交工单",
+        "desc": "遇到问题或有建议？提交工单，我们将尽快处理"
+      }
+    },
+    "section": {
+      "works": {
+        "create": "+ 创建新影片",
+        "title": "我的创作",
+        "desc": "管理和浏览您所有已生成的影片和图片"
+      },
+      "profile": {
+        "desc": "管理您的账户信息和偏好设置",
+        "title": "个人资料"
+      },
+      "subscription": {
+        "title": "订阅",
+        "desc": "管理您的订阅方案和账单信息，您可以随时取消订阅。"
+      },
+      "credits": {
+        "title": "积分历史",
+        "desc": "查看所有积分获取和使用记录。"
+      },
+      "orders": {
+        "title": "订单记录",
+        "desc": "查看所有付款订单的历史记录。"
+      },
+      "contact": {
+        "title": "提交工单",
+        "desc": "遇到问题或有建议？提交工单，我们将尽快处理。"
+      }
+    },
+    "tabs": {
+      "video": "影片",
+      "image": "图片"
+    },
+    "filter": {
+      "all": "所有影片",
+      "text": "文字转影片",
+      "image": "图片转影片",
+      "date": "📅 按日期筛选"
+    },
+    "empty": {
+      "works": {
+        "title": "没有找到影片",
+        "desc": "您尚未生成任何影片，开始创建您的第一部影片吧！"
+      },
+      "image_title": "暂无图片记录",
+      "image_desc": "图片生成记录将在此显示",
+      "team": {
+        "title": "尚未有团队",
+        "desc": "您尚未加入任何团队。订阅团队方案来建立您自己的团队，或由团队拥有者邀请您。"
+      },
+      "credits": "未找到信用历史记录。",
+      "orders": "未找到订单。"
+    },
+    "team": {
+      "create": "创建团队方案"
+    },
+    "credits": {
+      "buy": "购买更多点数"
+    },
+    "subscription": {
+      "unlock": "解锁 Seedance 2.0 高级版",
+      "no_plan": "您目前没有订阅任何方案",
+      "choose": "选择完美方案 →",
+      "points_per_month": "积分/月",
+      "max_resolution": "最高分辨率",
+      "concurrent_tasks": "并发任务",
+      "current_plan_btn": "当前方案",
+      "monthly_subscribe": "月付订阅",
+      "annual_subscribe": "年付订阅"
+    },
+    "features": {
+      "multimodal": "多模态输入",
+      "consistency": "角色一致性",
+      "audio": "音频生成",
+      "fast": "快速生成",
+      "edit": "精准编辑",
+      "privacy": "隐私保护"
+    },
+    "team_btn": {
+      "create": "创建团队方案"
+    },
+    "credits_btn": {
+      "buy": "购买更多点数"
+    },
+    "table": {
+      "date": "日期",
+      "type": "类型",
+      "details": "详情",
+      "amount": "金额",
+      "onetime_credits": "一次性信用额",
+      "subscription_credits": "订阅信用额",
+      "product": "商品",
+      "status": "状态",
+      "action": "操作",
+      "credits_change": "积分变动"
+    },
+    "pagination": {
+      "records": "共 0 条记录",
+      "orders": "0 笔订单",
+      "prev": "上一页",
+      "next": "下一页",
+      "per_page": "页",
+      "page": "第 1 / 0 页"
+    },
+    "form": {
+      "avatar": "头像",
+      "change_avatar": "更换头像",
+      "username": "用户名",
+      "username_placeholder": "请输入用户名",
+      "email": "邮箱",
+      "password": "密码",
+      "password_placeholder": "请输入新密码",
+      "confirm_password": "确认密码",
+      "confirm_password_placeholder": "请确认新密码",
+      "save": "保存更改",
+      "old_password": "旧密码",
+      "old_password_placeholder": "请输入旧密码（不修改密码可留空）",
+      "new_password": "新密码",
+      "new_password_placeholder": "请输入新密码（至少6位）",
+      "confirm_new_password": "确认新密码",
+      "confirm_new_password_placeholder": "请再次输入新密码"
+    },
+    "contact": {
+      "email": "邮箱",
+      "email_placeholder": "请输入您的邮箱",
+      "subject": "主题",
+      "subject_placeholder": "请输入主题",
+      "message": "消息",
+      "message_placeholder": "请输入您的消息",
+      "send": "发送消息",
+      "info": "联系方式",
+      "hours": "周一至周五 9:00 - 18:00",
+      "title": "提交工单",
+      "email_label": "联系邮箱",
+      "subject_label": "工单标题",
+      "message_label": "详细描述",
+      "attach_label": "附件（可选，支持图片/视频/PDF，每个不超过 20MB）",
+      "dropzone": "点击或拖拽上传文件",
+      "submit": "提交工单",
+      "my_tickets": "我的工单",
+      "other": "其他联系方式",
+      "hours_label": "服务时间",
+      "fill_all": "请填写所有字段",
+      "sending": "发送中...",
+      "sent": "工单已提交，我们会尽快处理！",
+      "send_fail": "发送失败"
+    },
+    "logout_confirm": "确定要登出吗？",
+    "avatar_success": "头像更新成功",
+    "avatar_fail": "头像更新失败",
+    "enter_username": "请输入用户名",
+    "profile_success": "资料更新成功",
+    "credits_topup": "充值积分",
+    "buy_plan": "购买套餐",
+    "loading": "加载中...",
+    "load_fail": "加载失败",
+    "delete_confirm": "确定删除此作品？此操作不可撤销。",
+    "delete_fail": "删除失败",
+    "credits_empty": "未找到积分记录",
+    "credits_records": "共 {total} 条记录，第 {page}/{totalPages} 页",
+    "orders_empty": "暂无订单记录",
+    "orders_count": "0 笔订单",
+    "orders_one": "1 笔订单",
+    "choose_plan": "选择方案",
+    "pw_mismatch": "两次密码不一致",
+    "pw_too_short": "新密码至少6位",
+    "update_fail": "更新失败",
+    "save_fail": "保存失败",
+    "pw_update_fail": "密码修改失败",
+    "address_copied": "地址已复制",
+    "payment": {
+      "generating": "生成订单中...",
+      "waiting": "等待转账...",
+      "create_fail": "创建失败",
+      "net_error": "网络错误，请重试",
+      "expired": "过期",
+      "cancelled": "取消",
+      "order_status": "订单已",
+      "remaining": "剩余时间",
+      "copy_address": "复制地址"
+    },
+    "attachment": "附件",
+    "upload_fail": "上传失败"
+  },
+  "api": {
+    "label": "开发者",
+    "title": "API 文档",
+    "desc": "将 AI 视频生成能力集成到您的应用中。",
+    "docs": "API 文档",
+    "docs_desc": "详细的 API 参考文档，包含所有端点、参数和示例。",
+    "sdk": "SDK 工具包",
+    "sdk_desc": "支持 Python、JavaScript、Go 等主流编程语言的 SDK。",
+    "playground": "API 游乐场",
+    "playground_desc": "在线测试 API，实时查看请求和响应。",
+    "view_docs": "查看文档",
+    "download_sdk": "下载 SDK",
+    "try_now": "立即体验"
+  },
+  "support": {
+    "label": "支持",
+    "title": "获取帮助",
+    "desc": "我们随时准备为您提供帮助。",
+    "guides": "帮助中心",
+    "guides_desc": "详细的使用指南和教程，助您快速上手。",
+    "community": "社区论坛",
+    "community_desc": "与其他用户交流，分享技巧和创意。",
+    "contact": "联系我们",
+    "contact_desc": "有问题？发送邮件，我们会尽快回复。",
+    "visit": "访问帮助中心",
+    "join": "加入社区",
+    "email": "发送邮件"
+  },
+  "contact_page": {
+    "page": {
+      "title": "联系我们",
+      "desc": "我们很乐意为您提供帮助"
+    },
+    "methods": {
+      "title": "联系方式",
+      "intro": "如有任何问题或建议，欢迎通过以下方式联系我们："
+    },
+    "email": {
+      "title": "邮件支持",
+      "text": "发送邮件至：",
+      "response": "工作日通常在 24 小时内回复"
+    },
+    "online": {
+      "title": "在线支持",
+      "hours": "工作时间：周一至周五 9:00 - 18:00",
+      "chat": "聊天窗口将在工作时间内提供即时支持"
+    },
+    "feedback": {
+      "title": "反馈表单",
+      "visit": "请访问我们的帮助中心提交反馈",
+      "note": "我们会认真对待每一条反馈"
+    },
+    "social": {
+      "title": "社交媒体",
+      "follow": "关注我们获取最新动态",
+      "platforms": "微信、微博、Twitter"
+    },
+    "telegram": {
+      "title": "Telegram",
+      "join": "加入我们的 Telegram 群组：",
+      "help": "快速获取帮助和最新消息"
+    },
+    "faq": {
+      "title": "常见问题",
+      "intro": "在联系我们之前，您可能想查看我们的常见问题解答：",
+      "page": "常见问题页面",
+      "help": "帮助中心"
+    }
+  },
+  "api_page": {
+    "page": {
+      "title": "API 文档",
+      "desc": "将 AI 视频生成能力集成到您的应用中。"
+    },
+    "quick_start": {
+      "title": "快速开始",
+      "desc": "使用 Sedgo API，您可以轻松将 AI 视频生成能力集成到您的应用程序中。"
+    },
+    "auth": {
+      "title": "认证方式",
+      "desc": "所有 API 请求都需要通过 API Key 进行认证。在请求头中添加以下字段："
+    },
+    "create_task": {
+      "title": "创建视频任务",
+      "desc": "使用 POST /v1/tasks 端点创建视频生成任务："
+    },
+    "query_status": {
+      "title": "查询任务状态",
+      "desc": "使用 GET /v1/tasks/{task_id} 端点查询任务状态："
+    },
+    "models": {
+      "title": "可用模型",
+      "sedgo_fast": "sedgo-fast - 快速生成模型，适合快速预览",
+      "sedgo": "sedgo - 高质量模型，适合最终输出"
+    },
+    "response": {
+      "title": "响应格式"
+    }
+  },
+  "support_page": {
+    "page": {
+      "title": "获取帮助",
+      "desc": "我们随时准备为您提供帮助。"
+    },
+    "help_center": {
+      "title": "帮助中心",
+      "intro": "详细的使用指南和教程，助您快速上手。",
+      "guide": "📖 入门指南 - 了解如何开始使用",
+      "tutorial": "🎬 视频制作教程 - 掌握高级技巧",
+      "api": "⚙️ API 文档 - 集成到您的应用",
+      "billing": "💰 计费说明 - 了解定价和充值"
+    },
+    "faq": {
+      "title": "常见问题",
+      "q1": "Q: 视频生成需要多长时间？",
+      "a1": "A: 视频生成时间取决于视频长度和所选模型。通常 10 秒视频需要 1-2 分钟。",
+      "q2": "Q: 支持哪些分辨率？",
+      "a2": "A: 我们支持 720p、1080p 和 4K 分辨率。",
+      "q3": "Q: 如何获取 API Key？",
+      "a3": "A: 登录后在个人中心的 API 设置中可以生成和管理您的 API Key。"
+    },
+    "community": {
+      "title": "社区论坛",
+      "intro": "与其他用户交流，分享技巧和创意。您可以在社区中：",
+      "share": "分享您的作品",
+      "inspiration": "获取创作灵感",
+      "suggest": "提出建议和反馈",
+      "help": "帮助其他用户"
+    },
+    "contact": {
+      "title": "联系我们",
+      "intro": "如有问题或建议，请发送邮件至：",
+      "email": "support@sedgo.ai",
+      "response": "工作日通常在 24 小时内回复。"
+    }
+  },
+  "privacy_page": {
+    "page": {
+      "title": "隐私政策",
+      "desc": "我们重视您的隐私",
+      "intro": "我们重视您的隐私，本政策说明我们如何收集和保护您的信息"
+    },
+    "info": {
+      "title": "1. 引言",
+      "intro": "欢迎使用 SedGoAI（以下简称「我们」或「平台」）。我们重视您的隐私，本隐私政策旨在说明我们如何收集、使用、存储和保护您的个人信息。",
+      "account": "个人身份信息：姓名、邮箱地址、电话号码",
+      "usage": "账户信息：密码（加密存储）、API密钥",
+      "technical": "使用数据：生成的内容、提示词、使用频率"
+    },
+    "usage": {
+      "title": "2. 信息收集",
+      "service": "我们收集您在注册和使用服务过程中提供的信息，包括但不限于：",
+      "improve": "我们使用收集的信息来：",
+      "security": "提供和维护服务",
+      "billing": "处理支付和计费",
+      "communication": "改进产品和服务",
+      "access": "发送重要通知和更新"
+    },
+    "sharing": {
+      "title": "3. 信息使用",
+      "intro": "我们不会出售您的个人信息。仅在以下情况下共享信息：",
+      "consent": "经您明确同意",
+      "legal": "遵守法律要求",
+      "partners": "保护平台和用户安全"
+    },
+    "security": {
+      "title": "4. 信息共享",
+      "intro": "我们采用行业标准的安全措施保护您的数据，包括加密传输、存储加密、访问控制等。但请注意，没有任何安全措施是绝对安全的。"
+    },
+    "rights": {
+      "title": "5. 数据安全",
+      "intro": "您有权访问、更正、删除您的个人信息，或限制我们对您数据的处理。请联系 support@sedgo.ai 提出请求。"
+    },
+    "changes": {
+      "title": "6. 用户权利",
+      "intro": "我们可能不定期更新本政策。重大变更将通过邮件通知您。"
+    },
+    "contact": {
+      "title": "7. 政策更新",
+      "intro": "如有疑问，请发送邮件至：",
+      "email": "support@sedgo.ai"
+    }
+  },
+  "terms_page": {
+    "page": {
+      "title": "服务条款",
+      "desc": "使用 SedGo ai 服务的条款和条件",
+      "intro": "使用我们的服务即表示您同意遵守以下条款"
+    },
+    "acceptance": {
+      "title": "1. 接受条款",
+      "intro": "使用 SedGoAI 服务即表示您同意遵守本服务条款。如果您不同意，请勿使用我们的服务。"
+    },
+    "service": {
+      "title": "2. 服务说明",
+      "intro": "SedGoAI 提供 AI 驱动的视频生成服务，包括文生视频、图生视频等功能。"
+    },
+    "user": {
+      "title": "3. 用户账户",
+      "intro": "您同意不：",
+      "legal": "违反任何法律法规",
+      "account": "您需要注册账户才能使用服务。您负责维护账户安全，对账户下的所有活动负责。",
+      "content": "生成非法或有害内容",
+      "respect": "滥用或攻击服务"
+    },
+    "payment": {
+      "title": "4. 使用规则",
+      "intro": "某些服务可能需要付费。您同意：",
+      "charges": "6. 费用和支付",
+      "billing": "服务可能收取费用。您负责支付所有费用，包括税费。未付款项可能导致服务暂停。"
+    },
+    "intellectual": {
+      "title": "5. 内容所有权",
+      "intro": "您对使用服务生成的内容拥有所有权。我们保留使用生成内容改进服务的权利。"
+    },
+    "termination": {
+      "title": "7. 服务变更",
+      "intro": "我们保留随时变更或终止服务的权利。重大变更将提前通知。",
+      "violation": "9. 终止",
+      "abuse": "我们可随时终止或暂停您的账户，无需提前通知，如果您违反本条款。"
+    },
+    "limitation": {
+      "title": "8. 免责声明",
+      "intro": "服务按「原样」提供，不提供任何担保。我们不对使用服务产生的任何损失负责。"
+    },
+    "contact": {
+      "title": "10. 联系我们",
+      "intro": "如有疑问，请发送邮件至：",
+      "email": "support@sedgo.ai"
+    }
+  },
+  "refund_page": {
+    "page": {
+      "title": "退款政策",
+      "desc": "了解我们的退款政策",
+      "intro": "了解我们的退款规则和流程"
+    },
+    "scope": {
+      "title": "1. 适用范围",
+      "intro": "本退款政策适用于所有通过 SedGoAI 购买的服务和积分。"
+    },
+    "credits": {
+      "title": "2. 积分退款",
+      "intro": "购买的积分在未使用的情况下，可在购买后 7 天内申请全额退款。已使用的积分不予退款。"
+    },
+    "subscription": {
+      "title": "3. 订阅退款",
+      "monthly": "月度订阅可随时取消，取消后服务将在当前计费周期结束时终止，不予退款。",
+      "yearly": "年度订阅在购买后 7 天内可申请全额退款。超过 7 天后，不予退款。"
+    },
+    "process": {
+      "title": "4. 退款申请",
+      "intro": "如需申请退款，请发送邮件至 support@sedgo.ai，包含以下信息：",
+      "email": "注册邮箱",
+      "order": "订单号",
+      "date": "购买日期",
+      "reason": "退款原因"
+    },
+    "timeline": {
+      "title": "5. 处理时间",
+      "intro": "退款申请将在收到后 5 个工作日内处理。退款将原路返回至支付账户，到账时间取决于支付方式。"
+    },
+    "exceptions": {
+      "title": "6. 例外情况"
+    },
+    "ineligible": {
+      "title": "以下情况不予退款：",
+      "intro": "以下情况不予退款：",
+      "used": "已使用的积分",
+      "expired": "超过退款期限的订单",
+      "terminated": "因违反服务条款被终止的账户"
+    },
+    "contact": {
+      "title": "7. 联系我们",
+      "intro": "如有疑问，请发送邮件至：",
+      "email": "support@sedgo.ai"
+    }
+  }
+}

@@ -1,0 +1,927 @@
+{
+  "nav": {
+    "video": "AI 影片",
+    "image": "AI 圖片",
+    "guide": "指南",
+    "pricing": "定價",
+    "signin": "登入",
+    "home": "首頁",
+    "features": "功能",
+    "api": "API",
+    "support": "支援",
+    "signup": "免費試用"
+  },
+  "hero": {
+    "badge": "現已推出 — Sedgo 帶音訊",
+    "sub": "體驗真正的多模態 AI 影片創作：圖像、影片、音訊和文本無縫協作。"
+  },
+  "tabs": {
+    "video": "影片生成",
+    "image": "AI 圖片",
+    "video_agent": "影片智能體",
+    "drama": "短劇工作室",
+    "developing": "開發中"
+  },
+  "gen": {
+    "desc": "多模態輸入，強大的參考能力",
+    "resolution": "解析度",
+    "duration": "時長",
+    "ratio": "畫面比例",
+    "ratio_auto": "自動",
+    "upload_label": "上傳",
+    "upload_count": "0 / 1 (PNG/JPG/WEBP)",
+    "add_ref": "添加圖片或影片參考",
+    "files": "個檔案",
+    "real_people": "包含真人",
+    "last_frame": "返回末幀",
+    "advanced": "高級設定",
+    "prompt_placeholder": "描述你的影片... 使用 @image1、@video1 引用上傳的檔案。",
+    "generate": "生成 ✦",
+    "prompt_eg": "例如",
+    "prompt_example": "一段電影級場景...",
+    "hint1": "用 AI 助手與參考素材規劃任意長度影片。",
+    "hint2": "上傳 1-9 張參考圖或影片並使用 @ 引用以創建互動。例如：用 @Image 1 作首幀、@Image 2 作尾幀，讓他們像 @Video 1 那樣跳舞。",
+    "hint3": "通過直接控制提示詞快速生成單段片段。",
+    "reference": "參考",
+    "images": "圖片",
+    "hint_video_1": "用 AI 助手與參考素材規劃任意長度影片。",
+    "hint_video_2": "上傳 1-9 張參考圖或影片並使用 @ 引用以創建互動。例如：用 @Image 1 作首幀、@Image 2 作尾幀，讓他們像 @Video 1 那樣跳舞。",
+    "hint_aivideo_1": "通過直接控制提示詞快速生成單段片段。",
+    "hint_aivideo_2": "上傳 1-9 張參考圖或影片並使用 @ 引用以創建互動。例如：用 @Image 1 作首幀、@Image 2 作尾幀，讓他們像 @Video 1 那樣跳舞。",
+    "hint_image_1": "從文本和參考圖像生成 AI 圖片。",
+    "hint_image_2": "上傳最多 14 張參考圖像，詳細描述您的目標圖片。",
+    "prompt_placeholder_video": "描述你的影片... 使用 @image1、@video1 引用上傳的檔案。",
+    "prompt_placeholder_aivideo": "描述你的影片...",
+    "prompt_placeholder_image": "描述你的圖片...",
+    "prompt_placeholder_drama": "上傳劇本、小說或輸入你的故事構想。AI 助手將規劃劇本並生成影片。",
+    "auto": "自動",
+    "custom": "自定義",
+    "upload_script": "上傳劇本/小說",
+    "single_episode": "單集",
+    "series": "系列",
+    "pro_writer": "專業編劇",
+    "ai_enhance": "AI 優化提示詞",
+    "ai_enhance_text": "AI優化",
+    "original_prompt": "原始描述",
+    "enhanced_prompt": "AI優化提示詞",
+    "enhanced_badge": "AI生成",
+    "use_enhanced": "✓ 使用優化",
+    "use_enhanced_text": "使用優化",
+    "clear_enhanced": "✕ 清除",
+    "edit_enhanced": "編輯",
+    "save_edit": "保存",
+    "ref_mode": "參考模式",
+    "ref_mode_title": "參考模式",
+    "text2vid": "文生視頻",
+    "first_last_frame": "首尾幀參考",
+    "multi_ref": "圖片+視頻+音頻參考",
+    "text2vid_desc": "僅文字描述生成視頻",
+    "ref_hint_text2vid": "提示：尾幀必填，首幀可選",
+    "ref_hint_first_last_frame": "當前模式按順序使用首幀、尾幀參考。",
+    "ref_hint_multi_ref": "當前模式最多支持 9 張圖片參考。",
+    "img2vid": "圖片參考",
+    "img2vid_desc": "上傳圖片作為參考",
+    "vid2vid": "視頻參考",
+    "vid2vid_desc": "上傳視頻作為參考",
+    "audio2vid": "音頻參考",
+    "audio2vid_desc": "上傳音頻生成視頻",
+    "ref_image": "圖片參考",
+    "ref_video": "視頻參考",
+    "ref_audio": "音頻參考",
+    "ref_hint_img2vid": "提示：圖片參考 ×9 + 視頻參考 ×3 + 音頻參考 ×3",
+    "ref_hint_vid2vid": "提示：視頻參考 ×3",
+    "real_people_title": "真人素材",
+    "use_real_people": "真人素材",
+    "real_people_hint": "上傳的圖片將作為選定類型素材",
+    "avatar_id": "虛擬人ID",
+    "asset_library_id": "素材庫ID",
+    "asset_library": "素材庫",
+    "real_human_portrait_id": "真人肖像ID",
+    "action_id": "動作ID",
+    "background_id": "背景ID",
+    "voice_id": "聲音ID",
+    "subtitle_removal_title": "字幕擦除",
+    "subtitle_removal": "字幕擦除",
+    "upload": "上傳檔案",
+    "optimize_fail": "優化失敗",
+    "optimizing": "優化中...",
+    "please_enter_prompt": "請輸入提示詞",
+    "ref_image_placeholder": "上傳圖片或從素材庫選擇",
+    "ref_video_placeholder": "上傳影片或從素材庫選擇",
+    "ref_audio_placeholder": "上傳音訊或從素材庫選擇",
+    "optimize_success": "提示詞優化成功！"
+  },
+  "features": {
+    "label": "為什麼選擇 Sedgo",
+    "title": "創作所需的一切",
+    "desc": "六大能力，統一在一個模型中。",
+    "f1_title": "多模態輸入",
+    "f1_desc": "在一次生成請求中組合圖像、影片、音訊和文本提示，獲得前所未有的創作控制力。",
+    "f2_title": "參考一切",
+    "f2_desc": "標記最多 9 張圖片和 3 段影片作為參考，模型可高保真地提取風格、主體和動作。",
+    "f3_title": "卓越的一致性",
+    "f3_desc": "角色、環境和風格在跨幀和多次生成中保持一致。",
+    "f4_title": "精準運鏡",
+    "f4_desc": "從參考影片中精確複製運動模式和鏡頭移動，幀級精準。",
+    "f5_title": "影片擴展與編輯",
+    "f5_desc": "擴展現有影片、修改場景，無需從頭開始迭代。",
+    "f6_title": "內置音訊生成",
+    "f6_desc": "與影片輸出同步生成本地音訊——音樂、音效或語音。"
+  },
+  "usecases": {
+    "label": "應用場景",
+    "title": "為每一位創作者打造",
+    "desc": "從獨立創作者到企業工作室，Sedgo 全面賦能。",
+    "ad": "廣告",
+    "ad_desc": "高影響力品牌影片",
+    "edu": "教育",
+    "edu_desc": "引人入勝的講解內容",
+    "story": "敘事",
+    "story_desc": "敘事驅動場景",
+    "social": "社交媒體",
+    "social_desc": "短影片爆款內容",
+    "dance": "動作/舞蹈",
+    "dance_desc": "編舞與動作捕捉",
+    "edit": "影片編輯",
+    "edit_desc": "AI 輔助後期製作",
+    "film": "電影預演",
+    "film_desc": "分鏡腳本躍然屏上",
+    "realestate": "房地產",
+    "realestate_desc": "沉浸式房屋展示",
+    "music": "音樂同步",
+    "music_desc": "音訊響應影片"
+  },
+  "how": {
+    "label": "如何使用",
+    "title": "三步生成影片",
+    "desc": "從創意到成品，只需幾分鐘。",
+    "s1_title": "上傳素材",
+    "s1_desc": "添加圖像、影片和音訊作為參考——最多 12 個檔案。",
+    "s2_title": "描述你的創意",
+    "s2_desc": "編寫提示詞，使用 <code>@image1</code>、<code>@video1</code> 標籤引用上傳檔案。",
+    "s3_title": "生成與下載",
+    "s3_desc": "等待 AI 生成影片，下載後即可分享或編輯。"
+  },
+  "faq": {
+    "label": "常見問題",
+    "title": "常見問題解答",
+    "desc": "關於 Sedgo 的一切。",
+    "q1": "最多可以上傳多少個參考檔案？",
+    "a1": "最多可上傳 12 個檔案：最多 9 張圖片、3 段影片（≤15秒）和 3 個音訊（≤15秒）。",
+    "q2": "支援多長的影片？",
+    "a2": "Sedgo 支援 4 到 15 秒的影片生成，預設為 5 秒。",
+    "q3": "生成的影片有水印嗎？",
+    "a3": "無水印，您對生成的內容擁有完整所有權。",
+    "q4": "支援哪些圖片/影片格式？",
+    "a4": "圖片：PNG、JPG、JPEG、WEBP。影片：MP4、MOV、WEBM。音訊：MP3、WAV、AAC。",
+    "q5": "積分如何計算？",
+    "a5": "按生成影片的每秒消耗積分，費率取決於所選模型和解析度。積分永不過期。",
+    "q6": "如何聯絡客服？",
+    "a6": "發送郵件至 support@sedgo.ai，工作日通常在 24 小時內回覆。"
+  },
+  "pricing": {
+    "label": "定價",
+    "title": "選擇最適合您的方案",
+    "desc": "所有方案均包含核心功能和技術支援。",
+    "trial": "免費試用",
+    "trial_desc": "新用戶專享體驗",
+    "pro": "專業版",
+    "pro_desc": "適合個人創作者",
+    "team": "團隊版",
+    "team_desc": "適合團隊協作",
+    "enterprise": "企業版",
+    "enterprise_desc": "定制化解決方案",
+    "monthly": "按月",
+    "yearly": "按年",
+    "annual": "按年",
+    "save": "省 40%",
+    "billed_yearly": "按年計費",
+    "points": "積分",
+    "points_per_month": "積分/月",
+    "minutes": "分鐘",
+    "max_batch_size": "批量生成上限",
+    "max_concurrent_tasks": "並發任務數",
+    "full_hd": "全高清",
+    "hd": "高清",
+    "output_support": "輸出支援",
+    "priority_support": "優先技術支援",
+    "custom_watermark": "自定義水印設定",
+    "seedance_video": "Sedgo AI 影片",
+    "multi_models": "多 AI 影片模型",
+    "private_space": "私人影片空間",
+    "recommended": "推薦",
+    "annual_total": "年付總計",
+    "subscribe_now": "立即訂閱",
+    "free_trial": "免費試用",
+    "start_free_trial": "開始免費試用",
+    "tab": {
+      "team": "套餐",
+      "credits": "積分包"
+    },
+    "credits": {
+      "basic": "新手套裝",
+      "basic_desc": "適合初學者和個人用戶",
+      "creator": "創作者套裝",
+      "creator_desc": "適合大多數內容創作者",
+      "elite": "菁英套裝",
+      "elite_desc": "適合專業用戶",
+      "advanced": "進階套裝",
+      "advanced_desc": "適合大量需求用戶",
+      "super": "超級套裝",
+      "super_desc": "適合企業級用戶",
+      "points_1k": "✓ 1,000 積分",
+      "points_3k": "✓ 3,000 積分",
+      "points_8k": "✓ 8,000 積分",
+      "points_30k": "✓ 30,000 積分",
+      "points_100k": "✓ 100,000 積分",
+      "all_features": "✓ 包含所有功能",
+      "no_expire": "✓ 積分永不過期",
+      "buy_now": "立即購買"
+    },
+    "plans": {
+      "name_1": "免費試用",
+      "desc_1": "新使用者專屬體驗套裝",
+      "name_2": "團隊版",
+      "desc_2": "適合中小型團隊使用",
+      "name_3": "團隊專業版",
+      "desc_3": "適合專業團隊和企業"
+    },
+    "model_pricing": "Sedgo 模型積分定價",
+    "points_per_second": "每秒鐘生成消耗的積分數量",
+    "series": "Sedgo 系列",
+    "series_v1": "Sedgo 1.x 系列",
+    "table": {
+      "model": "模型",
+      "resolution": "分辨率",
+      "points_per_sec": "積分/秒",
+      "cost_5s": "5秒消耗",
+      "cost_10s": "10秒消耗",
+      "cost_15s": "15秒消耗"
+    },
+    "monthly_annual": "月付（按年）"
+  },
+  "js": {
+    "created": "創建任務失敗：",
+    "gen_failed": "生成失敗：",
+    "timeout": "超時，請稍後重試。",
+    "error": "錯誤：",
+    "download": "⬇ 下載",
+    "uploading": "⏳ 上傳中…",
+    "attached": " 個檔案已附加",
+    "signin_first": "請先登入。",
+    "signed_in": "已登入",
+    "signed_in_alt": "已登入 ✓",
+    "unknown_error": "未知錯誤",
+    "subscribe_success": "訂閱成功",
+    "subscribe_failed": "訂閱失敗",
+    "select_endpoint": "請選擇接入點",
+    "auto": "自動",
+    "no_endpoints": "暫無可用接入點",
+    "load_failed": "加載失敗",
+    "no_description": "無描述",
+    "status_processing": "處理中",
+    "status_success": "成功",
+    "status_failed": "失敗",
+    "status_pending": "等待中",
+    "status_unknown": "未知",
+    "time_just_now": "剛剛",
+    "time_minutes_ago": "分鐘前",
+    "time_hours_ago": "小時前",
+    "generate_image": "生成圖片",
+    "video_generation": "影片生成",
+    "no_data": "暫無數據",
+    "load_error": "加載失敗",
+    "select_asset_first": "請先選擇資產",
+    "cancel": "取消",
+    "confirm": "確認",
+    "retry_generate": "↺ 重新生成",
+    "status_cancelled": "已取消",
+    "status_error": "異常",
+    "task_cancelled": "任務已取消",
+    "network_error_retry": "網路請求失敗，請手動重試",
+    "retry_failed": "重新生成失敗",
+    "create_failed": "建立任務失敗：",
+    "generate": "生成",
+    "generating": "生成中...",
+    "max_files": "最多上傳 {n} 個檔案",
+    "processing": "處理中…",
+    "upload_error": "上傳出錯",
+    "upload_failed": "上傳失敗",
+    "loading": "載入中...",
+    "confirm_select": "確認選擇",
+    "no_uploads": "尚無上傳檔案",
+    "asset_unavailable": "此功能需要開通權限，請聯繫服務商",
+    "admin_sender": "管理員",
+    "billing_annual": "年付",
+    "billing_monthly": "月付",
+    "choose_topup": "選擇充值套餐",
+    "current_plan": "目前方案",
+    "delete": "🗑 刪除",
+    "expires_at": "有效期至",
+    "me_sender": "我",
+    "no_tickets": "暫無工單記錄",
+    "payment_success": "支付成功！",
+    "payment_success_desc": "積分/訂閱已到帳",
+    "points_unit": "積分",
+    "remaining_points": "剩餘積分",
+    "reply_empty": "請輸入回覆內容",
+    "request_fail": "請求失敗",
+    "segment_progress": "片段 {done}/{total} · {pct}%",
+    "send": "發送",
+    "sub_active": "有效",
+    "sub_cancelled": "已取消",
+    "sub_expired": "已過期",
+    "sub_pending": "待處理",
+    "ticket_active": "進行中",
+    "ticket_closed": "工單已關閉",
+    "ticket_closed_label": "已關閉",
+    "ticket_reply_placeholder": "繼續回覆...",
+    "type_admin_adjust": "管理員調整",
+    "type_consume": "消耗",
+    "type_earn": "獲取",
+    "type_image": "🖼️ 圖片",
+    "type_long_video": "🎬 長視頻",
+    "type_subscription": "訂閱",
+    "type_video": "🎬 視頻",
+    "unknown": "未知",
+    "upgrade_hint": "立即升級以獲取更多積分和功能"
+  },
+  "modal": {
+    "description": "描述",
+    "status": "狀態",
+    "created_at": "創建時間",
+    "points_consumed": "消耗積分",
+    "title": "任務詳情"
+  },
+  "results": {
+    "title": "生成結果",
+    "refresh": "刷新",
+    "more": "更多 →",
+    "empty": "暫無生成結果",
+    "empty_hint": "點擊上方按鈕開始生成"
+  },
+  "lang": {
+    "zh": "中文",
+    "zh-TW": "繁體中文",
+    "en": "English",
+    "ja": "日本語",
+    "ko": "한국어",
+    "ru": "Русский",
+    "vi": "Tiếng Việt",
+    "es": "Español"
+  },
+  "auth": {
+    "login": "登入",
+    "register": "註冊",
+    "email": "信箱",
+    "password": "密碼",
+    "confirm_password": "確認密碼",
+    "display_name": "暱稱",
+    "remember_me": "記住我",
+    "forgot_password": "忘記密碼？",
+    "no_account": "沒有帳戶？",
+    "already_have_account": "已有帳戶？",
+    "loginBtn": "登入",
+    "registerBtn": "註冊",
+    "processing": "處理中…",
+    "google": "使用 Google 登入",
+    "download": "下載",
+    "copy_link": "複製連結",
+    "link_copied": "連結已複製到剪貼簿",
+    "enter_video_desc": "請輸入影片描述",
+    "enter_image_desc": "請輸入圖片描述",
+    "fillAll": "請填寫所有必填項",
+    "passwordMismatch": "兩次密碼不一致",
+    "passwordTooShort": "密碼至少6位",
+    "title": "歡迎",
+    "subtitle": "登入或註冊以開始使用",
+    "or": "或",
+    "namePlaceholder": "您的顯示名稱",
+    "confirmPassword": "確認密碼",
+    "displayName": "暱稱",
+    "agree": "我已閱讀並同意",
+    "terms": "服務條款",
+    "and": "和",
+    "privacy": "隱私政策",
+    "please_login": "請先登入以使用 AI 最佳化功能",
+    "loginFailed": "登入失敗",
+    "registerFailed": "註冊失敗",
+    "agreeRequired": "請先閱讀並同意服務條款和隱私政策"
+  },
+  "user": {
+    "profile": "個人中心",
+    "apiKeys": "API 金鑰",
+    "subscription": "訂閱",
+    "logout": "登出",
+    "apiKeyHint": "用於 API 存取的金鑰",
+    "currentSub": "目前訂閱",
+    "noSub": "目前無訂閱",
+    "points": "積分"
+  },
+  "footer": {
+    "txt2vid": "文生影片",
+    "img2vid": "圖生影片",
+    "terms": "服務條款",
+    "privacy": "隱私政策",
+    "refund": "退款政策",
+    "contact": "聯絡我們"
+  },
+  "profile": {
+    "title": "使用者中心 - Sedgo 2",
+    "menu": {
+      "works": "我的創作",
+      "subscription": "訂閱",
+      "team": "團隊",
+      "credits": "信用歷史",
+      "orders": "訂單記錄",
+      "profile": "個人資料",
+      "contact": "聯絡我們",
+      "logout": "登出"
+    },
+    "page": {
+      "works": {
+        "title": "我的創作",
+        "desc": "管理和瀏覽您所有已生成的影片和圖片"
+      },
+      "contact": {
+        "desc": "遇到問題或有建議？提交工單，我們將盡快處理",
+        "title": "提交工單"
+      },
+      "credits": {
+        "desc": "查看所有積分獲取和使用記錄",
+        "title": "積分歷史"
+      },
+      "orders": {
+        "desc": "查看所有付款訂單的歷史記錄",
+        "title": "訂單記錄"
+      },
+      "profile": {
+        "desc": "管理您的帳戶資訊和偏好設定",
+        "title": "個人資料"
+      },
+      "subscription": {
+        "desc": "管理您的訂閱方案和帳單資訊",
+        "title": "訂閱"
+      }
+    },
+    "section": {
+      "works": {
+        "create": "+ 創建新影片",
+        "desc": "管理和瀏覽您所有已生成的影片和圖片",
+        "title": "我的創作"
+      },
+      "contact": {
+        "desc": "遇到問題或有建議？提交工單，我們將盡快處理。",
+        "title": "提交工單"
+      },
+      "credits": {
+        "desc": "查看所有積分獲取和使用記錄。",
+        "title": "積分歷史"
+      },
+      "orders": {
+        "desc": "查看所有付款訂單的歷史記錄。",
+        "title": "訂單記錄"
+      },
+      "profile": {
+        "desc": "管理您的帳戶資訊和偏好設定",
+        "title": "個人資料"
+      },
+      "subscription": {
+        "desc": "管理您的訂閱方案和帳單資訊，您可以隨時取消訂閱。",
+        "title": "訂閱"
+      }
+    },
+    "tabs": {
+      "video": "影片",
+      "image": "圖片"
+    },
+    "filter": {
+      "all": "所有影片",
+      "text": "文字轉影片",
+      "image": "圖片轉影片",
+      "date": "📅 按日期篩選"
+    },
+    "empty": {
+      "works": {
+        "title": "沒有找到影片",
+        "desc": "您尚未生成任何影片，開始創建您的第一部影片吧！"
+      },
+      "team": {
+        "title": "尚未有團隊",
+        "desc": "您尚未加入任何團隊。訂閱團隊方案來建立您自己的團隊，或由團隊擁有者邀請您。"
+      },
+      "credits": "未找到信用歷史記錄。",
+      "orders": "未找到訂單。",
+      "image_desc": "圖片生成記錄將在此顯示",
+      "image_title": "暫無圖片記錄"
+    },
+    "team": {
+      "create": "創建團隊方案"
+    },
+    "credits": {
+      "buy": "購買更多點數"
+    },
+    "subscription": {
+      "unlock": "解鎖 Sedgo 高級版",
+      "no_plan": "您目前沒有訂閱任何方案，立即升級以獲取 Sedgo 革命性的多模態 AI 影像生成模型。",
+      "choose": "選擇完美方案 →",
+      "annual_subscribe": "年付訂閱",
+      "concurrent_tasks": "並發任務",
+      "current_plan_btn": "目前方案",
+      "max_resolution": "最高解析度",
+      "monthly_subscribe": "月付訂閱",
+      "points_per_month": "積分/月"
+    },
+    "features": {
+      "multimodal": "多模態輸入",
+      "consistency": "角色一致性",
+      "audio": "音頻生成",
+      "fast": "快速生成",
+      "edit": "精準編輯",
+      "privacy": "隱私保護"
+    },
+    "team_btn": {
+      "create": "創建團隊方案"
+    },
+    "credits_btn": {
+      "buy": "購買更多點數"
+    },
+    "table": {
+      "date": "日期",
+      "type": "類型",
+      "details": "詳情",
+      "amount": "金額",
+      "onetime_credits": "一次性信用額",
+      "subscription_credits": "訂閱信用額",
+      "product": "商品",
+      "status": "狀態",
+      "action": "操作",
+      "credits_change": "積分變動"
+    },
+    "pagination": {
+      "records": "共 0 條記錄",
+      "orders": "0 筆訂單",
+      "prev": "上一頁",
+      "next": "下一頁",
+      "per_page": "頁",
+      "page": "第 1 / 0 頁"
+    },
+    "form": {
+      "avatar": "頭像",
+      "change_avatar": "更換頭像",
+      "username": "使用者名稱",
+      "username_placeholder": "請輸入使用者名稱",
+      "email": "電子郵件",
+      "password": "密碼",
+      "password_placeholder": "請輸入新密碼",
+      "confirm_password": "確認密碼",
+      "confirm_password_placeholder": "請確認新密碼",
+      "save": "儲存更改",
+      "confirm_new_password": "確認新密碼",
+      "confirm_new_password_placeholder": "請再次輸入新密碼",
+      "new_password": "新密碼",
+      "new_password_placeholder": "請輸入新密碼（至少6位）",
+      "old_password": "舊密碼",
+      "old_password_placeholder": "請輸入舊密碼（不修改密碼可留空）"
+    },
+    "contact": {
+      "email": "電子郵件",
+      "email_placeholder": "請輸入您的電子郵件",
+      "subject": "主題",
+      "subject_placeholder": "請輸入主題",
+      "message": "訊息",
+      "message_placeholder": "請輸入您的訊息",
+      "send": "發送訊息",
+      "info": "聯絡方式",
+      "hours": "週一至週五 9:00 - 18:00",
+      "attach_label": "附件（可選，支援圖片/影片/PDF，每個不超過 20MB）",
+      "dropzone": "點擊或拖曳上傳檔案",
+      "email_label": "聯絡信箱",
+      "fill_all": "請填寫所有欄位",
+      "hours_label": "服務時間",
+      "message_label": "詳細描述",
+      "my_tickets": "我的工單",
+      "other": "其他聯絡方式",
+      "send_fail": "發送失敗",
+      "sending": "發送中...",
+      "sent": "工單已提交，我們會盡快處理！",
+      "subject_label": "工單標題",
+      "submit": "提交工單",
+      "title": "提交工單"
+    },
+    "logout_confirm": "確定要登出嗎？",
+    "avatar_success": "頭像更新成功",
+    "avatar_fail": "頭像更新失敗",
+    "enter_username": "請輸入使用者名稱",
+    "profile_success": "資料更新成功",
+    "address_copied": "地址已複製",
+    "attachment": "附件",
+    "buy_plan": "購買方案",
+    "choose_plan": "選擇方案",
+    "credits_empty": "未找到積分記錄",
+    "credits_records": "共 {total} 條記錄，第 {page}/{totalPages} 頁",
+    "credits_topup": "₮ 充值積分",
+    "delete_confirm": "確定刪除此作品？此操作不可撤銷。",
+    "delete_fail": "刪除失敗",
+    "load_fail": "載入失敗",
+    "loading": "載入中...",
+    "orders_count": "0 筆訂單",
+    "orders_empty": "暫無訂單記錄",
+    "orders_one": "1 筆訂單",
+    "payment": {
+      "cancelled": "取消",
+      "copy_address": "複製地址",
+      "create_fail": "創建失敗",
+      "expired": "過期",
+      "generating": "生成訂單中...",
+      "net_error": "網路錯誤，請重試",
+      "order_status": "訂單已",
+      "remaining": "剩餘時間",
+      "waiting": "等待轉帳..."
+    },
+    "pw_mismatch": "兩次密碼不一致",
+    "pw_too_short": "新密碼至少6位",
+    "pw_update_fail": "密碼修改失敗",
+    "save_fail": "儲存失敗",
+    "update_fail": "更新失敗",
+    "upload_fail": "上傳失敗"
+  },
+  "api": {
+    "label": "開發者",
+    "title": "API 文件",
+    "desc": "將 AI 視頻生成能力集成到您的應用中。",
+    "docs": "API 文件",
+    "docs_desc": "詳細的 API 參考文件，包含所有端點、參數和示例。",
+    "sdk": "SDK 工具包",
+    "sdk_desc": "支援 Python、JavaScript、Go 等主流程式語言的 SDK。",
+    "playground": "API 遊樂場",
+    "playground_desc": "在線測試 API，實時查看請求和響應。",
+    "view_docs": "查看文件",
+    "download_sdk": "下載 SDK",
+    "try_now": "立即體驗"
+  },
+  "support": {
+    "label": "支援",
+    "title": "獲取幫助",
+    "desc": "我們隨時準備為您提供幫助。",
+    "guides": "幫助中心",
+    "guides_desc": "詳細的使用指南和教程，助您快速上手。",
+    "community": "社區論壇",
+    "community_desc": "與其他用戶交流，分享技巧和創意。",
+    "contact": "聯絡我們",
+    "contact_desc": "有問題？發送郵件，我們會儘快回覆。",
+    "visit": "訪問幫助中心",
+    "join": "加入社區",
+    "email": "發送郵件"
+  },
+  "contact_page": {
+    "page": {
+      "title": "聯絡我們",
+      "desc": "我們很樂意為您提供幫助"
+    },
+    "methods": {
+      "title": "聯絡方式",
+      "intro": "如有任何問題或建議，歡迎通過以下方式聯絡我們："
+    },
+    "email": {
+      "title": "郵件支援",
+      "text": "發送郵件至：",
+      "response": "工作日通常在 24 小時內回覆"
+    },
+    "online": {
+      "title": "線上支援",
+      "hours": "工作時間：週一至週五 9:00 - 18:00",
+      "chat": "聊天視窗將在工作時間內提供即時支援"
+    },
+    "feedback": {
+      "title": "回饋表單",
+      "visit": "請造訪我們的幫助中心提交回饋",
+      "note": "我們會認真對待每一條回饋"
+    },
+    "social": {
+      "title": "社群媒體",
+      "follow": "關注我們獲取最新動態",
+      "platforms": "微信、微博、Twitter"
+    },
+    "telegram": {
+      "title": "Telegram",
+      "join": "加入我們的 Telegram 群組：",
+      "help": "快速獲取幫助和最新消息"
+    },
+    "faq": {
+      "title": "常見問題",
+      "intro": "在聯絡我們之前，您可能想查看我們的常見問題解答：",
+      "page": "常見問題頁面",
+      "help": "幫助中心"
+    }
+  },
+  "api_page": {
+    "page": {
+      "title": "API 文件",
+      "desc": "將 AI 視頻生成能力集成到您的應用中。"
+    },
+    "quick_start": {
+      "title": "快速開始",
+      "desc": "使用 Sedgo API，您可以輕鬆將 AI 視頻生成能力集成到您的應用程式中。"
+    },
+    "auth": {
+      "title": "認證方式",
+      "desc": "所有 API 請求都需要通過 API Key 進行認證。在請求標頭中添加以下欄位："
+    },
+    "create_task": {
+      "title": "建立視頻任務",
+      "desc": "使用 POST /v1/tasks 端點建立視頻生成任務："
+    },
+    "query_status": {
+      "title": "查詢任務狀態",
+      "desc": "使用 GET /v1/tasks/{task_id} 端點查詢任務狀態："
+    },
+    "models": {
+      "title": "可用模型",
+      "sedgo_fast": "sedgo-fast - 快速生成模型，適合快速預覽",
+      "sedgo": "sedgo - 高品質模型，適合最終輸出"
+    },
+    "response": {
+      "title": "回應格式"
+    }
+  },
+  "support_page": {
+    "page": {
+      "title": "獲取幫助",
+      "desc": "我們隨時準備為您提供幫助。"
+    },
+    "help_center": {
+      "title": "幫助中心",
+      "intro": "詳細的使用指南和教程，助您快速上手。",
+      "guide": "📖 入門指南 - 了解如何開始使用",
+      "tutorial": "🎬 視頻製作教程 - 掌握高級技巧",
+      "api": "⚙️ API 文件 - 集成到您的應用",
+      "billing": "💰 計費說明 - 了解定價和充值"
+    },
+    "faq": {
+      "title": "常見問題",
+      "q1": "Q: 視頻生成需要多長時間？",
+      "a1": "A: 視頻生成時間取決於視頻長度和所選模型。通常 10 秒視頻需要 1-2 分鐘。",
+      "q2": "Q: 支援哪些解析度？",
+      "a2": "A: 我們支援 720p、1080p 和 4K 解析度。",
+      "q3": "Q: 如何獲取 API Key？",
+      "a3": "A: 登入後，您可以在個人中心的 API 設定中生成和管理您的 API Key。"
+    },
+    "community": {
+      "title": "社群論壇",
+      "intro": "與其他用戶交流，分享技巧和創意。您可以在社群中：",
+      "share": "分享您的作品",
+      "inspiration": "獲取創作靈感",
+      "suggest": "提出建議和回饋",
+      "help": "幫助其他用戶"
+    },
+    "contact": {
+      "title": "聯絡我們",
+      "intro": "如有問題或建議，請發送郵件至：",
+      "email": "support@sedgo.ai",
+      "response": "工作日通常在 24 小時內回覆。"
+    }
+  },
+  "privacy_page": {
+    "page": {
+      "title": "隱私政策",
+      "desc": "我們重視您的隱私",
+      "intro": "我們重視您的隱私，本政策說明我們如何收集和保護您的資訊"
+    },
+    "info": {
+      "title": "1. 簡介",
+      "intro": "歡迎使用 SedGoAI（以下簡稱「我們」或「平台」）。我們重視您的隱私，本隱私政策旨在說明我們如何收集、使用、儲存和保護您的個人資訊。",
+      "account": "個人身份資訊：姓名、電子郵件地址、電話號碼",
+      "usage": "帳戶資訊：密碼（加密儲存）、API金鑰",
+      "technical": "使用資料：生成的內容、提示詞、使用頻率"
+    },
+    "usage": {
+      "title": "2. 資訊收集",
+      "service": "我們收集您在註冊和使用服務過程中提供的資訊，包括不僅限於：",
+      "improve": "我們使用收集的資訊來：",
+      "security": "提供和維護服務",
+      "billing": "處理付款和計費",
+      "communication": "改進產品和服務",
+      "access": "發送重要通知和更新"
+    },
+    "sharing": {
+      "title": "3. 資訊使用",
+      "intro": "我們不會出售您的個人資訊。僅在以下情況下共享資訊：",
+      "consent": "經您明確同意",
+      "legal": "遵守法律要求",
+      "partners": "保護平台和使用者安全"
+    },
+    "security": {
+      "title": "4. 資訊共享",
+      "intro": "我們採用行業標準的安全措施保護您的資料，包括加密傳輸、儲存加密、存取控制等。但請注意，沒有任何安全措施是絕對安全的。"
+    },
+    "rights": {
+      "title": "5. 資料安全",
+      "intro": "您有權存取、更正、刪除您的個人資訊，或限制我們對您資料的處理。請聯絡 support@sedgo.ai 提出請求。"
+    },
+    "changes": {
+      "title": "6. 使用者權利",
+      "intro": "我們可能不定期更新本政策。重大變更將通過郵件通知您。"
+    },
+    "contact": {
+      "title": "7. 政策更新",
+      "intro": "如有疑問，請發送郵件至：",
+      "email": "support@sedgo.ai"
+    }
+  },
+  "terms_page": {
+    "page": {
+      "title": "服務條款",
+      "desc": "使用 SedGo ai 服務的條款和條件",
+      "intro": "使用我們的服務即表示您同意遵守以下條款"
+    },
+    "acceptance": {
+      "title": "1. 接受條款",
+      "intro": "使用 SedGoAI 服務即表示您同意遵守本服務條款。如果您不同意，請勿使用我們的服務。"
+    },
+    "service": {
+      "title": "2. 服務說明",
+      "intro": "SedGoAI 提供 AI 驅動的視頻生成服務，包括文字轉視頻、圖片轉視頻等功能。"
+    },
+    "user": {
+      "title": "3. 用戶帳戶",
+      "intro": "您同意不：",
+      "legal": "違反任何法律或法規",
+      "account": "您需要註冊帳戶才能使用服務。您負責維護帳戶安全，對帳戶下的所有活動負責。",
+      "content": "生成非法或有害內容",
+      "respect": "濫用或攻擊服務"
+    },
+    "payment": {
+      "title": "4. 使用規則",
+      "intro": "某些服務可能需要付費。您同意：",
+      "charges": "6. 費用和支付",
+      "billing": "服務可能收取費用。您負責支付所有費用，包括稅金。未付款項可能導致服務暫停。"
+    },
+    "intellectual": {
+      "title": "5. 內容所有權",
+      "intro": "您對使用服務生成的內容擁有所有權。我們保留使用生成內容改進服務的權利。"
+    },
+    "termination": {
+      "title": "7. 服務變更",
+      "intro": "我們保留隨時變更或終止服務的權利。重大變更將提前通知。",
+      "violation": "9. 終止",
+      "abuse": "如果您違反本條款，我們可隨時終止或暫停您的帳戶，無需提前通知。"
+    },
+    "limitation": {
+      "title": "8. 免責聲明",
+      "intro": "服務按「原樣」提供，不提供任何擔保。我們不對使用服務產生的任何損失負責。"
+    },
+    "contact": {
+      "title": "10. 聯絡我們",
+      "intro": "如有疑問，請發送郵件至：",
+      "email": "support@sedgo.ai"
+    }
+  },
+  "refund_page": {
+    "page": {
+      "title": "退款政策",
+      "desc": "了解我們的退款政策",
+      "intro": "了解我們的退款規則和流程"
+    },
+    "scope": {
+      "title": "1. 適用範圍",
+      "intro": "本退款政策適用於所有透過 SedGoAI 購買的服務和積分。"
+    },
+    "credits": {
+      "title": "2. 積分退款",
+      "intro": "購買的積分在未使用的情況下，可在購買後 7 天內申請全額退款。已使用的積分不予退款。"
+    },
+    "subscription": {
+      "title": "3. 訂閱退款",
+      "monthly": "月度訂閱可隨時取消，取消後服務將在當前計費週期結束時終止，不予退款。",
+      "yearly": "年度訂閱在購買後 7 天內可申請全額退款。超過 7 天後，不予退款。"
+    },
+    "process": {
+      "title": "4. 退款申請",
+      "intro": "如需申請退款，請發送郵件至 support@sedgo.ai，包含以下資訊：",
+      "email": "註冊郵箱",
+      "order": "訂單號",
+      "date": "購買日期",
+      "reason": "退款原因"
+    },
+    "timeline": {
+      "title": "5. 處理時間",
+      "intro": "退款申請將在收到後 5 個工作日內處理。退款將原路返回至支付帳戶，到帳時間取決於支付方式。"
+    },
+    "exceptions": {
+      "title": "6. 例外情況"
+    },
+    "ineligible": {
+      "title": "以下情況不予退款：",
+      "intro": "以下情況不予退款：",
+      "used": "已使用的積分",
+      "expired": "超過退款期限的訂單",
+      "terminated": "因違反服務條款被終止的帳戶"
+    },
+    "contact": {
+      "title": "7. 聯絡我們",
+      "intro": "如有疑問，請發送郵件至：",
+      "email": "support@sedgo.ai"
+    }
+  }
+}

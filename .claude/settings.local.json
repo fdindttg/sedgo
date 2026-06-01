@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sleep 6 && cat /tmp/server.log)",
+      "Read(//tmp/**)",
+      "Bash(netstat -ano)",
+      "Bash(awk '{print $5}')",
+      "Bash(taskkill /PID 47836 /F)",
+      "Bash(uv run *)",
+      "Bash(grep -v \"^0$\")",
+      "Bash(curl -s -X POST https://ark.ap-southeast.bytepluses.com/api/v3/images/generations -H 'Authorization: Bearer ark-bd1d6ab6-4c77-4eef-8d2e-bf46605966ad-c674e' -H 'Content-Type: application/json' -d '{\"model\":\"doubao-seedream-3-0-t2i-250415\",\"prompt\":\"a beautiful sunset\",\"size\":\"1024x1024\",\"n\":1}')",
+      "Bash(pkill -f \"uvicorn\\\\|python app.py\")",
+      "Bash(curl -s http://localhost:8908/api/tasks/endpoints?type=video)",
+      "Bash(uv run python app.py > /tmp/app.log 2>&1 & *)",
+      "Bash(curl -s -X POST http://localhost:8908/api/auth/login -H 'Content-Type: application/json' -d '{\"email\":\"admin@seedance.com\",\"password\":\"admin123\"}')",
+      "Bash(curl -s http://localhost:8908/api/tasks/endpoints)",
+      "Bash(taskkill /PID 29632 /F)",
+      "Bash(cmd.exe /c \"taskkill /PID 29632 /F\")",
+      "Bash(cmd.exe /c \"for /f \\\\\"tokens=5\\\\\" %a in \\('netstat -ano ^| findstr :8908 ^| findstr LISTENING'\\) do taskkill /PID %a /F\")",
+      "Bash(powershell.exe -Command 'Get-Process | Where-Object { $_.Id -ne 0 } | ForEach-Object { try { $conn = [System.Net.NetworkInformation.IPGlobalProperties]::GetIPGlobalProperties\\(\\).GetActiveTcpListeners\\(\\) | Where-Object { $_.Port -eq 8908 }; if \\($conn\\) { Stop-Process -Id $_.Id -Force } } catch {} }; \\(Get-NetTCPConnection -LocalPort 8908 -ErrorAction SilentlyContinue\\).OwningProcess | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }')",
+      "Bash(echo \"PID=$!\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8908/admin)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} -> %{redirect_url}\" http://localhost:8908/admin)",
+      "Bash(curl -s http://localhost:8908/admin -I)",
+      "Bash(powershell -Command \"Get-Process python | Stop-Process -Force\")",
+      "Bash(curl -s -L http://localhost:8908/admin -I)",
+      "Bash(curl -s http://localhost:8908/admin)",
+      "Bash(curl -v http://localhost:8908/admin)",
+      "Bash(curl -s http://localhost:8908/api/assets/byteplus/portraits -I)",
+      "Bash(cat > *)",
+      "Bash(xargs grep -l \"progress\\\\|percent\")",
+      "Bash(pkill -f \"python app.py\")",
+      "Bash(pkill -f \"uvicorn\")",
+      "Bash(cmd.exe /c \"taskkill /PID 26508 /F\")",
+      "Bash(curl -s http://localhost:8908/ -o /dev/null -w \"%{http_code}\")"
+    ],
+    "additionalDirectories": [
+      "\\tmp"
+    ]
+  }
+}

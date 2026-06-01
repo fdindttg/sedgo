@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://sedgo.ai/</loc>
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sedgo.ai/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://sedgo.ai/"/>
+    <image:image>
+      <image:loc>https://sedgo.ai/static/logo.png</image:loc>
+      <image:title>SedGo AI - AI Video Generator</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://sedgo.ai/pages/api</loc>
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sedgo.ai/pages/api"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://sedgo.ai/pages/api"/>
+  </url>
+  <url>
+    <loc>https://sedgo.ai/pages/support</loc>
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sedgo.ai/pages/support"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://sedgo.ai/pages/support"/>
+  </url>
+  <url>
+    <loc>https://sedgo.ai/pages/privacy</loc>
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sedgo.ai/pages/privacy"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://sedgo.ai/pages/privacy"/>
+  </url>
+  <url>
+    <loc>https://sedgo.ai/pages/terms</loc>
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sedgo.ai/pages/terms"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://sedgo.ai/pages/terms"/>
+  </url>
+  <url>
+    <loc>https://sedgo.ai/pages/refund</loc>
+    <lastmod>2026-05-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sedgo.ai/pages/refund"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://sedgo.ai/pages/refund"/>
+  </url>
+</urlset>

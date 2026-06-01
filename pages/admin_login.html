@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Admin login page should not be indexed -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+
+<!-- Basic SEO -->
+<meta name="description" content="SedGo AI Admin Login | Secure administrative access to AI video generation platform management console." />
+<meta name="keywords" content="SedGo admin login, admin access, platform management, secure login, SedGo管理员登录, 管理后台入口" />
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="/static/favicon.png" />
+
+<title>SedGo Admin Login | 管理员登录</title>
+<link rel="stylesheet" href="/static/css/admin_login.css">
+</head>
+<body>
+<div class="card">
+<h2>SedGo Admin</h2>
+<p class="sub">管理员登录</p>
+<p class="hint">admin@seedance.com / admin123</p>
+<form id="f" onsubmit="return false">
+<label>邮箱</label>
+<input type="email" id="e" value="admin@seedance.com" autocomplete="email">
+<label>密码</label>
+<input type="password" id="p" value="admin123" autocomplete="current-password">
+<div id="msg"></div>
+<button type="button" id="btn">登 录</button>
+</form>
+<div id="dbg"></div>
+</div>
+
+<script src="/static/js/admin_login.js"></script>
+</body>
+</html>

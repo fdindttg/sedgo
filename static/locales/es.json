@@ -1,0 +1,926 @@
+{
+  "nav": {
+    "video": "AI Video",
+    "image": "AI Imagen",
+    "guide": "Guía",
+    "pricing": "Precios",
+    "signin": "Iniciar Sesión",
+    "home": "Inicio",
+    "features": "Características",
+    "api": "API",
+    "support": "Soporte",
+    "signup": "Prueba gratuita"
+  },
+  "hero": {
+    "badge": "Ahora disponible — Sedgo Con Audio",
+    "sub": "Experimenta la creación de video AI multimodal real: imágenes, videos, audio y texto trabajan juntos sin problemas."
+  },
+  "tabs": {
+    "video": "Generar Video",
+    "image": "Generar Imagen",
+    "video_agent": "Agente de Video",
+    "drama": "Studio de Drama",
+    "developing": "En Desarrollo"
+  },
+  "gen": {
+    "desc": "Entrada multimodal, potentes capacidades de referencia",
+    "resolution": "Resolución",
+    "duration": "Duración",
+    "ratio": "Relación de aspecto",
+    "ratio_auto": "Automático",
+    "upload_label": "Subir",
+    "upload_count": "0 / 1 (PNG/JPG/WEBP)",
+    "add_ref": "Agregar imagen o video de referencia",
+    "files": "archivos",
+    "real_people": "Contiene personas reales",
+    "last_frame": "Volver al último fotograma",
+    "advanced": "Avanzado",
+    "prompt_placeholder": "Describe tu video... Usa @image1, @video1 para hacer referencia a los archivos subidos.",
+    "generate": "Generar ✦",
+    "prompt_eg": "ej.",
+    "prompt_example": "Una escena cinematográfica...",
+    "hint1": "Planifica videos de cualquier longitud con asistente AI y materiales de referencia.",
+    "hint2": "Sube 1-9 imágenes o videos de referencia y usa @ para crear interacciones. Ejemplo: Usa @Image 1 como primer fotograma, @Image 2 como último fotograma, y hazlos bailar como @Video 1.",
+    "hint3": "Genera clips únicos rápidamente con control directo del prompt.",
+    "reference": "Referencia",
+    "images": "Imágenes",
+    "hint_video_1": "Planifica videos de cualquier longitud con asistente AI y materiales de referencia.",
+    "hint_video_2": "Sube 1-9 imágenes o videos de referencia y usa @ para crear interacciones. Ejemplo: Usa @Image 1 como primer fotograma, @Image 2 como último fotograma, y hazlos bailar como @Video 1.",
+    "hint_aivideo_1": "Genera clips únicos rápidamente con control directo del prompt.",
+    "hint_aivideo_2": "Sube 1-9 imágenes o videos de referencia y usa @ para crear interacciones. Ejemplo: Usa @Image 1 como primer fotograma, @Image 2 como último fotograma, y hazlos bailar como @Video 1.",
+    "hint_image_1": "Genera imágenes AI desde texto y referencias.",
+    "hint_image_2": "Sube hasta 14 imágenes de referencia y describe detalladamente la imagen objetivo.",
+    "prompt_placeholder_video": "Describe tu video... Usa @image1, @video1 para hacer referencia a los archivos subidos.",
+    "prompt_placeholder_aivideo": "Describe tu video...",
+    "prompt_placeholder_image": "Describe tu imagen...",
+    "prompt_placeholder_drama": "Sube un guión, novela o ingresa tu idea de historia. El asistente inteligente planificará el guión y generará el video.",
+    "auto": "Automático",
+    "custom": "Personalizado",
+    "upload_script": "Subir Guión/Novela",
+    "single_episode": "Episodio Único",
+    "series": "Serie",
+    "pro_writer": "Guionista Profesional",
+    "ai_enhance": "Mejorar con AI",
+    "ai_enhance_text": "AI Enhance",
+    "original_prompt": "Descripción Original",
+    "enhanced_prompt": "Prompt Mejorado por AI",
+    "enhanced_badge": "Generado por AI",
+    "use_enhanced": "✓ Usar Mejorado",
+    "use_enhanced_text": "Usar Mejorado",
+    "clear_enhanced": "✕ Limpiar",
+    "edit_enhanced": "Editar",
+    "save_edit": "Guardar",
+    "ref_mode": "Modo de Referencia",
+    "ref_mode_title": "Modo de Referencia",
+    "text2vid": "Texto a Video",
+    "first_last_frame": "Referencia de Primer y Último Fotograma",
+    "multi_ref": "Referencia de Imagen+Video+Audio",
+    "text2vid_desc": "Generar video solo con texto",
+    "ref_hint_text2vid": "Consejo: Último fotograma obligatorio, primero opcional",
+    "ref_hint_first_last_frame": "Este modo usa la referencia del primer y último fotograma en orden.",
+    "ref_hint_multi_ref": "Este modo admite hasta 9 referencias de imagen.",
+    "img2vid": "Referencia de Imagen",
+    "img2vid_desc": "Subir imagen como referencia",
+    "vid2vid": "Referencia de Video",
+    "vid2vid_desc": "Subir video como referencia",
+    "audio2vid": "Referencia de Audio",
+    "audio2vid_desc": "Generar video desde audio",
+    "ref_image": "Referencia de Imagen",
+    "ref_video": "Referencia de Video",
+    "ref_audio": "Referencia de Audio",
+    "ref_hint_img2vid": "Consejo: Referencia de Imagen ×9 + Referencia de Video ×3 + Referencia de Audio ×3",
+    "ref_hint_vid2vid": "Consejo: Referencia de Video ×3",
+    "real_people_title": "Recursos de Personas Reales",
+    "use_real_people": "Usar Recursos de Personas Reales",
+    "real_people_hint": "Las imágenes subidas se usarán como el tipo de recurso seleccionado",
+    "avatar_id": "ID de Avatar",
+    "asset_library": "Biblioteca de Recursos",
+    "asset_library_id": "ID de Biblioteca de Recursos",
+    "real_human_portrait_id": "ID de Retrato Humano Real",
+    "action_id": "ID de Acción",
+    "background_id": "ID de Fondo",
+    "voice_id": "ID de Voz",
+    "subtitle_removal_title": "Eliminación de Subtítulos",
+    "subtitle_removal": "Eliminación de Subtítulos",
+    "upload": "Subir archivo",
+    "optimize_fail": "Error de optimización",
+    "optimizing": "Optimizando...",
+    "please_enter_prompt": "Por favor ingrese un prompt",
+    "ref_image_placeholder": "Subir imagen o seleccionar de la biblioteca",
+    "ref_video_placeholder": "Subir video o seleccionar de la biblioteca",
+    "ref_audio_placeholder": "Subir audio o seleccionar de la biblioteca",
+    "optimize_success": "¡Optimización de prompt exitosa!"
+  },
+  "features": {
+    "label": "Por qué Sedgo",
+    "title": "Todo lo que necesitas para crear",
+    "desc": "Seis potentes capacidades, unificadas en un solo modelo.",
+    "f1_title": "Entrada Multimodal",
+    "f1_desc": "Combina imágenes, videos, clips de audio y prompts de texto en una sola solicitud de generación para un control creativo sin precedentes.",
+    "f2_title": "Referencia Cualquier cosa",
+    "f2_desc": "Etiqueta hasta 9 imágenes y 3 videos como referencias. El modelo extrae estilo, sujeto y movimiento con alta fidelidad.",
+    "f3_title": "Consistencia Superior",
+    "f3_desc": "Personajes, entornos y estilos permanecen consistentes a lo largo de los fotogramas y múltiples pasadas de generación.",
+    "f4_title": "Control Preciso de Cámara",
+    "f4_desc": "Replica con precisión patrones de movimiento y movimientos de cámara desde videos de referencia con precisión a nivel de fotograma.",
+    "f5_title": "Extensión y Edición de Video",
+    "f5_desc": "Extiende videos existentes, modifica escenas e itera sin empezar desde cero.",
+    "f6_title": "Generación de Audio Integrada",
+    "f6_desc": "Genera audio local sincronizado con la salida de video: música, efectos de sonido o voz."
+  },
+  "usecases": {
+    "label": "Casos de Uso",
+    "title": "Creado para cada creador",
+    "desc": "Desde creadores independientes hasta estudios empresariales, Sedgo potencia a todos.",
+    "ad": "Publicidad",
+    "ad_desc": "Videos de marca de alto impacto",
+    "edu": "Educación",
+    "edu_desc": "Contenido explicativo atractivo",
+    "story": "Narración",
+    "story_desc": "Escenas impulsadas por narrativa",
+    "social": "Redes Sociales",
+    "social_desc": "Contenido viral de formato corto",
+    "dance": "Movimiento/Danza",
+    "dance_desc": "Coreografía y captura de movimiento",
+    "edit": "Edición de Video",
+    "edit_desc": "Postproducción asistida por AI",
+    "film": "Previsualización Cinematográfica",
+    "film_desc": "Dar vida a los storyboards",
+    "realestate": "Inmobiliaria",
+    "realestate_desc": "Exhibiciones inmersivas de propiedades",
+    "music": "Sincronización Musical",
+    "music_desc": "Videos responsivos al audio"
+  },
+  "how": {
+    "label": "Cómo Funciona",
+    "title": "Crea video en tres pasos",
+    "desc": "De la idea al video final en minutos.",
+    "s1_title": "Sube Activos",
+    "s1_desc": "Agrega imágenes, videos y audio como referencias — hasta 12 archivos.",
+    "s2_title": "Describe Tu Visión",
+    "s2_desc": "Escribe prompts y usa etiquetas <code>@image1</code>, <code>@video1</code> para hacer referencia a los archivos subidos.",
+    "s3_title": "Genera y Descarga",
+    "s3_desc": "Espera a que AI genere tu video, luego descarga y comparte o edita."
+  },
+  "faq": {
+    "label": "FAQ",
+    "title": "Preguntas Frecuentes",
+    "desc": "Todo lo que necesitas saber sobre Sedgo.",
+    "q1": "¿Cuántos archivos de referencia puedo subir?",
+    "a1": "Hasta 12 archivos: 9 imágenes, 3 videos (≤15s) y 3 clips de audio (≤15s).",
+    "q2": "¿Qué longitudes de video son compatibles?",
+    "a2": "Sedgo admite generación de videos de 4 a 15 segundos, con un valor predeterminado de 5 segundos.",
+    "q3": "¿Los videos generados tienen marca de agua?",
+    "a3": "Sin marca de agua. Tienes propiedad completa del contenido generado.",
+    "q4": "¿Qué formatos de imagen/video son compatibles?",
+    "a4": "Imágenes: PNG, JPG, JPEG, WEBP. Videos: MP4, MOV, WEBM. Audio: MP3, WAV, AAC.",
+    "q5": "¿Cómo se calculan los puntos?",
+    "a5": "Los puntos se consumen por segundo de video generado. La tarifa depende del modelo y la resolución seleccionados. Los puntos nunca caducan.",
+    "q6": "¿Cómo contactar al soporte?",
+    "a6": "Envía un correo a support@sedgo.ai. Normalmente respondemos en 24 horas hábiles."
+  },
+  "pricing": {
+    "label": "Precios",
+    "title": "Elige el mejor plan para ti",
+    "desc": "Todos los planes incluyen características core y soporte técnico.",
+    "trial": "Prueba Gratuita",
+    "trial_desc": "Experiencia exclusiva para nuevos usuarios",
+    "pro": "Pro",
+    "pro_desc": "Para creadores individuales",
+    "team": "Equipo",
+    "team_desc": "Para colaboración en equipo",
+    "enterprise": "Empresa",
+    "enterprise_desc": "Soluciones personalizadas",
+    "monthly": "/mes",
+    "monthly_annual": "/mes (pago anual)",
+    "yearly": "Anual",
+    "annual": "Anual",
+    "save": "Ahorra 40%",
+    "billed_yearly": "Facturado anualmente",
+    "points": "Puntos",
+    "points_per_month": "Puntos/mes",
+    "minutes": "Minutos",
+    "max_batch_size": "Tamaño máximo de lote",
+    "max_concurrent_tasks": "Máximo de tareas concurrentes",
+    "full_hd": "Full HD",
+    "hd": "HD",
+    "output_support": "Soporte de salida",
+    "priority_support": "Soporte prioritario",
+    "custom_watermark": "Marca de agua personalizada",
+    "seedance_video": "Sedgo AI Video",
+    "multi_models": "Multiples modelos de video AI",
+    "private_space": "Espacio de video privado",
+    "recommended": "Recomendado",
+    "annual_total": "Total anual",
+    "subscribe_now": "Suscribirse Ahora",
+    "free_trial": "Prueba Gratuita",
+    "start_free_trial": "Iniciar Prueba Gratuita",
+    "tab": {
+      "team": "Planes",
+      "credits": "Paquetes de Créditos"
+    },
+    "credits": {
+      "basic": "Paquete Inicial",
+      "basic_desc": "Perfecto para principiantes y usuarios individuales",
+      "creator": "Paquete de Creador",
+      "creator_desc": "Perfecto para la mayoría de los creadores de contenido",
+      "elite": "Paquete Élite",
+      "elite_desc": "Perfecto para usuarios profesionales",
+      "advanced": "Paquete Avanzado",
+      "advanced_desc": "Perfecto para usuarios con alta demanda",
+      "super": "Paquete Super",
+      "super_desc": "Perfecto para usuarios empresariales",
+      "points_1k": "✓ 1,000 Puntos",
+      "points_3k": "✓ 3,000 Puntos",
+      "points_8k": "✓ 8,000 Puntos",
+      "points_30k": "✓ 30,000 Puntos",
+      "points_100k": "✓ 100,000 Puntos",
+      "all_features": "✓ Todas las características incluidas",
+      "no_expire": "✓ Los puntos no caducan",
+      "buy_now": "Comprar ahora"
+    },
+    "plans": {
+      "name_1": "Prueba gratuita",
+      "desc_1": "Paquete de prueba exclusivo para nuevos usuarios",
+      "name_2": "Equipo",
+      "desc_2": "Para equipos pequeños y medianos",
+      "name_3": "Equipo Pro",
+      "desc_3": "Para equipos profesionales y empresas"
+    },
+    "model_pricing": "Precios de puntos del modelo Sedgo",
+    "points_per_second": "Puntos consumidos por segundo de generación",
+    "series": "Serie Sedgo",
+    "series_v1": "Serie Sedgo 1.x",
+    "table": {
+      "model": "Modelo",
+      "resolution": "Resolución",
+      "points_per_sec": "Puntos/seg",
+      "cost_5s": "Costo 5s",
+      "cost_10s": "Costo 10s",
+      "cost_15s": "Costo 15s"
+    }
+  },
+  "js": {
+    "created": "Error al crear tarea: ",
+    "gen_failed": "Generación fallida: ",
+    "timeout": "Tiempo agotado, por favor intenta de nuevo más tarde.",
+    "error": "Error: ",
+    "download": "⬇ Descargar",
+    "uploading": "⏳ Subiendo…",
+    "attached": " archivos adjuntos",
+    "signin_first": "Por favor inicia sesión primero.",
+    "signed_in": "Iniciado sesión",
+    "signed_in_alt": "Iniciado sesión ✓",
+    "unknown_error": "Error desconocido",
+    "subscribe_success": "Suscripción exitosa",
+    "subscribe_failed": "Suscripción fallida",
+    "select_endpoint": "Por favor selecciona un endpoint",
+    "auto": "Automático",
+    "no_endpoints": "No hay endpoints disponibles",
+    "load_failed": "Carga fallida",
+    "no_description": "Sin descripción",
+    "status_processing": "Procesando",
+    "status_success": "Éxito",
+    "status_failed": "Fallido",
+    "status_pending": "Pendiente",
+    "status_unknown": "Desconocido",
+    "time_just_now": "Justo ahora",
+    "time_minutes_ago": "minutos atrás",
+    "time_hours_ago": "horas atrás",
+    "generate_image": "Generar Imagen",
+    "video_generation": "Generación de Video",
+    "no_data": "No hay datos disponibles",
+    "load_error": "Carga fallida",
+    "select_asset_first": "Seleccione un recurso primero",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "retry_generate": "↺ Regenerar",
+    "status_cancelled": "Cancelado",
+    "status_error": "Error",
+    "task_cancelled": "Tarea cancelada",
+    "network_error_retry": "Error de red, por favor reintente manualmente",
+    "retry_failed": "Error al regenerar",
+    "create_failed": "Error al crear la tarea: ",
+    "generate": "Generar",
+    "generating": "Generando...",
+    "max_files": "Máximo {n} archivos permitidos",
+    "processing": "Procesando…",
+    "upload_error": "Error de carga",
+    "upload_failed": "Carga fallida",
+    "loading": "Cargando...",
+    "confirm_select": "Confirmar seleccion",
+    "no_uploads": "Sin archivos subidos",
+    "asset_unavailable": "Esta función requiere acceso especial. Contacte con soporte.",
+    "admin_sender": "Administrador",
+    "billing_annual": "Anual",
+    "billing_monthly": "Mensual",
+    "choose_topup": "Elegir paquete de recarga",
+    "current_plan": "Plan actual",
+    "delete": "🗑 Eliminar",
+    "expires_at": "Vence el",
+    "me_sender": "Yo",
+    "no_tickets": "Sin tickets",
+    "payment_success": "¡Pago exitoso!",
+    "payment_success_desc": "Créditos/suscripción activados",
+    "points_unit": "Créditos",
+    "remaining_points": "Créditos restantes",
+    "reply_empty": "Ingrese una respuesta",
+    "request_fail": "Solicitud fallida",
+    "segment_progress": "Segmento {done}/{total} · {pct}%",
+    "send": "Enviar",
+    "sub_active": "Activo",
+    "sub_cancelled": "Cancelado",
+    "sub_expired": "Expirado",
+    "sub_pending": "Pendiente",
+    "ticket_active": "Abierto",
+    "ticket_closed": "Ticket cerrado",
+    "ticket_closed_label": "Cerrado",
+    "ticket_reply_placeholder": "Continuar respondiendo...",
+    "type_admin_adjust": "Ajuste de administrador",
+    "type_consume": "Consumido",
+    "type_earn": "Obtenido",
+    "type_image": "🖼️ Imagen",
+    "type_long_video": "🎬 Video largo",
+    "type_subscription": "Suscripción",
+    "type_video": "🎬 Video",
+    "unknown": "Desconocido",
+    "upgrade_hint": "Actualiza para obtener más créditos y funciones"
+  },
+  "modal": {
+    "description": "Descripción",
+    "status": "Estado",
+    "created_at": "Fecha de creación",
+    "points_consumed": "Puntos consumidos",
+    "title": "Detalles de la Tarea"
+  },
+  "results": {
+    "title": "Resultados de Generación",
+    "refresh": "Actualizar",
+    "empty": "Sin resultados de generación",
+    "empty_hint": "Haz clic en el botón de arriba para empezar a generar"
+  },
+  "footer": {
+    "txt2vid": "Texto a Video",
+    "img2vid": "Imagen a Video",
+    "terms": "Términos de Servicio",
+    "privacy": "Política de Privacidad",
+    "refund": "Política de Reembolso",
+    "contact": "Contáctanos"
+  },
+  "lang": {
+    "zh": "中文",
+    "zh-TW": "繁體中文",
+    "en": "English",
+    "ja": "日本語",
+    "ko": "한국어",
+    "ru": "Русский",
+    "vi": "Tiếng Việt",
+    "es": "Español"
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "confirm_password": "Confirmar Contraseña",
+    "display_name": "Nombre de Mostrar",
+    "remember_me": "Recuérdame",
+    "forgot_password": "¿Olvidaste tu contraseña?",
+    "no_account": "¿No tienes una cuenta?",
+    "already_have_account": "¿Ya tienes una cuenta?",
+    "loginBtn": "Iniciar Sesión",
+    "registerBtn": "Registrarse",
+    "processing": "Procesando…",
+    "google": "Iniciar sesión con Google",
+    "download": "Descargar",
+    "copy_link": "Copiar Enlace",
+    "link_copied": "Enlace copiado al portapapeles",
+    "enter_video_desc": "Ingresa la descripción del video",
+    "enter_image_desc": "Ingresa la descripción de la imagen",
+    "fillAll": "Por favor completa todos los campos obligatorios",
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+    "title": "Bienvenido",
+    "subtitle": "Inicia sesión o regístrate para comenzar",
+    "or": "O",
+    "namePlaceholder": "Tu nombre de usuario",
+    "confirmPassword": "Confirmar contraseña",
+    "displayName": "Nombre de usuario",
+    "agree": "He leído y acepto los",
+    "terms": "Términos de servicio",
+    "and": "y",
+    "privacy": "Política de privacidad",
+    "please_login": "Inicie sesión para usar la mejora de IA",
+    "loginFailed": "Error de inicio de sesión",
+    "registerFailed": "Error de registro",
+    "agreeRequired": "Por favor lea y acepte los Términos de servicio y la Política de privacidad"
+  },
+  "profile": {
+    "title": "Centro de Usuario - Sedgo 2",
+    "menu": {
+      "works": "Mis Obras",
+      "subscription": "Suscripción",
+      "team": "Equipo",
+      "credits": "Historial de Créditos",
+      "orders": "Historial de Pedidos",
+      "profile": "Perfil",
+      "contact": "Contáctanos",
+      "logout": "Cerrar Sesión"
+    },
+    "page": {
+      "works": {
+        "title": "Mis Obras",
+        "desc": "Gestiona y visualiza todos los videos e imágenes que has generado"
+      },
+      "contact": {
+        "desc": "¿Problema o sugerencia? Envía un ticket",
+        "title": "Enviar ticket"
+      },
+      "credits": {
+        "desc": "Ver registros de créditos",
+        "title": "Historial de créditos"
+      },
+      "orders": {
+        "desc": "Ver historial de pedidos",
+        "title": "Historial de pedidos"
+      },
+      "profile": {
+        "desc": "Administra tu cuenta",
+        "title": "Perfil"
+      },
+      "subscription": {
+        "desc": "Administra tu plan y facturación",
+        "title": "Suscripción"
+      }
+    },
+    "section": {
+      "works": {
+        "create": "+ Crear Nuevo Video",
+        "desc": "Administra todos tus videos e imágenes",
+        "title": "Mis trabajos"
+      },
+      "contact": {
+        "desc": "¿Problema o sugerencia? Envíanos un ticket.",
+        "title": "Enviar ticket"
+      },
+      "credits": {
+        "desc": "Ver registros de créditos.",
+        "title": "Historial de créditos"
+      },
+      "orders": {
+        "desc": "Ver historial de pedidos.",
+        "title": "Historial de pedidos"
+      },
+      "profile": {
+        "desc": "Administra tu cuenta",
+        "title": "Perfil"
+      },
+      "subscription": {
+        "desc": "Administra tu plan. Cancela cuando quieras.",
+        "title": "Suscripción"
+      }
+    },
+    "tabs": {
+      "video": "Videos",
+      "image": "Imágenes"
+    },
+    "filter": {
+      "all": "Todos los Videos",
+      "text": "Texto a Video",
+      "image": "Imagen a Video",
+      "date": "📅 Filtrar por Fecha"
+    },
+    "empty": {
+      "works": {
+        "title": "No se encontraron videos",
+        "desc": "Aún no has generado ningún video. ¡Comienza creando tu primer video!"
+      },
+      "team": {
+        "title": "Sin equipo aún",
+        "desc": "Aún no te has unido a ningún equipo. Suscríbete a un plan de equipo o espera una invitación."
+      },
+      "credits": "No se encontró historial de créditos.",
+      "orders": "No se encontraron pedidos.",
+      "image_desc": "Los registros de imágenes aparecerán aquí",
+      "image_title": "Sin registros de imágenes"
+    },
+    "team": {
+      "create": "Crear Plan de Equipo"
+    },
+    "credits": {
+      "buy": "Comprar Más Créditos"
+    },
+    "subscription": {
+      "unlock": "Desbloquear Sedgo Pro",
+      "no_plan": "Actualmente no tienes ningún plan de suscripción. Actualiza ahora para obtener el modelo revolucionario de generación de video AI multimodal de Sedgo.",
+      "choose": "Elige el Plan Perfecto →",
+      "annual_subscribe": "Suscripción anual",
+      "concurrent_tasks": "Tareas concurrentes",
+      "current_plan_btn": "Plan actual",
+      "max_resolution": "Resolución máxima",
+      "monthly_subscribe": "Suscripción mensual",
+      "points_per_month": "Créditos/mes"
+    },
+    "features": {
+      "multimodal": "Entrada Multimodal",
+      "consistency": "Consistencia de Personajes",
+      "audio": "Generación de Audio",
+      "fast": "Generación Rápida",
+      "edit": "Edición Precisa",
+      "privacy": "Protección de Privacidad"
+    },
+    "team_btn": {
+      "create": "Crear Plan de Equipo"
+    },
+    "credits_btn": {
+      "buy": "Comprar Más Créditos"
+    },
+    "table": {
+      "date": "Fecha",
+      "type": "Tipo",
+      "details": "Detalles",
+      "amount": "Cantidad",
+      "onetime_credits": "Créditos Únicos",
+      "subscription_credits": "Créditos de Suscripción",
+      "product": "Producto",
+      "status": "Estado",
+      "action": "Acción",
+      "credits_change": "Cambio de créditos"
+    },
+    "pagination": {
+      "records": "0 registros totales",
+      "orders": "0 pedidos",
+      "prev": "Anterior",
+      "next": "Siguiente",
+      "per_page": "página",
+      "page": "Página 1 / 0"
+    },
+    "form": {
+      "avatar": "Avatar",
+      "change_avatar": "Cambiar Avatar",
+      "username": "Nombre de Usuario",
+      "username_placeholder": "Ingresa nombre de usuario",
+      "email": "Correo Electrónico",
+      "password": "Contraseña",
+      "password_placeholder": "Ingresa nueva contraseña",
+      "confirm_password": "Confirmar Contraseña",
+      "confirm_password_placeholder": "Confirma nueva contraseña",
+      "save": "Guardar Cambios",
+      "confirm_new_password": "Confirmar nueva contraseña",
+      "confirm_new_password_placeholder": "Ingresa la nueva contraseña de nuevo",
+      "new_password": "Nueva contraseña",
+      "new_password_placeholder": "Nueva contraseña (mín. 6 caracteres)",
+      "old_password": "Contraseña antigua",
+      "old_password_placeholder": "Contraseña antigua (en blanco si no cambias)"
+    },
+    "contact": {
+      "email": "Correo Electrónico",
+      "email_placeholder": "Ingresa tu correo",
+      "subject": "Asunto",
+      "subject_placeholder": "Ingresa asunto",
+      "message": "Mensaje",
+      "message_placeholder": "Ingresa tu mensaje",
+      "send": "Enviar Mensaje",
+      "info": "Información de Contacto",
+      "hours": "Lunes-Viernes 9:00 - 18:00",
+      "attach_label": "Adjunto (opcional, imagen/video/PDF, máx. 20 MB)",
+      "dropzone": "Haz clic o arrastra para subir archivos",
+      "email_label": "Correo de contacto",
+      "fill_all": "Completa todos los campos",
+      "hours_label": "Horario de atención",
+      "message_label": "Descripción",
+      "my_tickets": "Mis tickets",
+      "other": "Otros métodos de contacto",
+      "send_fail": "Error al enviar",
+      "sending": "Enviando...",
+      "sent": "¡Ticket enviado! Lo procesaremos pronto.",
+      "subject_label": "Título del ticket",
+      "submit": "Enviar ticket",
+      "title": "Enviar ticket"
+    },
+    "logout_confirm": "¿Estás seguro de que quieres cerrar sesión?",
+    "avatar_success": "Avatar actualizado exitosamente",
+    "avatar_fail": "Error al actualizar avatar",
+    "enter_username": "Por favor ingresa nombre de usuario",
+    "profile_success": "Perfil actualizado exitosamente",
+    "address_copied": "Dirección copiada",
+    "attachment": "Archivo adjunto",
+    "buy_plan": "Comprar plan",
+    "choose_plan": "Elegir plan",
+    "credits_empty": "Sin registros de créditos",
+    "credits_records": "Total {total} registros, página {page}/{totalPages}",
+    "credits_topup": "₮ Recargar créditos",
+    "delete_confirm": "¿Eliminar este trabajo? No se puede deshacer.",
+    "delete_fail": "Error al eliminar",
+    "load_fail": "Error al cargar",
+    "loading": "Cargando...",
+    "orders_count": "0 pedidos",
+    "orders_empty": "Sin pedidos",
+    "orders_one": "1 pedido",
+    "payment": {
+      "cancelled": "Cancelado",
+      "copy_address": "Copiar dirección",
+      "create_fail": "Error al crear",
+      "expired": "Expirado",
+      "generating": "Generando pedido...",
+      "net_error": "Error de red, intenta de nuevo",
+      "order_status": "Pedido",
+      "remaining": "Tiempo restante",
+      "waiting": "Esperando transferencia..."
+    },
+    "pw_mismatch": "Las contraseñas no coinciden",
+    "pw_too_short": "La nueva contraseña debe tener al menos 6 caracteres",
+    "pw_update_fail": "Error al actualizar contraseña",
+    "save_fail": "Error al guardar",
+    "update_fail": "Error al actualizar",
+    "upload_fail": "Error al subir"
+  },
+  "user": {
+    "profile": "Perfil",
+    "apiKeys": "Claves API",
+    "subscription": "Suscripción",
+    "logout": "Cerrar sesión",
+    "apiKeyHint": "Clave para acceso a la API",
+    "currentSub": "Suscripción actual",
+    "noSub": "Sin suscripción",
+    "points": "Puntos"
+  },
+  "api": {
+    "label": "Desarrolladores",
+    "title": "Documentación de API",
+    "desc": "Integra la generación de video AI en tus aplicaciones.",
+    "docs": "Documentación de API",
+    "docs_desc": "Referencia completa de API con todos los endpoints, parámetros y ejemplos.",
+    "sdk": "Herramientas SDK",
+    "sdk_desc": "SDK para Python, JavaScript, Go y otros lenguajes de programación populares.",
+    "playground": "API Playground",
+    "playground_desc": "Prueba APIs en línea y verifica solicitudes y respuestas en tiempo real.",
+    "view_docs": "Ver Documentación",
+    "download_sdk": "Descargar SDK",
+    "try_now": "Probar ahora"
+  },
+  "support": {
+    "label": "Soporte",
+    "title": "Obtener ayuda",
+    "desc": "Estamos aquí para ayudarte.",
+    "guides": "Centro de ayuda",
+    "guides_desc": "Guías detalladas y tutoriales para empezar.",
+    "community": "Foro de la comunidad",
+    "community_desc": "Conéctate con otros usuarios, comparte consejos e ideas.",
+    "contact": "Contacto",
+    "contact_desc": "¿Tienes preguntas? Envíanos un correo electrónico.",
+    "visit": "Visitar centro de ayuda",
+    "join": "Unirse a la comunidad",
+    "email": "Enviar correo"
+  },
+  "contact_page": {
+    "page": {
+      "title": "Contáctenos",
+      "desc": "Estamos aquí para ayudarle"
+    },
+    "methods": {
+      "title": "Métodos de contacto",
+      "intro": "Si tiene alguna pregunta o sugerencia, no dude en contactarnos:"
+    },
+    "email": {
+      "title": "Soporte por correo electrónico",
+      "text": "Enviar correo a:",
+      "response": "Normalmente respondemos dentro de las 24 horas en días laborables"
+    },
+    "online": {
+      "title": "Soporte en línea",
+      "hours": "Horario: Lunes a Viernes 9:00 - 18:00",
+      "chat": "Soporte de chat disponible durante el horario laboral"
+    },
+    "feedback": {
+      "title": "Formulario de comentarios",
+      "visit": "Visite nuestro Centro de Ayuda para enviar comentarios",
+      "note": "Tomamos cada comentario en serio"
+    },
+    "social": {
+      "title": "Redes sociales",
+      "follow": "Síganos para las últimas actualizaciones",
+      "platforms": "WeChat, Weibo, Twitter"
+    },
+    "telegram": {
+      "title": "Telegram",
+      "join": "Únase a nuestro grupo de Telegram:",
+      "help": "Obtenga ayuda rápida y las últimas noticias"
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "intro": "Antes de contactarnos, es posible que desee consultar nuestras preguntas frecuentes:",
+      "page": "Página de preguntas frecuentes",
+      "help": "Centro de ayuda"
+    }
+  },
+  "api_page": {
+    "page": {
+      "title": "Documentación de API",
+      "desc": "Integre la generación de video AI en sus aplicaciones."
+    },
+    "quick_start": {
+      "title": "Inicio rápido",
+      "desc": "Con la API de Sedgo, puede integrar fácilmente la generación de video AI en sus aplicaciones."
+    },
+    "auth": {
+      "title": "Autenticación",
+      "desc": "Todas las solicitudes API requieren autenticación a través de API Key. Agregue el siguiente encabezado:"
+    },
+    "create_task": {
+      "title": "Crear tarea de video",
+      "desc": "Use el punto final POST /v1/tasks para crear una tarea de generación de video:"
+    },
+    "query_status": {
+      "title": "Consultar estado de tarea",
+      "desc": "Use el punto final GET /v1/tasks/{task_id} para consultar el estado de la tarea:"
+    },
+    "models": {
+      "title": "Modelos disponibles",
+      "sedgo_fast": "sedgo-fast - Modelo de generación rápida, adecuado para vista previa rápida",
+      "sedgo": "sedgo - Modelo de alta calidad, adecuado para salida final"
+    },
+    "response": {
+      "title": "Formato de respuesta"
+    }
+  },
+  "support_page": {
+    "page": {
+      "title": "Obtener ayuda",
+      "desc": "Estamos aquí para ayudarle."
+    },
+    "help_center": {
+      "title": "Centro de ayuda",
+      "intro": "Guías detalladas y tutoriales para ayudarle a comenzar.",
+      "guide": "📖 Guía de inicio - Aprenda cómo comenzar",
+      "tutorial": "🎬 Tutoriales de video - Domine técnicas avanzadas",
+      "api": "⚙️ Documentación de API - Integre en su aplicación",
+      "billing": "💰 Información de facturación - Entienda precios y recargas"
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "q1": "Q: ¿Cuánto tiempo toma la generación de video?",
+      "a1": "A: El tiempo de generación de video depende de la duración del video y el modelo seleccionado. Típicamente, un video de 10 segundos toma 1-2 minutos.",
+      "q2": "Q: ¿Qué resoluciones son compatibles?",
+      "a2": "A: Soportamos resoluciones de 720p, 1080p y 4K.",
+      "q3": "Q: ¿Cómo obtengo una API Key?",
+      "a3": "A: Después de iniciar sesión, puede generar y administrar sus API Keys en la configuración de API en su perfil."
+    },
+    "community": {
+      "title": "Foro de la comunidad",
+      "intro": "Conéctese con otros usuarios, comparta consejos e ideas. En la comunidad puede:",
+      "share": "Compartir su trabajo",
+      "inspiration": "Obtener inspiración creativa",
+      "suggest": "Enviar sugerencias y comentarios",
+      "help": "Ayudar a otros usuarios"
+    },
+    "contact": {
+      "title": "Contáctenos",
+      "intro": "Si tiene preguntas o sugerencias, envíe un correo a:",
+      "email": "support@sedgo.ai",
+      "response": "Normalmente respondemos dentro de las 24 horas en días laborables."
+    }
+  },
+  "privacy_page": {
+    "page": {
+      "title": "Política de privacidad",
+      "desc": "Valoramos su privacidad",
+      "intro": "Valoramos su privacidad. Esta política explica cómo recopilamos y protegemos su información"
+    },
+    "info": {
+      "title": "1. Introducción",
+      "intro": "Bienvenido a SedGoAI (en adelante, \"nosotros\" o \"la plataforma\"). Valoramos su privacidad. Esta Política de Privacidad explica cómo recopilamos, usamos, almacenamos y protegemos su información personal.",
+      "account": "Información de identidad personal: nombre, dirección de correo electrónico, número de teléfono",
+      "usage": "Información de cuenta: contraseña (almacenamiento cifrado), API Key",
+      "technical": "Datos de uso: contenido generado, avisos, frecuencia de uso"
+    },
+    "usage": {
+      "title": "2. Recopilación de información",
+      "service": "Recopilamos información que usted proporciona durante el registro y uso del servicio:",
+      "improve": "Usamos la información recopilada para:",
+      "security": "Proporcionar y mantener servicios",
+      "billing": "Procesar pagos y facturación",
+      "communication": "Mejorar productos y servicios",
+      "access": "Enviar notificaciones importantes y actualizaciones"
+    },
+    "sharing": {
+      "title": "3. Uso de información",
+      "intro": "No vendemos su información personal. Solo compartimos información en los siguientes casos:",
+      "consent": "Con su consentimiento explícito",
+      "legal": "Para cumplir con los requisitos legales",
+      "partners": "Para proteger la seguridad de la plataforma y los usuarios"
+    },
+    "security": {
+      "title": "4. Compartir información",
+      "intro": "Usamos medidas de seguridad estándar de la industria para proteger sus datos, incluyendo transmisión de datos cifrados, almacenamiento cifrado y control de acceso. Sin embargo, tenga en cuenta que ninguna medida de seguridad es absolutamente segura."
+    },
+    "rights": {
+      "title": "5. Seguridad de datos",
+      "intro": "Tiene derecho a acceder, corregir, eliminar su información personal o restringir nuestro procesamiento de sus datos. Por favor contacte a support@sedgo.ai para hacer solicitudes."
+    },
+    "changes": {
+      "title": "6. Derechos del usuario",
+      "intro": "Podemos actualizar esta política de vez en cuando. Los cambios significativos serán notificados por correo electrónico."
+    },
+    "contact": {
+      "title": "7. Actualizaciones de política",
+      "intro": "Si tiene preguntas, envíe un correo a:",
+      "email": "support@sedgo.ai"
+    }
+  },
+  "terms_page": {
+    "page": {
+      "title": "Términos de servicio",
+      "desc": "Términos y condiciones para usar los servicios de SedGo ai",
+      "intro": "Al usar nuestros servicios, acepta cumplir con los siguientes términos"
+    },
+    "acceptance": {
+      "title": "1. Aceptación de términos",
+      "intro": "Usar los servicios de SedGoAI significa que acepta cumplir con estos Términos de Servicio. Si no está de acuerdo, no use nuestros servicios."
+    },
+    "service": {
+      "title": "2. Descripción del servicio",
+      "intro": "SedGoAI proporciona servicios de generación de video impulsados por IA, incluyendo texto a video, imagen a video y otras funciones."
+    },
+    "user": {
+      "title": "3. Cuenta de usuario",
+      "intro": "Acepta no:",
+      "legal": "Violar cualquier ley o regulación",
+      "account": "Necesita registrar una cuenta para usar los servicios. Usted es responsable de mantener la seguridad de la cuenta y todas las actividades bajo su cuenta.",
+      "content": "Generar contenido ilegal o dañino",
+      "respect": "Abusar o atacar servicios"
+    },
+    "payment": {
+      "title": "4. Reglas de uso",
+      "intro": "Algunos servicios pueden requerir pago. Usted acepta:",
+      "charges": "6. Tarifas y pagos",
+      "billing": "Los servicios pueden generar cargos. Usted es responsable de pagar todos los cargos, incluyendo impuestos. El incumplimiento puede resultar en la suspensión del servicio."
+    },
+    "intellectual": {
+      "title": "5. Propiedad del contenido",
+      "intro": "Usted conserva la propiedad del contenido generado usando nuestros servicios. Nos reservamos el derecho de usar el contenido generado para mejorar los servicios."
+    },
+    "termination": {
+      "title": "7. Cambios en el servicio",
+      "intro": "Nos reservamos el derecho de cambiar o terminar los servicios en cualquier momento. Los cambios significativos serán notificados con anticipación.",
+      "violation": "9. Terminación",
+      "abuse": "Podemos terminar o suspender su cuenta en cualquier momento sin previo aviso si viola los términos."
+    },
+    "limitation": {
+      "title": "8. Aviso de exención de responsabilidad",
+      "intro": "Los servicios se proporcionan 'tal como están' sin ninguna garantía. No somos responsables de ninguna pérdida derivada del uso de nuestros servicios."
+    },
+    "contact": {
+      "title": "10. Contáctenos",
+      "intro": "Si tiene preguntas, envíe un correo a:",
+      "email": "support@sedgo.ai"
+    }
+  },
+  "refund_page": {
+    "page": {
+      "title": "Política de reembolso",
+      "desc": "Conozca nuestra política de reembolso",
+      "intro": "Conozca nuestras reglas y proceso de reembolso"
+    },
+    "scope": {
+      "title": "1. Ámbito de aplicación",
+      "intro": "Esta Política de Reembolso se aplica a todos los servicios y créditos comprados a través de SedGoAI."
+    },
+    "credits": {
+      "title": "2. Reembolso de créditos",
+      "intro": "Los créditos comprados pueden ser reembolsados en su totalidad dentro de los 7 días posteriores a la compra si no se han usado. Los créditos usados no son reembolsables."
+    },
+    "subscription": {
+      "title": "3. Reembolso de suscripción",
+      "monthly": "Las suscripciones mensuales pueden cancelarse en cualquier momento. Después de la cancelación, el servicio terminará al final del ciclo de facturación actual y no es reembolsable.",
+      "yearly": "Las suscripciones anuales pueden ser reembolsadas en su totalidad dentro de los 7 días posteriores a la compra. Después de 7 días, no hay reembolsos disponibles."
+    },
+    "process": {
+      "title": "4. Solicitud de reembolso",
+      "intro": "Para solicitar un reembolso, envíe un correo a support@sedgo.ai con la siguiente información:",
+      "email": "Correo registrado",
+      "order": "Número de pedido",
+      "date": "Fecha de compra",
+      "reason": "Motivo del reembolso"
+    },
+    "timeline": {
+      "title": "5. Tiempo de procesamiento",
+      "intro": "Las solicitudes de reembolso se procesarán dentro de los 5 días hábiles posteriores a la recepción. Los reembolsos se devolverán a la cuenta de pago original, el tiempo de llegada depende del método de pago."
+    },
+    "exceptions": {
+      "title": "6. Excepciones"
+    },
+    "ineligible": {
+      "title": "Los siguientes casos no son reembolsables:",
+      "intro": "Los siguientes casos no son reembolsables:",
+      "used": "Créditos usados",
+      "expired": "Pedidos más allá del período de reembolso",
+      "terminated": "Cuentas terminadas por violación de los Términos de servicio"
+    },
+    "contact": {
+      "title": "7. Contáctenos",
+      "intro": "Si tiene preguntas, envíe un correo a:",
+      "email": "support@sedgo.ai"
+    }
+  }
+}

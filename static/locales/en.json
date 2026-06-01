@@ -1,0 +1,926 @@
+{
+  "nav": {
+    "video": "AI Video",
+    "image": "AI Image",
+    "guide": "Guide",
+    "pricing": "Pricing",
+    "signin": "Sign In",
+    "home": "Home",
+    "features": "Features",
+    "api": "API",
+    "support": "Support",
+    "signup": "Free Trial"
+  },
+  "hero": {
+    "badge": "Now Available — Sedgo With Audio",
+    "sub": "Experience true multi-modal AI video creation with images, videos, audio, and text — all working together seamlessly."
+  },
+  "tabs": {
+    "video": "Video Generation",
+    "image": "AI Image",
+    "video_agent": "Video Agent",
+    "drama": "Drama Studio",
+    "developing": "In Development"
+  },
+  "gen": {
+    "desc": "Multimodal input with powerful reference capabilities",
+    "resolution": "Resolution",
+    "duration": "Duration",
+    "ratio": "Aspect Ratio",
+    "ratio_auto": "Auto",
+    "upload_label": "Upload",
+    "upload_count": "0 / 1 (PNG/JPG/WEBP)",
+    "add_ref": "Add image or video reference",
+    "files": "files",
+    "real_people": "Contains Real People",
+    "last_frame": "Return Last Frame",
+    "advanced": "Advanced",
+    "prompt_placeholder": "Describe your video... Use @image1, @video1 to reference uploaded files.",
+    "generate": "Generate ✦",
+    "prompt_eg": "e.g.",
+    "prompt_example": "A cinematic scene...",
+    "hint1": "Plan videos of any length with AI assistant and reference materials.",
+    "hint2": "Upload 1-9 reference images or videos and use @ references to create interactions. For example: Use @Image 1 as the first frame, @Image 2 as the last frame, and make them dance like @Video 1.",
+    "hint3": "Quickly generate single clips with direct prompt control.",
+    "reference": "Reference",
+    "images": "Images",
+    "hint_video_1": "Plan videos of any length with AI assistant and reference materials.",
+    "hint_video_2": "Upload 1-9 reference images or videos and use @ references to create interactions. For example: Use @Image 1 as the first frame, @Image 2 as the last frame, and make them dance like @Video 1.",
+    "hint_aivideo_1": "Quickly generate single clips with direct prompt control.",
+    "hint_aivideo_2": "Upload 1-9 reference images or videos and use @ references to create interactions. For example: Use @Image 1 as the first frame, @Image 2 as the last frame, and make them dance like @Video 1.",
+    "hint_image_1": "Generate AI images from text and reference images.",
+    "hint_image_2": "Upload up to 14 reference images and describe your target image in detail.",
+    "prompt_placeholder_video": "Describe your video... Use @image1, @video1 to reference uploaded files.",
+    "prompt_placeholder_aivideo": "Describe your video...",
+    "prompt_placeholder_image": "Describe your image...",
+    "prompt_placeholder_drama": "Upload a script, novel, or enter your story idea. The AI assistant will plan the script and generate videos.",
+    "auto": "Auto",
+    "custom": "Custom",
+    "upload_script": "Upload Script/Novel",
+    "single_episode": "Single Episode",
+    "series": "Series",
+    "pro_writer": "Professional Writer",
+    "ai_enhance": "AI Enhance Prompt",
+    "ai_enhance_text": "AI Enhance",
+    "original_prompt": "Original Description",
+    "enhanced_prompt": "AI Enhanced Prompt",
+    "enhanced_badge": "AI Generated",
+    "use_enhanced": "✓ Use Enhanced",
+    "use_enhanced_text": "Use Enhanced",
+    "clear_enhanced": "✕ Clear",
+    "edit_enhanced": "Edit",
+    "save_edit": "Save",
+    "please_enter_prompt": "Please enter a prompt first",
+    "optimizing": "Optimizing...",
+    "optimize_success": "Prompt optimization successful!",
+    "optimize_fail": "Prompt optimization failed, please try again",
+    "ref_mode": "Reference Mode",
+    "ref_mode_title": "Reference Mode",
+    "text2vid": "Text to Video",
+    "first_last_frame": "First & Last Frame Reference",
+    "multi_ref": "Image+Video+Audio Reference",
+    "text2vid_desc": "Generate video from text only",
+    "ref_hint_text2vid": "Tip: Last frame required, first frame optional",
+    "ref_hint_first_last_frame": "This mode uses first frame and last frame reference in order.",
+    "ref_hint_multi_ref": "This mode supports up to 9 image references.",
+    "img2vid": "Image Reference",
+    "img2vid_desc": "Upload image as reference",
+    "vid2vid": "Video Reference",
+    "vid2vid_desc": "Upload video as reference",
+    "audio2vid": "Audio Reference",
+    "audio2vid_desc": "Generate video from audio",
+    "ref_image": "Image Reference",
+    "ref_video": "Video Reference",
+    "ref_audio": "Audio Reference",
+    "ref_hint_img2vid": "Tip: Image Reference ×9 + Video Reference ×3 + Audio Reference ×3",
+    "ref_hint_vid2vid": "Tip: Video Reference ×3",
+    "real_people_title": "Real People Assets",
+    "use_real_people": "Use Real People Assets",
+    "real_people_hint": "Uploaded images will be used as selected asset type",
+    "avatar_id": "Avatar ID",
+    "asset_library": "Asset Library",
+    "asset_library_id": "Asset Library ID",
+    "real_human_portrait_id": "Real Human Portrait ID",
+    "action_id": "Action ID",
+    "background_id": "Background ID",
+    "voice_id": "Voice ID",
+    "subtitle_removal_title": "Subtitle Removal",
+    "subtitle_removal": "Subtitle Removal",
+    "upload": "Upload File",
+    "ref_image_placeholder": "Upload image or select from library",
+    "ref_video_placeholder": "Upload video or select from library",
+    "ref_audio_placeholder": "Upload audio or select from library"
+  },
+  "features": {
+    "label": "Why Sedgo",
+    "title": "Everything you need to create",
+    "desc": "Six powerful capabilities, unified in one model.",
+    "f1_title": "Multi-Modal Input",
+    "f1_desc": "Combine images, videos, audio clips, and text prompts in a single generation request for unprecedented creative control.",
+    "f2_title": "Reference Anything",
+    "f2_desc": "Tag up to 9 images and 3 videos as references. The model extracts style, subject, and motion with high fidelity.",
+    "f3_title": "Superior Consistency",
+    "f3_desc": "Characters, environments, and styles remain consistent across frames and multiple generation passes.",
+    "f4_title": "Precision Camera Control",
+    "f4_desc": "Precisely replicate motion patterns and camera movements from reference videos with frame-level accuracy.",
+    "f5_title": "Video Extension & Editing",
+    "f5_desc": "Extend existing videos, modify scenes, and iterate without starting from scratch.",
+    "f6_title": "Built-in Audio Generation",
+    "f6_desc": "Generate synchronized local audio alongside video output — music, sound effects, or voice."
+  },
+  "usecases": {
+    "label": "Use Cases",
+    "title": "Built for every creator",
+    "desc": "From independent creators to enterprise studios, Sedgo empowers everyone.",
+    "ad": "Advertising",
+    "ad_desc": "High-impact brand videos",
+    "edu": "Education",
+    "edu_desc": "Engaging explainer content",
+    "story": "Storytelling",
+    "story_desc": "Narrative-driven scenes",
+    "social": "Social Media",
+    "social_desc": "Short-form viral content",
+    "dance": "Motion/Dance",
+    "dance_desc": "Choreography & motion capture",
+    "edit": "Video Editing",
+    "edit_desc": "AI-assisted post-production",
+    "film": "Film Previsualization",
+    "film_desc": "Bring storyboards to life",
+    "realestate": "Real Estate",
+    "realestate_desc": "Immersive property showcases",
+    "music": "Music Sync",
+    "music_desc": "Audio-responsive videos"
+  },
+  "how": {
+    "label": "How It Works",
+    "title": "Create video in three steps",
+    "desc": "From idea to final video in minutes.",
+    "s1_title": "Upload Assets",
+    "s1_desc": "Add images, videos, and audio as references — up to 12 files.",
+    "s2_title": "Describe Your Vision",
+    "s2_desc": "Write prompts and use <code>@image1</code>, <code>@video1</code> tags to reference uploaded files.",
+    "s3_title": "Generate & Download",
+    "s3_desc": "Wait for AI to generate your video, then download and share or edit."
+  },
+  "faq": {
+    "label": "FAQ",
+    "title": "Frequently Asked Questions",
+    "desc": "Everything you need to know about Sedgo.",
+    "q1": "How many reference files can I upload?",
+    "a1": "Up to 12 files: 9 images, 3 videos (≤15s), and 3 audio clips (≤15s).",
+    "q2": "What video lengths are supported?",
+    "a2": "Sedgo supports video generation from 4 to 15 seconds, defaulting to 5 seconds.",
+    "q3": "Do generated videos have watermarks?",
+    "a3": "No watermarks. You have full ownership of generated content.",
+    "q4": "What image/video formats are supported?",
+    "a4": "Images: PNG, JPG, JPEG, WEBP. Videos: MP4, MOV, WEBM. Audio: MP3, WAV, AAC.",
+    "q5": "How are points calculated?",
+    "a5": "Points are consumed per second of generated video, with rates depending on the selected model and resolution. Points never expire.",
+    "q6": "How do I contact customer support?",
+    "a6": "Send an email to support@sedgo.ai. Responses typically within 24 hours on weekdays."
+  },
+  "pricing": {
+    "label": "Pricing",
+    "title": "Choose the best plan for you",
+    "desc": "All plans include core features and technical support.",
+    "trial": "Free Trial",
+    "trial_desc": "New user exclusive experience",
+    "pro": "Pro",
+    "pro_desc": "For individual creators",
+    "team": "Team",
+    "team_desc": "For team collaboration",
+    "enterprise": "Enterprise",
+    "enterprise_desc": "Custom solutions",
+    "monthly": "/month",
+    "monthly_annual": "/month (billed annually)",
+    "yearly": "Yearly",
+    "annual": "Yearly",
+    "save": "Save 40%",
+    "billed_yearly": "Billed annually",
+    "points": "Points",
+    "points_per_month": "Points/month",
+    "minutes": "Minutes",
+    "max_batch_size": "Max batch size",
+    "max_concurrent_tasks": "Max concurrent tasks",
+    "full_hd": "Full HD",
+    "hd": "HD",
+    "output_support": "Output support",
+    "priority_support": "Priority support",
+    "custom_watermark": "Custom watermark",
+    "seedance_video": "Sedgo AI Video",
+    "multi_models": "Multi AI video models",
+    "private_space": "Private video space",
+    "recommended": "Recommended",
+    "annual_total": "Annual total",
+    "subscribe_now": "Subscribe Now",
+    "free_trial": "Free Trial",
+    "start_free_trial": "Start Free Trial",
+    "tab": {
+      "team": "Plans",
+      "credits": "Credit Packs"
+    },
+    "credits": {
+      "basic": "Starter Pack",
+      "basic_desc": "Perfect for beginners and individual users",
+      "creator": "Creator Pack",
+      "creator_desc": "Perfect for most content creators",
+      "elite": "Elite Pack",
+      "elite_desc": "Perfect for professional users",
+      "advanced": "Advanced Pack",
+      "advanced_desc": "Perfect for high-volume users",
+      "super": "Super Pack",
+      "super_desc": "Perfect for enterprise users",
+      "points_1k": "✓ 1,000 Points",
+      "points_3k": "✓ 3,000 Points",
+      "points_8k": "✓ 8,000 Points",
+      "points_30k": "✓ 30,000 Points",
+      "points_100k": "✓ 100,000 Points",
+      "all_features": "✓ All features included",
+      "no_expire": "✓ Points never expire",
+      "buy_now": "Buy Now"
+    },
+    "plans": {
+      "name_1": "Free Trial",
+      "desc_1": "Exclusive trial package for new users",
+      "name_2": "Team",
+      "desc_2": "For small and medium teams",
+      "name_3": "Team Pro",
+      "desc_3": "For professional teams and enterprises"
+    },
+    "model_pricing": "Sedgo Model Points Pricing",
+    "points_per_second": "Points consumed per second of generation",
+    "series": "Sedgo Series",
+    "series_v1": "Sedgo 1.x Series",
+    "table": {
+      "model": "Model",
+      "resolution": "Resolution",
+      "points_per_sec": "Points/sec",
+      "cost_5s": "5s Cost",
+      "cost_10s": "10s Cost",
+      "cost_15s": "15s Cost"
+    }
+  },
+  "js": {
+    "created": "Failed to create task: ",
+    "gen_failed": "Generation failed: ",
+    "timeout": "Timeout, please try again later.",
+    "error": "Error: ",
+    "download": "⬇ Download",
+    "uploading": "⏳ Uploading…",
+    "attached": " files attached",
+    "signin_first": "Please sign in first.",
+    "signed_in": "Signed in",
+    "signed_in_alt": "Signed in ✓",
+    "unknown_error": "Unknown error",
+    "subscribe_success": "Subscription successful",
+    "subscribe_failed": "Subscription failed",
+    "select_endpoint": "Please select an endpoint",
+    "auto": "Auto",
+    "no_endpoints": "No endpoints available",
+    "load_failed": "Load failed",
+    "no_description": "No description",
+    "status_processing": "Processing",
+    "status_success": "Success",
+    "status_failed": "Failed",
+    "status_pending": "Pending",
+    "status_unknown": "Unknown",
+    "time_just_now": "Just now",
+    "time_minutes_ago": "minutes ago",
+    "time_hours_ago": "hours ago",
+    "generate_image": "Generate Image",
+    "video_generation": "Video Generation",
+    "no_data": "No data available",
+    "load_error": "Load failed",
+    "select_asset_first": "Please select an asset first",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "retry_generate": "↺ Regenerate",
+    "status_cancelled": "Cancelled",
+    "status_error": "Error",
+    "task_cancelled": "Task cancelled",
+    "network_error_retry": "Network error, please retry manually",
+    "retry_failed": "Regeneration failed",
+    "create_failed": "Failed to create task: ",
+    "generate": "Generate",
+    "generating": "Generating...",
+    "max_files": "Maximum {n} files allowed",
+    "processing": "Processing…",
+    "upload_error": "Upload error",
+    "upload_failed": "Upload failed",
+    "loading": "Loading...",
+    "confirm_select": "Confirm Selection",
+    "no_uploads": "No uploaded files",
+    "asset_unavailable": "This feature requires special access. Please contact support.",
+    "admin_sender": "Admin",
+    "billing_annual": "Annual",
+    "billing_monthly": "Monthly",
+    "choose_topup": "Choose Top-up Package",
+    "current_plan": "Current Plan",
+    "delete": "🗑 Delete",
+    "expires_at": "Expires",
+    "me_sender": "Me",
+    "no_tickets": "No tickets yet",
+    "payment_success": "Payment Successful!",
+    "payment_success_desc": "Credits/subscription activated",
+    "points_unit": "Credits",
+    "remaining_points": "Remaining Credits",
+    "reply_empty": "Please enter a reply",
+    "request_fail": "Request failed",
+    "segment_progress": "Segment {done}/{total} · {pct}%",
+    "send": "Send",
+    "sub_active": "Active",
+    "sub_cancelled": "Cancelled",
+    "sub_expired": "Expired",
+    "sub_pending": "Pending",
+    "ticket_active": "Open",
+    "ticket_closed": "Ticket closed",
+    "ticket_closed_label": "Closed",
+    "ticket_reply_placeholder": "Continue replying...",
+    "type_admin_adjust": "Admin Adjustment",
+    "type_consume": "Consumed",
+    "type_earn": "Earned",
+    "type_image": "🖼️ Image",
+    "type_long_video": "🎬 Long Video",
+    "type_subscription": "Subscription",
+    "type_video": "🎬 Video",
+    "unknown": "Unknown",
+    "upgrade_hint": "Upgrade now for more credits and features"
+  },
+  "modal": {
+    "description": "Description",
+    "status": "Status",
+    "created_at": "Created At",
+    "points_consumed": "Points Consumed",
+    "title": "Task Details"
+  },
+  "results": {
+    "title": "Generation Results",
+    "refresh": "Refresh",
+    "empty": "No generation results",
+    "empty_hint": "Click the button above to start generating"
+  },
+  "lang": {
+    "zh": "中文",
+    "zh-TW": "繁體中文",
+    "en": "English",
+    "ja": "日本語",
+    "ko": "한국어",
+    "ru": "Русский",
+    "vi": "Tiếng Việt",
+    "es": "Español"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "display_name": "Display Name",
+    "remember_me": "Remember me",
+    "forgot_password": "Forgot password?",
+    "no_account": "Don't have an account?",
+    "already_have_account": "Already have an account?",
+    "loginBtn": "Login",
+    "registerBtn": "Register",
+    "processing": "Processing…",
+    "google": "Sign in with Google",
+    "download": "Download",
+    "copy_link": "Copy Link",
+    "link_copied": "Link copied to clipboard",
+    "enter_video_desc": "Enter video description",
+    "enter_image_desc": "Enter image description",
+    "fillAll": "Please fill all required fields",
+    "passwordMismatch": "Passwords do not match",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "title": "Welcome",
+    "subtitle": "Login or register to get started",
+    "or": "or",
+    "namePlaceholder": "Your display name",
+    "confirmPassword": "Confirm Password",
+    "displayName": "Display Name",
+    "agree": "I have read and agree to the",
+    "terms": "Terms of Service",
+    "and": "and",
+    "privacy": "Privacy Policy",
+    "please_login": "Please log in to use AI enhancement",
+    "loginFailed": "Login failed",
+    "registerFailed": "Registration failed",
+    "agreeRequired": "Please read and agree to the Terms of Service and Privacy Policy"
+  },
+  "user": {
+    "profile": "Profile",
+    "apiKeys": "API Keys",
+    "subscription": "Subscription",
+    "logout": "Logout",
+    "apiKeyHint": "Key for API access",
+    "currentSub": "Current Subscription",
+    "noSub": "No subscription",
+    "points": "Points"
+  },
+  "footer": {
+    "txt2vid": "Text to Video",
+    "img2vid": "Image to Video",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "refund": "Refund Policy",
+    "contact": "Contact Us"
+  },
+  "profile": {
+    "title": "User Center - Sedgo 2",
+    "menu": {
+      "works": "My Works",
+      "subscription": "Subscription",
+      "team": "Team",
+      "credits": "Credit History",
+      "orders": "Orders",
+      "profile": "Profile",
+      "contact": "Contact Us",
+      "logout": "Logout"
+    },
+    "page": {
+      "works": {
+        "title": "My Works",
+        "desc": "Manage and browse all your generated videos and images"
+      },
+      "contact": {
+        "desc": "Have an issue or suggestion? Submit a ticket and we will respond ASAP",
+        "title": "Submit Ticket"
+      },
+      "credits": {
+        "desc": "View all credit earning and usage records",
+        "title": "Credit History"
+      },
+      "orders": {
+        "desc": "View payment order history",
+        "title": "Order History"
+      },
+      "profile": {
+        "desc": "Manage your account info and preferences",
+        "title": "Profile"
+      },
+      "subscription": {
+        "desc": "Manage your subscription plan and billing",
+        "title": "Subscription"
+      }
+    },
+    "section": {
+      "works": {
+        "create": "+ Create New Video",
+        "desc": "Manage and browse all your generated videos and images",
+        "title": "My Works"
+      },
+      "contact": {
+        "desc": "Have an issue or suggestion? Submit a ticket and we will respond ASAP.",
+        "title": "Submit Ticket"
+      },
+      "credits": {
+        "desc": "View all credit earning and usage records.",
+        "title": "Credit History"
+      },
+      "orders": {
+        "desc": "View history of all payment orders.",
+        "title": "Order History"
+      },
+      "profile": {
+        "desc": "Manage your account information and preferences",
+        "title": "Profile"
+      },
+      "subscription": {
+        "desc": "Manage your subscription plan and billing. Cancel anytime.",
+        "title": "Subscription"
+      }
+    },
+    "tabs": {
+      "video": "Videos",
+      "image": "Images"
+    },
+    "filter": {
+      "all": "All Videos",
+      "text": "Text to Video",
+      "image": "Image to Video",
+      "date": "📅 Filter by Date"
+    },
+    "empty": {
+      "works": {
+        "title": "No Videos Found",
+        "desc": "You haven't generated any videos yet. Start creating your first video!"
+      },
+      "team": {
+        "title": "No Team Yet",
+        "desc": "You haven't joined any team. Subscribe to a team plan to create your own team, or wait for an invitation from a team owner."
+      },
+      "credits": "No credit history found.",
+      "orders": "No orders found.",
+      "image_desc": "Image generation records will appear here",
+      "image_title": "No image records"
+    },
+    "team": {
+      "create": "Create Team Plan"
+    },
+    "credits": {
+      "buy": "Buy More Credits"
+    },
+    "subscription": {
+      "unlock": "Unlock Sedgo Pro",
+      "no_plan": "You don't have any subscription plan yet. Upgrade now to get Sedgo revolutionary multimodal AI video generation model.",
+      "choose": "Choose Perfect Plan →",
+      "annual_subscribe": "Annual Subscription",
+      "concurrent_tasks": "Concurrent Tasks",
+      "current_plan_btn": "Current Plan",
+      "max_resolution": "Max Resolution",
+      "monthly_subscribe": "Monthly Subscription",
+      "points_per_month": "Credits/month"
+    },
+    "features": {
+      "multimodal": "Multimodal Input",
+      "consistency": "Character Consistency",
+      "audio": "Audio Generation",
+      "fast": "Fast Generation",
+      "edit": "Precise Editing",
+      "privacy": "Privacy Protection"
+    },
+    "team_btn": {
+      "create": "Create Team Plan"
+    },
+    "credits_btn": {
+      "buy": "Buy More Credits"
+    },
+    "table": {
+      "date": "Date",
+      "type": "Type",
+      "details": "Details",
+      "amount": "Amount",
+      "onetime_credits": "One-time Credits",
+      "subscription_credits": "Subscription Credits",
+      "product": "Product",
+      "status": "Status",
+      "action": "Action",
+      "credits_change": "Credits Change"
+    },
+    "pagination": {
+      "records": "0 records total",
+      "orders": "0 orders",
+      "prev": "Previous",
+      "next": "Next",
+      "per_page": "page",
+      "page": "Page 1 / 0"
+    },
+    "form": {
+      "avatar": "Avatar",
+      "change_avatar": "Change Avatar",
+      "username": "Username",
+      "username_placeholder": "Enter username",
+      "email": "Email",
+      "password": "Password",
+      "password_placeholder": "Enter new password",
+      "confirm_password": "Confirm Password",
+      "confirm_password_placeholder": "Confirm new password",
+      "save": "Save Changes",
+      "confirm_new_password": "Confirm New Password",
+      "confirm_new_password_placeholder": "Enter new password again",
+      "new_password": "New Password",
+      "new_password_placeholder": "Enter new password (min 6 chars)",
+      "old_password": "Old Password",
+      "old_password_placeholder": "Enter old password (leave blank if not changing)"
+    },
+    "contact": {
+      "email": "Email",
+      "email_placeholder": "Enter your email",
+      "subject": "Subject",
+      "subject_placeholder": "Enter subject",
+      "message": "Message",
+      "message_placeholder": "Enter your message",
+      "send": "Send Message",
+      "info": "Contact Information",
+      "hours": "Mon-Fri 9:00 - 18:00",
+      "attach_label": "Attachment (optional, image/video/PDF, max 20MB each)",
+      "dropzone": "Click or drag to upload files",
+      "email_label": "Contact Email",
+      "fill_all": "Please fill in all fields",
+      "hours_label": "Business Hours",
+      "message_label": "Description",
+      "my_tickets": "My Tickets",
+      "other": "Other Contact Methods",
+      "send_fail": "Send failed",
+      "sending": "Sending...",
+      "sent": "Ticket submitted! We will process it ASAP.",
+      "subject_label": "Ticket Title",
+      "submit": "Submit Ticket",
+      "title": "Submit Ticket"
+    },
+    "logout_confirm": "Are you sure you want to logout?",
+    "avatar_success": "Avatar updated successfully",
+    "avatar_fail": "Failed to update avatar",
+    "enter_username": "Please enter username",
+    "profile_success": "Profile updated successfully",
+    "address_copied": "Address copied",
+    "attachment": "Attachment",
+    "buy_plan": "Buy Plan",
+    "choose_plan": "Choose Plan",
+    "credits_empty": "No credit records found",
+    "credits_records": "Total {total} records, page {page}/{totalPages}",
+    "credits_topup": "₮ Top Up Credits",
+    "delete_confirm": "Delete this work? This cannot be undone.",
+    "delete_fail": "Delete failed",
+    "load_fail": "Load failed",
+    "loading": "Loading...",
+    "orders_count": "0 orders",
+    "orders_empty": "No order records",
+    "orders_one": "1 order",
+    "payment": {
+      "cancelled": "Cancelled",
+      "copy_address": "Copy Address",
+      "create_fail": "Create failed",
+      "expired": "Expired",
+      "generating": "Generating order...",
+      "net_error": "Network error, please retry",
+      "order_status": "Order",
+      "remaining": "Time remaining",
+      "waiting": "Waiting for transfer..."
+    },
+    "pw_mismatch": "Passwords do not match",
+    "pw_too_short": "New password must be at least 6 characters",
+    "pw_update_fail": "Password update failed",
+    "save_fail": "Save failed",
+    "update_fail": "Update failed",
+    "upload_fail": "Upload failed"
+  },
+  "api": {
+    "label": "Developers",
+    "title": "API Documentation",
+    "desc": "Integrate AI video generation into your applications.",
+    "docs": "API Documentation",
+    "docs_desc": "Comprehensive API reference with all endpoints, parameters, and examples.",
+    "sdk": "SDK Tools",
+    "sdk_desc": "SDKs for Python, JavaScript, Go and other popular programming languages.",
+    "playground": "API Playground",
+    "playground_desc": "Test APIs online and view requests and responses in real-time.",
+    "view_docs": "View Docs",
+    "download_sdk": "Download SDK",
+    "try_now": "Try Now"
+  },
+  "support": {
+    "label": "Support",
+    "title": "Get Help",
+    "desc": "We're here to help you.",
+    "guides": "Help Center",
+    "guides_desc": "Detailed guides and tutorials to help you get started.",
+    "community": "Community Forum",
+    "community_desc": "Connect with other users, share tips and ideas.",
+    "contact": "Contact Us",
+    "contact_desc": "Have questions? Send us an email and we'll respond quickly.",
+    "visit": "Visit Help Center",
+    "join": "Join Community",
+    "email": "Send Email"
+  },
+  "contact_page": {
+    "page": {
+      "title": "Contact Us",
+      "desc": "We're here to help"
+    },
+    "methods": {
+      "title": "Contact Methods",
+      "intro": "If you have any questions or suggestions, feel free to contact us:"
+    },
+    "email": {
+      "title": "Email Support",
+      "text": "Send email to:",
+      "response": "Typically responds within 24 hours on weekdays"
+    },
+    "online": {
+      "title": "Online Support",
+      "hours": "Hours: Monday to Friday 9:00 - 18:00",
+      "chat": "Chat support available during business hours"
+    },
+    "feedback": {
+      "title": "Feedback Form",
+      "visit": "Please visit our Help Center to submit feedback",
+      "note": "We take every feedback seriously"
+    },
+    "social": {
+      "title": "Social Media",
+      "follow": "Follow us for latest updates",
+      "platforms": "WeChat, Weibo, Twitter"
+    },
+    "telegram": {
+      "title": "Telegram",
+      "join": "Join our Telegram group:",
+      "help": "Get quick help and latest news"
+    },
+    "faq": {
+      "title": "FAQ",
+      "intro": "Before contacting us, you might want to check our FAQ:",
+      "page": "FAQ Page",
+      "help": "Help Center"
+    }
+  },
+  "api_page": {
+    "page": {
+      "title": "API Documentation",
+      "desc": "Integrate AI video generation into your applications."
+    },
+    "quick_start": {
+      "title": "Quick Start",
+      "desc": "With Sedgo API, you can easily integrate AI video generation into your applications."
+    },
+    "auth": {
+      "title": "Authentication",
+      "desc": "All API requests require authentication via API Key. Add the following header:"
+    },
+    "create_task": {
+      "title": "Create Video Task",
+      "desc": "Use the POST /v1/tasks endpoint to create a video generation task:"
+    },
+    "query_status": {
+      "title": "Query Task Status",
+      "desc": "Use the GET /v1/tasks/{task_id} endpoint to query task status:"
+    },
+    "models": {
+      "title": "Available Models",
+      "sedgo_fast": "sedgo-fast - Fast generation model, suitable for quick preview",
+      "sedgo": "sedgo - High quality model, suitable for final output"
+    },
+    "response": {
+      "title": "Response Format"
+    }
+  },
+  "support_page": {
+    "page": {
+      "title": "Get Help",
+      "desc": "We're here to help you."
+    },
+    "help_center": {
+      "title": "Help Center",
+      "intro": "Detailed guides and tutorials to help you get started.",
+      "guide": "📖 Getting Started Guide - Learn how to start using",
+      "tutorial": "🎬 Video Tutorials - Master advanced techniques",
+      "api": "⚙️ API Documentation - Integrate into your application",
+      "billing": "💰 Billing Info - Understand pricing and top-up"
+    },
+    "faq": {
+      "title": "FAQ",
+      "q1": "Q: How long does video generation take?",
+      "a1": "A: Video generation time depends on video length and selected model. Typically, a 10-second video takes 1-2 minutes.",
+      "q2": "Q: What resolutions are supported?",
+      "a2": "A: We support 720p, 1080p, and 4K resolutions.",
+      "q3": "Q: How do I get an API Key?",
+      "a3": "A: After logging in, you can generate and manage your API Keys in the API settings in your profile."
+    },
+    "community": {
+      "title": "Community Forum",
+      "intro": "Connect with other users, share tips and ideas. In the community you can:",
+      "share": "Share your work",
+      "inspiration": "Get creative inspiration",
+      "suggest": "Submit suggestions and feedback",
+      "help": "Help other users"
+    },
+    "contact": {
+      "title": "Contact Us",
+      "intro": "If you have questions or suggestions, please send an email to:",
+      "email": "support@sedgo.ai",
+      "response": "Typically responds within 24 hours on weekdays."
+    }
+  },
+  "privacy_page": {
+    "page": {
+      "title": "Privacy Policy",
+      "desc": "We value your privacy",
+      "intro": "We value your privacy. This policy explains how we collect and protect your information"
+    },
+    "info": {
+      "title": "1. Introduction",
+      "intro": "Welcome to SedGoAI (hereinafter referred to as \"we\" or \"platform\"). We value your privacy. This Privacy Policy explains how we collect, use, store, and protect your personal information.",
+      "account": "Personal Identity Information: Name, email address, phone number",
+      "usage": "Account Information: Password (encrypted storage), API Key",
+      "technical": "Usage Data: Generated content, prompts, usage frequency"
+    },
+    "usage": {
+      "title": "2. Information Collection",
+      "service": "We collect information you provide during registration and service usage, including but not limited to:",
+      "improve": "We use the collected information to:",
+      "security": "Provide and maintain services",
+      "billing": "Process payments and billing",
+      "communication": "Improve products and services",
+      "access": "Send important notifications and updates"
+    },
+    "sharing": {
+      "title": "3. Information Usage",
+      "intro": "We do not sell your personal information. We only share information in the following cases:",
+      "consent": "With your explicit consent",
+      "legal": "To comply with legal requirements",
+      "partners": "To protect platform and user security"
+    },
+    "security": {
+      "title": "4. Information Sharing",
+      "intro": "We use industry-standard security measures to protect your data, including encrypted transmission, storage encryption, and access controls. However, please note that no security measure is absolutely secure."
+    },
+    "rights": {
+      "title": "5. Data Security",
+      "intro": "You have the right to access, correct, delete your personal information, or restrict our processing of your data. Please contact support@sedgo.ai to make requests."
+    },
+    "changes": {
+      "title": "6. User Rights",
+      "intro": "We may update this policy from time to time. Significant changes will be notified via email."
+    },
+    "contact": {
+      "title": "7. Policy Updates",
+      "intro": "If you have questions, please send an email to:",
+      "email": "support@sedgo.ai"
+    }
+  },
+  "terms_page": {
+    "page": {
+      "title": "Terms of Service",
+      "desc": "Terms and conditions for using SedGo ai services",
+      "intro": "By using our services, you agree to comply with the following terms"
+    },
+    "acceptance": {
+      "title": "1. Acceptance of Terms",
+      "intro": "Using SedGoAI services means you agree to comply with these Terms of Service. If you do not agree, please do not use our services."
+    },
+    "service": {
+      "title": "2. Service Description",
+      "intro": "SedGoAI provides AI-driven video generation services, including text-to-video, image-to-video and other features."
+    },
+    "user": {
+      "title": "3. User Account",
+      "intro": "You agree not to:",
+      "legal": "Violate any laws or regulations",
+      "account": "You need to register an account to use the services. You are responsible for maintaining account security and all activities under your account.",
+      "content": "Generate illegal or harmful content",
+      "respect": "Abuse or attack services"
+    },
+    "payment": {
+      "title": "4. Usage Rules",
+      "intro": "Some services may require payment. You agree to:",
+      "charges": "6. Fees and Payment",
+      "billing": "Services may incur charges. You are responsible for paying all fees, including taxes. Non-payment may result in service suspension."
+    },
+    "intellectual": {
+      "title": "5. Content Ownership",
+      "intro": "You retain ownership of the content generated using our services. We reserve the right to use generated content to improve services."
+    },
+    "termination": {
+      "title": "7. Service Changes",
+      "intro": "We reserve the right to change or terminate services at any time. Significant changes will be notified in advance.",
+      "violation": "9. Termination",
+      "abuse": "We may terminate or suspend your account at any time without prior notice if you violate these terms."
+    },
+    "limitation": {
+      "title": "8. Disclaimer",
+      "intro": "Services are provided 'as is' without any warranties. We are not liable for any losses arising from the use of our services."
+    },
+    "contact": {
+      "title": "10. Contact Us",
+      "intro": "If you have questions, please send an email to:",
+      "email": "support@sedgo.ai"
+    }
+  },
+  "refund_page": {
+    "page": {
+      "title": "Refund Policy",
+      "desc": "Learn about our refund policy",
+      "intro": "Learn about our refund rules and process"
+    },
+    "scope": {
+      "title": "1. Scope of Application",
+      "intro": "This Refund Policy applies to all services and credits purchased through SedGoAI."
+    },
+    "credits": {
+      "title": "2. Credits Refund",
+      "intro": "Purchased credits can be refunded in full within 7 days of purchase if unused. Used credits are non-refundable."
+    },
+    "subscription": {
+      "title": "3. Subscription Refund",
+      "monthly": "Monthly subscriptions can be cancelled at any time. After cancellation, service will terminate at the end of the current billing cycle and is non-refundable.",
+      "yearly": "Yearly subscriptions can be refunded in full within 7 days of purchase. After 7 days, no refunds are available."
+    },
+    "process": {
+      "title": "4. Refund Request",
+      "intro": "To request a refund, please send an email to support@sedgo.ai with the following information:",
+      "email": "Registered email",
+      "order": "Order number",
+      "date": "Purchase date",
+      "reason": "Reason for refund"
+    },
+    "timeline": {
+      "title": "5. Processing Time",
+      "intro": "Refund requests will be processed within 5 business days of receipt. Refunds will be returned to the original payment account, with arrival time depending on the payment method."
+    },
+    "exceptions": {
+      "title": "6. Exceptions"
+    },
+    "ineligible": {
+      "title": "The following cases are non-refundable:",
+      "intro": "The following cases are non-refundable:",
+      "used": "Used credits",
+      "expired": "Orders beyond refund period",
+      "terminated": "Accounts terminated for violation of Terms of Service"
+    },
+    "contact": {
+      "title": "7. Contact Us",
+      "intro": "If you have questions, please send an email to:",
+      "email": "support@sedgo.ai"
+    }
+  }
+}

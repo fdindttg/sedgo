@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN" prefix="og: https://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Basic SEO -->
+  <meta name="description" content="SedGo AI User Center | Manage your profile, subscriptions, credits, and AI-generated video works. Track your orders, billing history, and API keys." />
+  <meta name="keywords" content="SedGo user center, profile management, subscription management, credits, AI video works, API keys, user dashboard, SedGo用户中心, 个人资料管理, 订阅管理, 积分管理, API密钥" />
+  <meta name="robots" content="noindex, follow" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://sedgo.ai/pages/profile" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://sedgo.ai/pages/profile" />
+  <meta property="og:title" content="User Center | 用户中心 - SedGo AI" />
+  <meta property="og:description" content="Manage your SedGo AI account, subscriptions, and AI-generated video works." />
+  <meta property="og:site_name" content="SedGo AI" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/static/favicon.png" />
+
+  <title data-i18n="profile.title">User Center | 用户中心 - SedGo AI</title>
+  <link rel="stylesheet" href="/static/css/profile.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.12.2/i18next.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-http-backend/2.5.2/i18nextHttpBackend.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-browser-languagedetector/7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo" onclick="goHome()">
+        <div class="sidebar-logo-icon">S</div>
+        <span class="sidebar-logo-text">SedGo AI</span>
+      </div>
+    </div>
+    <ul class="sidebar-menu">
+      <li><a href="#" class="active" data-page="works"><span>📹</span> <span data-i18n="profile.menu.works">我的创作</span></a></li>
+      <li><a href="#" data-page="subscription"><span>💎</span> <span data-i18n="profile.menu.subscription">订阅</span></a></li>
+      <li><a href="#" data-page="credits"><span>💰</span> <span data-i18n="profile.menu.credits">信用历史</span></a></li>
+      <li><a href="#" data-page="orders"><span>📋</span> <span data-i18n="profile.menu.orders">订单记录</span></a></li>
+      <li><a href="#" data-page="profile"><span>👤</span> <span data-i18n="profile.menu.profile">个人资料</span></a></li>
+      <li><a href="#" data-page="contact"><span>🎫</span> <span data-i18n="profile.menu.contact">提交工单</span></a></li>
+      <li><a href="#" class="logout" onclick="doLogout()"><span>🚪</span> <span data-i18n="profile.menu.logout">登出</span></a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="header-left">
+        <h1 class="header-title" id="pageTitle" data-i18n="profile.page.works.title">我的创作</h1>
+        <span class="header-title-desc" id="pageDesc" data-i18n="profile.page.works.desc">管理和浏览您所有已生成的影片和图片</span>
+      </div>
+      <div class="header-right">
+        <div class="lang-dropdown" id="lang-dropdown">
+          <button class="lang-btn" id="lang-btn">中文</button>
+          <div class="lang-menu" id="lang-menu">
+            <div class="lang-option" data-lang="zh">中文</div>
+            <div class="lang-option" data-lang="zh-TW">繁體中文</div>
+            <div class="lang-option" data-lang="en">English</div>
+            <div class="lang-option" data-lang="ja">日本語</div>
+            <div class="lang-option" data-lang="ko">한국어</div>
+            <div class="lang-option" data-lang="ru">Русский</div>
+            <div class="lang-option" data-lang="vi">Tiếng Việt</div>
+            <div class="lang-option" data-lang="es">Español</div>
+          </div>
+        </div>
+        <button class="user-menu-btn">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <div>
+            <div class="user-name" id="userName">User</div>
+            <div class="user-email" id="userEmail">user@example.com</div>
+          </div>
+        </button>
+      </div>
+    </header>
+
+    <div class="content-area" id="contentArea">
+      <!-- My Works Page -->
+      <div id="page-works" class="page-content">
+        <div class="section-header">
+
+          <div class="section-actions">
+            <button class="btn-primary" onclick="createNewWork()" data-i18n="profile.section.works.create">+ 创建新影片</button>
+          </div>
+        </div>
+
+        <!-- Media Tabs -->
+        <div class="tabs">
+          <button class="tab works-tab active" data-tab="video" data-i18n="profile.tabs.video">🎬 影片</button>
+          <button class="tab works-tab" data-tab="image" data-i18n="profile.tabs.image">🖼️ 图片</button>
+        </div>
+
+        <!-- Works Grid -->
+        <div id="worksGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;">
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <div class="empty-state-title" data-i18n="profile.empty.works.title">没有找到影片</div>
+            <div class="empty-state-desc" data-i18n="profile.empty.works.desc">您尚未生成任何影片，开始创建您的第一部影片吧！</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subscription Page -->
+      <div id="page-subscription" class="page-content" style="display: none;">
+        <div class="section-header">
+
+          <div class="section-actions">
+            <button onclick="openTopupModal()" style="padding:8px 16px;background:var(--primary,#7c3aed);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:13px;" data-i18n="profile.credits_topup">₮ 充值积分</button>
+          </div>
+        </div>
+        <div id="subscriptionContent">
+          <div style="text-align:center;padding:40px;color:var(--t3)" data-i18n="profile.loading">加载中...</div>
+        </div>
+      </div>
+
+      <!-- Credits Page -->
+      <div id="page-credits" class="page-content" style="display: none;">
+        <div class="section-header">
+
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th data-i18n="profile.table.date">日期</th>
+                <th data-i18n="profile.table.type">类型</th>
+                <th data-i18n="profile.table.details">说明</th>
+                <th data-i18n="profile.table.credits_change">积分变动</th>
+              </tr>
+            </thead>
+            <tbody id="creditsTbody">
+              <tr><td colspan="4" style="text-align: center; color: var(--t3);" data-i18n="profile.loading">加载中...</td></tr>
+            </tbody>
+          </table>
+          <div class="pagination">
+            <div class="pagination-info" id="creditsPageInfo" data-i18n="profile.pagination.records">共 0 条记录</div>
+            <div class="pagination-links">
+              <button class="pagination-btn" id="creditsPrevBtn" disabled onclick="loadCredits(_creditsPage-1)" data-i18n="profile.pagination.prev">上一页</button>
+              <button class="pagination-btn" id="creditsNextBtn" disabled onclick="loadCredits(_creditsPage+1)" data-i18n="profile.pagination.next">下一页</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders Page -->
+      <div id="page-orders" class="page-content" style="display: none;">
+        <div class="section-header">
+
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th data-i18n="profile.table.date">日期</th>
+                <th data-i18n="profile.table.product">方案</th>
+                <th data-i18n="profile.pagination.per_page">周期</th>
+                <th data-i18n="profile.table.status">状态</th>
+                <th data-i18n="profile.table.amount">金额</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTbody">
+              <tr><td colspan="5" style="text-align: center; color: var(--t3);" data-i18n="profile.loading">加载中...</td></tr>
+            </tbody>
+          </table>
+          <div class="pagination">
+            <div class="pagination-info" id="ordersPageInfo" data-i18n="profile.pagination.orders">0 笔订单</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Page -->
+      <div id="page-profile" class="page-content" style="display: none;">
+        <div class="section-header">
+
+        </div>
+
+        <form class="profile-form">
+          <div class="form-group">
+            <label class="form-label" data-i18n="profile.form.avatar">头像</label>
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <div class="user-avatar" style="width: 64px; height: 64px; font-size: 20px;" id="profileAvatar">U</div>
+              <button type="button" class="btn-secondary" onclick="uploadAvatar()" data-i18n="profile.form.change_avatar">更换头像</button>
+              <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="profile.form.username">用户名</label>
+            <input type="text" class="form-input" id="profileUsername" data-i18n="[placeholder]profile.form.username_placeholder" placeholder="请输入用户名">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="profile.form.email">邮箱</label>
+            <input type="email" class="form-input" id="profileEmail" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="profile.form.old_password">旧密码</label>
+            <input type="password" class="form-input" id="oldPassword" data-i18n="[placeholder]profile.form.old_password_placeholder" placeholder="请输入旧密码（不修改密码可留空）">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="profile.form.new_password">新密码</label>
+            <input type="password" class="form-input" id="newPassword" data-i18n="[placeholder]profile.form.new_password_placeholder" placeholder="请输入新密码（至少6位）">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" data-i18n="profile.form.confirm_new_password">确认新密码</label>
+            <input type="password" class="form-input" id="confirmPassword" data-i18n="[placeholder]profile.form.confirm_new_password_placeholder" placeholder="请再次输入新密码">
+          </div>
+
+          <button type="button" class="btn-primary" style="width: 100%;" onclick="saveProfile()" data-i18n="profile.form.save">保存更改</button>
+        </form>
+      </div>
+
+      <!-- Contact Page -->
+      <div id="page-contact" class="page-content" style="display: none;">
+        <div class="section-header">
+
+        </div>
+
+        <div style="max-width: 500px; margin: 0 auto;">
+          <form class="profile-form" id="contactForm">
+            <div class="form-group">
+              <label class="form-label" data-i18n="profile.contact.email_label">联系邮箱</label>
+              <input type="email" id="contactEmail" class="form-input" data-i18n="[placeholder]profile.contact.email_placeholder" placeholder="请输入您的邮箱">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="profile.contact.subject_label">工单标题</label>
+              <input type="text" id="contactSubject" class="form-input" data-i18n="[placeholder]profile.contact.subject_placeholder" placeholder="请简要描述问题或需求">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="profile.contact.message_label">详细描述</label>
+              <textarea id="contactMessage" class="form-input" rows="6" data-i18n="[placeholder]profile.contact.message_placeholder" placeholder="请详细描述您的问题或建议..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="profile.contact.attach_label">附件（可选，支持图片/视频/PDF，每个不超过 20MB）</label>
+              <div id="contactDropzone" style="border:2px dashed var(--bg4);border-radius:10px;padding:20px;text-align:center;cursor:pointer;color:var(--t3);font-size:13px;transition:border-color .2s;"
+                onclick="document.getElementById('contactFileInput').click()"
+                ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
+                ondragleave="this.style.borderColor='var(--bg4)'"
+                ondrop="handleContactDrop(event)"
+                data-i18n="profile.contact.dropzone">
+                点击或拖拽上传文件
+              </div>
+              <input type="file" id="contactFileInput" multiple accept="image/*,video/*,.pdf" style="display:none" onchange="handleContactFileSelect(this.files)">
+              <div id="contactAttachList" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;"></div>
+            </div>
+
+            <button type="button" id="contactSubmitBtn" class="btn-primary" style="width: 100%;" onclick="submitContact()" data-i18n="profile.contact.submit">提交工单</button>
+          </form>
+
+          <div id="contactHistorySection" style="margin-top:32px;">
+            <h3 style="font-size:15px;font-weight:600;margin-bottom:12px;" data-i18n="profile.contact.my_tickets">我的工单</h3>
+            <div id="contactHistory" style="color:var(--t3);font-size:13px;" data-i18n="profile.loading">加载中...</div>
+          </div>
+
+          <div style="margin-top: 32px; padding: 20px; background: var(--bg2); border-radius: 12px;">
+            <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 16px;" data-i18n="profile.contact.other">其他联系方式</h3>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span>✈️</span>
+                <a id="profileTelegramLink" href="https://t.me/sedgo_support" target="_blank" style="color: var(--accent); text-decoration: none;">@sedgo_support</a>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span>🕐</span>
+                <span style="color: var(--t2);" data-i18n="profile.contact.hours">周一至周五 9:00 - 18:00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/static/js/i18n-config.js"></script>
+  <script src="/static/js/profile.js?v=7"></script>
+</body>
+</html>

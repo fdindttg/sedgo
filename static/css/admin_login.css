@@ -1,0 +1,16 @@
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,sans-serif;background:#07070d;color:#f0f0ff;display:flex;justify-content:center;align-items:center;min-height:100vh}
+.card{background:#151524;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:36px 32px;width:380px}
+h2{text-align:center;margin-bottom:4px}
+.sub{text-align:center;color:#9494b0;font-size:13px;margin-bottom:20px}
+.hint{font-size:11px;color:#5a5a78;margin-bottom:16px;text-align:center;background:rgba(91,110,245,.1);padding:6px 12px;border-radius:6px}
+label{display:block;font-size:13px;color:#9494b0;margin-bottom:4px;margin-top:14px}
+input{width:100%;padding:11px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:#0e0e1a;color:#f0f0ff;font-size:14px;outline:none}
+input:focus{border-color:#5b6ef5}
+button{width:100%;padding:13px;margin-top:20px;background:linear-gradient(135deg,#5b6ef5,#7c3aed);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+#msg{margin-top:14px;text-align:center;font-size:14px;display:none}
+#msg.error{color:#ef4444;display:block}
+#msg.success{color:#22c55e;display:block}
+#msg.info{color:#f59e0b;display:block}
+#dbg{margin-top:16px;padding:12px;background:#0e0e1a;border-radius:8px;font-size:11px;color:#5a5a78;font-family:monospace;white-space:pre-wrap;display:none}

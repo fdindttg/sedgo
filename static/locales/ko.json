@@ -1,0 +1,930 @@
+{
+  "nav": {
+    "video": "AI 비디오",
+    "image": "AI 이미지",
+    "guide": "가이드",
+    "pricing": "가격",
+    "signin": "로그인",
+    "home": "홈",
+    "features": "기능",
+    "api": "API",
+    "support": "지원",
+    "signup": "무료 체험"
+  },
+  "hero": {
+    "badge": "지금 이용 가능 — Sedgo 오디오 포함",
+    "sub": "이미지, 비디오, 오디오, 텍스트가 원활하게 협업하는 진정한 멀티모달 AI 비디오 제작을 경험해보세요."
+  },
+  "tabs": {
+    "video": "비디오 생성",
+    "image": "AI 이미지",
+    "video_agent": "비디오 에이전트",
+    "drama": "드라마 스튜디오",
+    "developing": "개발 중"
+  },
+  "gen": {
+    "desc": "멀티모달 입력, 강력한 참조 기능",
+    "resolution": "해상도",
+    "duration": "기간",
+    "ratio": "화면 비율",
+    "ratio_auto": "자동",
+    "upload_label": "업로드",
+    "upload_count": "0 / 1 (PNG/JPG/WEBP)",
+    "add_ref": "이미지 또는 비디오 참조 추가",
+    "files": "파일",
+    "real_people": "실제 인물 포함",
+    "last_frame": "마지막 프레임 반환",
+    "advanced": "고급 설정",
+    "prompt_placeholder": "비디오 설명... @image1, @video1을 사용하여 업로드한 파일을 참조하세요.",
+    "generate": "생성 ✦",
+    "prompt_eg": "예를 들어",
+    "prompt_example": "영화급 장면...",
+    "hint1": "AI 어시스턴트와 참조 자료로 원하는 길이의 비디오를 계획하세요.",
+    "hint2": "1-9개의 참조 이미지 또는 비디오를 업로드하고 @ 참조를 사용하여 상호작용을 만드세요. 예: @Image 1을 첫 프레임으로, @Image 2를 마지막 프레임으로 사용하고 @Video 1처럼 춤추게 하세요.",
+    "hint3": "프롬프트를 직접 제어하여 단일 클립을 빠르게 생성하세요.",
+    "reference": "참조",
+    "images": "이미지",
+    "hint_video_1": "AI 어시스턴트와 참조 자료로 원하는 길이의 비디오를 계획하세요.",
+    "hint_video_2": "1-9개의 참조 이미지 또는 비디오를 업로드하고 @ 참조를 사용하여 상호작용을 만드세요. 예: @Image 1을 첫 프레임으로, @Image 2를 마지막 프레임으로 사용하고 @Video 1처럼 춤추게 하세요.",
+    "hint_aivideo_1": "프롬프트를 직접 제어하여 단일 클립을 빠르게 생성하세요.",
+    "hint_aivideo_2": "1-9개의 참조 이미지 또는 비디오를 업로드하고 @ 참조를 사용하여 상호작용을 만드세요. 예: @Image 1을 첫 프레임으로, @Image 2를 마지막 프레임으로 사용하고 @Video 1처럼 춤추게 하세요.",
+    "hint_image_1": "텍스트와 참조 이미지로 AI 이미지를 생성하세요.",
+    "hint_image_2": "최대 14개의 참조 이미지를 업로드하고 대상 이미지를 상세히 설명하세요.",
+    "prompt_placeholder_video": "비디오 설명... @image1, @video1을 사용하여 업로드한 파일을 참조하세요.",
+    "prompt_placeholder_aivideo": "비디오 설명...",
+    "prompt_placeholder_image": "이미지 설명...",
+    "prompt_placeholder_drama": "스크립트, 소설을 업로드하거나 이야기 아이디어를 입력하세요. AI 어시스턴트가 스크립트를 계획하고 비디오를 생성합니다.",
+    "auto": "자동",
+    "custom": "사용자 지정",
+    "upload_script": "스크립트/소설 업로드",
+    "single_episode": "단일 에피소드",
+    "series": "시리즈",
+    "pro_writer": "프로 작가",
+    "ai_enhance": "AI 프롬프트 최적화",
+    "ai_enhance_text": "AI최적화",
+    "original_prompt": "원래 설명",
+    "enhanced_prompt": "AI최적화 프롬프트",
+    "enhanced_badge": "AI생성",
+    "use_enhanced": "✓ 최적화 사용",
+    "use_enhanced_text": "최적화 사용",
+    "clear_enhanced": "✕ 지우기",
+    "edit_enhanced": "편집",
+    "save_edit": "저장",
+    "please_enter_prompt": "프롬프트를 입력하세요",
+    "optimizing": "최적화 중...",
+    "optimize_success": "프롬프트 최적화 성공！",
+    "optimize_fail": "프롬프트 최적화에 실패했습니다, 다시 시도해주세요",
+    "upload": "파일 업로드",
+    "asset_library": "자산 라이브러리",
+    "ref_mode": "참조 모드",
+    "text2vid": "텍스트에서 비디오",
+    "img2vid": "이미지 참조",
+    "vid2vid": "비디오 참조",
+    "ref_hint_text2vid": "현재 모드는 텍스트에서 비디오입니다. 참조 이미지가 필요하지 않습니다.",
+    "ref_hint_img2vid": "팁: 이미지 참조 ×9 + 비디오 참조 ×3 + 오디오 참조 ×3",
+    "ref_hint_vid2vid": "팁: 비디오 참조 ×3",
+    "ref_mode_title": "참조 모드",
+    "first_last_frame": "첫 및 마지막 프레임 참조",
+    "multi_ref": "이미지+비디오+오디오 참조",
+    "text2vid_desc": "텍스트만으로 비디오 생성",
+    "ref_hint_first_last_frame": "이 모드는 첫 프레임과 마지막 프레임을 순서대로 참조합니다.",
+    "ref_hint_multi_ref": "이 모드는 최대 9개의 이미지 참조를 지원합니다.",
+    "img2vid_desc": "이미지를 업로드하여 참조",
+    "vid2vid_desc": "비디오를 업로드하여 참조",
+    "audio2vid": "오디오 참조",
+    "audio2vid_desc": "오디오로부터 비디오 생성",
+    "ref_image": "이미지 참조",
+    "ref_video": "비디오 참조",
+    "ref_audio": "오디오 참조",
+    "real_people_title": "실제 인물 에셋",
+    "use_real_people": "실제 인물 에셋 사용",
+    "real_people_hint": "업로드한 이미지가 선택한 에셋 유형으로 사용됩니다",
+    "avatar_id": "아바타 ID",
+    "asset_library_id": "에셋 라이브러리 ID",
+    "real_human_portrait_id": "실제 인물 초상화 ID",
+    "action_id": "액션 ID",
+    "background_id": "배경 ID",
+    "voice_id": "음성 ID",
+    "subtitle_removal_title": "자막 제거",
+    "subtitle_removal": "자막 제거",
+    "ref_image_placeholder": "이미지 업로드 또는 라이브러리에서 선택",
+    "ref_video_placeholder": "동영상 업로드 또는 라이브러리에서 선택",
+    "ref_audio_placeholder": "오디오 업로드 또는 라이브러리에서 선택"
+  },
+  "features": {
+    "label": "Sedgo을 선택하는 이유",
+    "title": "제작에 필요한 모든 것",
+    "desc": "6가지 강력한 기능이 하나의 모델에 통합되었습니다.",
+    "f1_title": "멀티모달 입력",
+    "f1_desc": "단일 생성 요청에서 이미지, 비디오, 오디오 클립, 텍스트 프롬프트를 결합하여 전례 없는 창의적인 제어를 실현하세요.",
+    "f2_title": "무엇이든 참조",
+    "f2_desc": "최대 9개의 이미지와 3개의 비디오를 참조로 태그하세요. 모델은 스타일, 주제, 모션을 고충실도로 추출합니다.",
+    "f3_title": "뛰어난 일관성",
+    "f3_desc": "캐릭터, 환경, 스타일이 프레임 간 및 여러 생성 패스에서 일관되게 유지됩니다.",
+    "f4_title": "정밀한 카메라 제어",
+    "f4_desc": "참조 비디오에서 모션 패턴과 카메라 움직임을 프레임 단위로 정확하게 복제하세요.",
+    "f5_title": "비디오 확장 및 편집",
+    "f5_desc": "기존 비디오를 확장하고, 장면을 수정하고, 처음부터 다시 시작하지 않고 반복하세요.",
+    "f6_title": "내장 오디오 생성",
+    "f6_desc": "비디오 출력과 동기화된 로컬 오디오(음악, 효과음, 음성)를 생성하세요."
+  },
+  "usecases": {
+    "label": "사용 사례",
+    "title": "모든 크리에이터를 위한",
+    "desc": "독립 크리에이터부터 기업 스튜디오까지, Sedgo이 모든 이에게 힘을 줍니다.",
+    "ad": "광고",
+    "ad_desc": "고영향력 브랜드 비디오",
+    "edu": "교육",
+    "edu_desc": "매력적인 설명 콘텐츠",
+    "story": "스토리텔링",
+    "story_desc": "내러티브 기반 장면",
+    "social": "소셜 미디어",
+    "social_desc": "숏폼 유행 콘텐츠",
+    "dance": "모션/댄스",
+    "dance_desc": "안무 및 모션 캡처",
+    "edit": "비디오 편집",
+    "edit_desc": "AI 지원 후반 제작",
+    "film": "영화 프리비주얼라이제이션",
+    "film_desc": "스토리보드를 실제로 만들기",
+    "realestate": "부동산",
+    "realestate_desc": "몰입형 부동산 전시",
+    "music": "뮤직 싱크",
+    "music_desc": "오디오 반응 비디오"
+  },
+  "how": {
+    "label": "사용 방법",
+    "title": "3단계로 비디오 생성",
+    "desc": "아이디어에서 최종 비디오까지 몇 분 만에.",
+    "s1_title": "자산 업로드",
+    "s1_desc": "이미지, 비디오, 오디오를 참조로 추가 — 최대 12개 파일.",
+    "s2_title": "비전 설명",
+    "s2_desc": "프롬프트를 작성하고 <code>@image1</code>, <code>@video1</code> 태그를 사용하여 업로드한 파일을 참조하세요.",
+    "s3_title": "생성 및 다운로드",
+    "s3_desc": "AI가 비디오를 생성하는 것을 기다린 후 다운로드하여 공유하거나 편집하세요."
+  },
+  "faq": {
+    "label": "FAQ",
+    "title": "자주 묻는 질문",
+    "desc": "Sedgo에 관한 모든 것.",
+    "q1": "최대 몇 개의 참조 파일을 업로드할 수 있나요?",
+    "a1": "최대 12개 파일: 9개 이미지, 3개 비디오(≤15초), 및 3개 오디오 클립(≤15초).",
+    "q2": "어떤 길이의 비디오가 지원되나요?",
+    "a2": "Sedgo은 4초에서 15초 사이의 비디오 생성을 지원하며, 기본값은 5초입니다.",
+    "q3": "생성된 비디오에 워터마크가 있나요?",
+    "a3": "워터마크 없음. 생성된 콘텐츠에 대한 완전한 소유권이 있습니다.",
+    "q4": "어떤 이미지/비디오 형식이 지원되나요?",
+    "a4": "이미지: PNG, JPG, JPEG, WEBP. 비디오: MP4, MOV, WEBM. 오디오: MP3, WAV, AAC.",
+    "q5": "포인트는 어떻게 계산되나요?",
+    "a5": "생성된 비디오의 초당 포인트 소비로, 요율은 선택한 모델과 해상도에 따라 다릅니다. 포인트는 만료되지 않습니다.",
+    "q6": "고객 지원에 어떻게 문의하나요?",
+    "a6": "support@sedgo.ai로 이메일을 보내세요. 평일에는 일반적으로 24시간 이내에 답변합니다."
+  },
+  "pricing": {
+    "label": "가격",
+    "title": "최적의 플랜을 선택",
+    "desc": "모든 플랜에는 핵심 기능과 기술 지원이 포함됩니다.",
+    "trial": "무료 체험",
+    "trial_desc": "새 사용자 전용 체험",
+    "pro": "프로",
+    "pro_desc": "개인 크리에이터용",
+    "team": "팀",
+    "team_desc": "팀 협업용",
+    "enterprise": "엔터프라이즈",
+    "enterprise_desc": "맞춤 솔루션",
+    "monthly": "월간",
+    "yearly": "연간",
+    "annual": "연간",
+    "save": "40% 절약",
+    "billed_yearly": "연간 청구",
+    "points": "포인트",
+    "points_per_month": "포인트/월",
+    "minutes": "분",
+    "max_batch_size": "최대 배치 크기",
+    "max_concurrent_tasks": "최대 동시 작업 수",
+    "full_hd": "풀 HD",
+    "hd": "HD",
+    "output_support": "출력 지원",
+    "priority_support": "우선 지원",
+    "custom_watermark": "맞춤 워터마크",
+    "seedance_video": "Sedgo AI 비디오",
+    "multi_models": "다중 AI 비디오 모델",
+    "private_space": "프라이빗 비디오 공간",
+    "recommended": "추천",
+    "annual_total": "연간 총액",
+    "subscribe_now": "지금 구독",
+    "free_trial": "무료 체험",
+    "start_free_trial": "무료 체험 시작",
+    "tab": {
+      "team": "플랜",
+      "credits": "크레딧 팩"
+    },
+    "credits": {
+      "basic": "스타터 팩",
+      "basic_desc": "초보자 및 개인 사용자에게 최적",
+      "creator": "크리에이터 팩",
+      "creator_desc": "대부분의 콘텐츠 크리에이터에게 최적",
+      "elite": "엘리트 팩",
+      "elite_desc": "전문 사용자에게 최적",
+      "advanced": "고급 팩",
+      "advanced_desc": "대량 수요 사용자에게 최적",
+      "super": "슈퍼 팩",
+      "super_desc": "엔터프라이즈 사용자에게 최적",
+      "points_1k": "✓ 1,000 포인트",
+      "points_3k": "✓ 3,000 포인트",
+      "points_8k": "✓ 8,000 포인트",
+      "points_30k": "✓ 30,000 포인트",
+      "points_100k": "✓ 100,000 포인트",
+      "all_features": "✓ 모든 기능 포함",
+      "no_expire": "✓ 포인트 만료 없음",
+      "buy_now": "지금 구매"
+    },
+    "plans": {
+      "name_1": "무료 체험",
+      "desc_1": "신규 사용자 전용 체험 패키지",
+      "name_2": "팀",
+      "desc_2": "중소 규모 팀용",
+      "name_3": "팀 프로",
+      "desc_3": "프로페셔널 팀 및 기업용"
+    },
+    "model_pricing": "Sedgo 모델 포인트 가격",
+    "points_per_second": "초당 생성 소비 포인트 수",
+    "series": "Sedgo 시리즈",
+    "series_v1": "Sedgo 1.x 시리즈",
+    "table": {
+      "model": "모델",
+      "resolution": "해상도",
+      "points_per_sec": "포인트/초",
+      "cost_5s": "5초 소비",
+      "cost_10s": "10초 소비",
+      "cost_15s": "15초 소비"
+    },
+    "monthly_annual": "월납 (연간)"
+  },
+  "js": {
+    "created": "작업 생성 실패:",
+    "gen_failed": "생성 실패:",
+    "timeout": "시간 초과, 나중에 다시 시도하세요.",
+    "error": "오류:",
+    "download": "⬇ 다운로드",
+    "uploading": "⏳ 업로드 중…",
+    "attached": " 개 파일 첨부됨",
+    "signin_first": "먼저 로그인하세요.",
+    "signed_in": "로그인됨",
+    "signed_in_alt": "로그인됨 ✓",
+    "unknown_error": "알 수 없는 오류",
+    "subscribe_success": "구독 성공",
+    "subscribe_failed": "구독 실패",
+    "select_endpoint": "엔드포인트를 선택하세요",
+    "auto": "자동",
+    "no_endpoints": "사용 가능한 엔드포인트 없음",
+    "load_failed": "로드 실패",
+    "no_description": "설명 없음",
+    "status_processing": "처리 중",
+    "status_success": "성공",
+    "status_failed": "실패",
+    "status_pending": "대기 중",
+    "status_unknown": "알 수 없음",
+    "time_just_now": "방금 전",
+    "time_minutes_ago": "분 전",
+    "time_hours_ago": "시간 전",
+    "generate_image": "이미지 생성",
+    "video_generation": "비디오 생성",
+    "no_data": "데이터가 없습니다",
+    "load_error": "로드 실패",
+    "select_asset_first": "자산을 먼저 선택하세요",
+    "cancel": "취소",
+    "confirm": "확인",
+    "retry_generate": "↺ 재생성",
+    "status_cancelled": "취소됨",
+    "status_error": "오류",
+    "task_cancelled": "작업이 취소되었습니다",
+    "network_error_retry": "네트워크 오류, 수동으로 재시도하세요",
+    "retry_failed": "재생성 실패",
+    "create_failed": "작업 생성 실패：",
+    "generate": "생성",
+    "generating": "생성 중...",
+    "max_files": "최대 {n}개의 파일 업로드 가능",
+    "processing": "처리 중…",
+    "upload_error": "업로드 오류",
+    "upload_failed": "업로드 실패",
+    "loading": "로딩 중...",
+    "confirm_select": "선택 확인",
+    "no_uploads": "업로드된 파일 없음",
+    "asset_unavailable": "이 기능은 특별한 접근 권한이 필요합니다. 지원팀에 문의하세요.",
+    "admin_sender": "관리자",
+    "billing_annual": "연간",
+    "billing_monthly": "월간",
+    "choose_topup": "충전 패키지 선택",
+    "current_plan": "현재 플랜",
+    "delete": "🗑 삭제",
+    "expires_at": "만료일",
+    "me_sender": "나",
+    "no_tickets": "티켓 없음",
+    "payment_success": "결제 성공!",
+    "payment_success_desc": "크레딧/구독 활성화됨",
+    "points_unit": "크레딧",
+    "remaining_points": "남은 크레딧",
+    "reply_empty": "답변 내용을 입력하세요",
+    "request_fail": "요청 실패",
+    "segment_progress": "세그먼트 {done}/{total} · {pct}%",
+    "send": "전송",
+    "sub_active": "활성",
+    "sub_cancelled": "취소됨",
+    "sub_expired": "만료됨",
+    "sub_pending": "대기 중",
+    "ticket_active": "진행 중",
+    "ticket_closed": "티켓이 종료되었습니다",
+    "ticket_closed_label": "종료됨",
+    "ticket_reply_placeholder": "계속 답변...",
+    "type_admin_adjust": "관리자 조정",
+    "type_consume": "소비",
+    "type_earn": "획득",
+    "type_image": "🖼️ 이미지",
+    "type_long_video": "🎬 긴 동영상",
+    "type_subscription": "구독",
+    "type_video": "🎬 동영상",
+    "unknown": "알 수 없음",
+    "upgrade_hint": "지금 업그레이드하여 더 많은 크레딧과 기능 사용"
+  },
+  "modal": {
+    "description": "설명",
+    "status": "상태",
+    "created_at": "생성 시간",
+    "points_consumed": "소비 포인트",
+    "title": "작업 세부 정보"
+  },
+  "results": {
+    "title": "생성 결과",
+    "refresh": "새로 고침",
+    "empty": "생성 결과가 없습니다",
+    "empty_hint": "위 버튼을 클릭하여 생성을 시작하세요"
+  },
+  "lang": {
+    "zh": "中文",
+    "zh-TW": "繁體中文",
+    "en": "English",
+    "ja": "日本語",
+    "ko": "한국어",
+    "ru": "Русский",
+    "vi": "Tiếng Việt",
+    "es": "Español"
+  },
+  "auth": {
+    "login": "로그인",
+    "register": "등록",
+    "email": "이메일",
+    "password": "비밀번호",
+    "confirm_password": "비밀번호 확인",
+    "display_name": "표시 이름",
+    "remember_me": "기억하기",
+    "forgot_password": "비밀번호를 잊으셨나요?",
+    "no_account": "계정이 없으신가요?",
+    "already_have_account": "이미 계정이 있으신가요?",
+    "loginBtn": "로그인",
+    "registerBtn": "등록",
+    "processing": "처리 중…",
+    "google": "Google로 로그인",
+    "download": "다운로드",
+    "copy_link": "링크 복사",
+    "link_copied": "링크가 클립보드에 복사되었습니다",
+    "enter_video_desc": "비디오 설명을 입력하세요",
+    "enter_image_desc": "이미지 설명을 입력하세요",
+    "fillAll": "모든 필수 항목을 작성하세요",
+    "passwordMismatch": "비밀번호가 일치하지 않습니다",
+    "passwordTooShort": "비밀번호는 최소 6자 이상이어야 합니다",
+    "title": "환영합니다",
+    "subtitle": "시작하려면 로그인 또는 등록하세요",
+    "or": "또는",
+    "namePlaceholder": "표시 이름",
+    "confirmPassword": "비밀번호 확인",
+    "displayName": "표시 이름",
+    "agree": "이용약관과 개인정보처리방침에 동의합니다",
+    "terms": "이용약관",
+    "and": "및",
+    "privacy": "개인정보처리방침",
+    "please_login": "AI 향상 기능을 사용하려면 로그인하세요",
+    "loginFailed": "로그인 실패",
+    "registerFailed": "등록 실패",
+    "agreeRequired": "서비스 약관 및 개인정보 처리방침에 동의해 주세요"
+  },
+  "user": {
+    "profile": "프로필",
+    "apiKeys": "API 키",
+    "subscription": "구독",
+    "logout": "로그아웃",
+    "apiKeyHint": "API 접근용 키",
+    "currentSub": "현재 구독",
+    "noSub": "구독 없음",
+    "points": "포인트"
+  },
+  "footer": {
+    "txt2vid": "텍스트에서 비디오",
+    "img2vid": "이미지에서 비디오",
+    "terms": "서비스 약관",
+    "privacy": "개인 정보 보호 정책",
+    "refund": "환불 정책",
+    "contact": "문의하기"
+  },
+  "profile": {
+    "title": "사용자 센터 - Sedgo 2",
+    "menu": {
+      "works": "내 작품",
+      "subscription": "구독",
+      "team": "팀",
+      "credits": "크레딧 내역",
+      "orders": "주문 기록",
+      "profile": "프로필",
+      "contact": "문의하기",
+      "logout": "로그아웃"
+    },
+    "page": {
+      "works": {
+        "title": "내 작품",
+        "desc": "생성한 모든 비디오와 이미지를 관리하고 보세요"
+      },
+      "contact": {
+        "desc": "문제나 제안이 있으면 티켓을 제출하세요",
+        "title": "티켓 제출"
+      },
+      "credits": {
+        "desc": "크레딧 기록 보기",
+        "title": "크레딧 이력"
+      },
+      "orders": {
+        "desc": "주문 이력 보기",
+        "title": "주문 이력"
+      },
+      "profile": {
+        "desc": "계정 정보 관리",
+        "title": "프로필"
+      },
+      "subscription": {
+        "desc": "구독 플랜 및 결제 관리",
+        "title": "구독"
+      }
+    },
+    "section": {
+      "works": {
+        "title": "내 작품",
+        "desc": "생성된 동영상 및 이미지 관리",
+        "create": "+ 새 비디오 만들기"
+      },
+      "subscription": {
+        "title": "구독",
+        "desc": "구독 플랜 관리. 언제든지 취소 가능."
+      },
+      "team": {
+        "title": "팀",
+        "desc": "아직 팀에 가입하지 않으셨어요. 팀 플랜을 구독하여 직접 팀을 생성하거나, 팀 소유자로부터 초대를 기다리세요."
+      },
+      "credits": {
+        "title": "크레딧 이력",
+        "desc": "크레딧 기록 보기."
+      },
+      "orders": {
+        "title": "주문 이력",
+        "desc": "주문 이력 보기."
+      },
+      "profile": {
+        "title": "프로필",
+        "desc": "계정 정보 관리"
+      },
+      "contact": {
+        "title": "티켓 제출",
+        "desc": "문제나 제안이 있으시면 티켓을 제출해주세요."
+      }
+    },
+    "tabs": {
+      "video": "비디오",
+      "image": "이미지"
+    },
+    "filter": {
+      "all": "모든 비디오",
+      "text": "텍스트에서 비디오",
+      "image": "이미지에서 비디오",
+      "date": "📅 날짜로 필터링"
+    },
+    "empty": {
+      "works": {
+        "title": "비디오를 찾을 수 없습니다",
+        "desc": "아직 비디오를 생성하지 않으셨어요. 첫 번째 비디오를 만들어보세요!"
+      },
+      "team": {
+        "title": "팀이 없습니다",
+        "desc": "아직 팀에 가입하지 않으셨어요. 팀 플랜을 구독하여 직접 팀을 생성하거나 초대를 기다리세요."
+      },
+      "credits": "크레딧 내역을 찾을 수 없습니다.",
+      "orders": "주문을 찾을 수 없습니다.",
+      "image_desc": "이미지 생성 기록이 여기에 표시됩니다",
+      "image_title": "이미지 기록 없음"
+    },
+    "team": {
+      "create": "팀 플랜 만들기"
+    },
+    "credits": {
+      "buy": "더 많은 크레딧 구매"
+    },
+    "subscription": {
+      "unlock": "Sedgo Pro 잠금 해제",
+      "no_plan": "아직 구독 플랜이 없습니다. 지금 업그레이드하여 Sedgo 혁신적인 다중 모달 AI 비디오 생성 모델을 받아보세요.",
+      "choose": "완벽한 플랜 선택 →",
+      "annual_subscribe": "연간 구독",
+      "concurrent_tasks": "동시 작업",
+      "current_plan_btn": "현재 플랜",
+      "max_resolution": "최대 해상도",
+      "monthly_subscribe": "월간 구독",
+      "points_per_month": "크레딧/월"
+    },
+    "features": {
+      "multimodal": "다중 모달 입력",
+      "consistency": "캐릭터 일관성",
+      "audio": "오디오 생성",
+      "fast": "빠른 생성",
+      "edit": "정밀 편집",
+      "privacy": "프라이버시 보호"
+    },
+    "team_btn": {
+      "create": "팀 플랜 만들기"
+    },
+    "credits_btn": {
+      "buy": "더 많은 크레딧 구매"
+    },
+    "table": {
+      "date": "날짜",
+      "type": "유형",
+      "details": "세부 정보",
+      "amount": "금액",
+      "onetime_credits": "일회성 크레딧",
+      "subscription_credits": "구독 크레딧",
+      "product": "제품",
+      "status": "상태",
+      "action": "행동",
+      "credits_change": "크레딧 변동"
+    },
+    "pagination": {
+      "records": "총 0개 기록",
+      "orders": "0개 주문",
+      "prev": "이전",
+      "next": "다음",
+      "per_page": "페이지",
+      "page": "페이지 1 / 0"
+    },
+    "form": {
+      "avatar": "아바타",
+      "change_avatar": "아바타 변경",
+      "username": "사용자 이름",
+      "username_placeholder": "사용자 이름 입력",
+      "email": "이메일",
+      "password": "비밀번호",
+      "password_placeholder": "새 비밀번호 입력",
+      "confirm_password": "비밀번호 확인",
+      "confirm_password_placeholder": "새 비밀번호 확인",
+      "save": "변경 저장",
+      "confirm_new_password": "새 비밀번호 확인",
+      "confirm_new_password_placeholder": "새 비밀번호를 다시 입력하세요",
+      "new_password": "새 비밀번호",
+      "new_password_placeholder": "새 비밀번호 (최소 6자)",
+      "old_password": "기존 비밀번호",
+      "old_password_placeholder": "기존 비밀번호 (변경 안 하면 비워두세요)"
+    },
+    "contact": {
+      "email": "이메일",
+      "email_placeholder": "이메일 입력",
+      "subject": "제목",
+      "subject_placeholder": "제목 입력",
+      "message": "메시지",
+      "message_placeholder": "메시지 입력",
+      "send": "메시지 보내기",
+      "info": "연락처 정보",
+      "hours": "월요일-금요일 9:00 - 18:00",
+      "attach_label": "첨부 (선택, 이미지/동영상/PDF, 각 20MB 이하)",
+      "dropzone": "클릭하거나 드래그하여 업로드",
+      "email_label": "연락처 이메일",
+      "fill_all": "모든 필드를 입력해주세요",
+      "hours_label": "운영 시간",
+      "message_label": "상세 설명",
+      "my_tickets": "내 티켓",
+      "other": "기타 연락 방법",
+      "send_fail": "전송 실패",
+      "sending": "전송 중...",
+      "sent": "티켓이 제출되었습니다! 최대한 빨리 처리하겠습니다.",
+      "subject_label": "티켓 제목",
+      "submit": "티켓 제출",
+      "title": "티켓 제출"
+    },
+    "logout_confirm": "로그아웃하시겠습니까?",
+    "avatar_success": "아바타 업데이트 성공",
+    "avatar_fail": "아바타 업데이트 실패",
+    "enter_username": "사용자 이름을 입력하세요",
+    "profile_success": "프로필 업데이트 성공",
+    "address_copied": "주소가 복사되었습니다",
+    "attachment": "첨부 파일",
+    "buy_plan": "플랜 구매",
+    "choose_plan": "플랜 선택",
+    "credits_empty": "크레딧 기록 없음",
+    "credits_records": "총 {total}개, {page}/{totalPages} 페이지",
+    "credits_topup": "₮ 크레딧 충전",
+    "delete_confirm": "이 작품을 삭제하시겠습니까? 되돌릴 수 없습니다.",
+    "delete_fail": "삭제 실패",
+    "load_fail": "로드 실패",
+    "loading": "로드 중...",
+    "orders_count": "0건",
+    "orders_empty": "주문 없음",
+    "orders_one": "1건",
+    "payment": {
+      "cancelled": "취소됨",
+      "copy_address": "주소 복사",
+      "create_fail": "생성 실패",
+      "expired": "만료됨",
+      "generating": "주문 생성 중...",
+      "net_error": "네트워크 오류, 다시 시도하세요",
+      "order_status": "주문",
+      "remaining": "남은 시간",
+      "waiting": "송금 대기 중..."
+    },
+    "pw_mismatch": "비밀번호가 일치하지 않습니다",
+    "pw_too_short": "새 비밀번호는 최소 6자 이상",
+    "pw_update_fail": "비밀번호 업데이트 실패",
+    "save_fail": "저장 실패",
+    "update_fail": "업데이트 실패",
+    "upload_fail": "업로드 실패"
+  },
+  "api": {
+    "label": "개발자",
+    "title": "API 문서",
+    "desc": "AI 비디오 생성 기능을 애플리케이션에 통합하세요.",
+    "docs": "API 문서",
+    "docs_desc": "모든 엔드포인트, 매개변수 및 예제가 포함된 포괄적인 API 참조.",
+    "sdk": "SDK 도구",
+    "sdk_desc": "Python, JavaScript, Go 등 인기 프로그래밍 언어용 SDK.",
+    "playground": "API 플레이그라운드",
+    "playground_desc": "온라인으로 API를 테스트하고 실시간으로 요청 및 응답을 보세요.",
+    "view_docs": "문서 보기",
+    "download_sdk": "SDK 다운로드",
+    "try_now": "지금 시도"
+  },
+  "support": {
+    "label": "지원",
+    "title": "도움 받기",
+    "desc": "도와드릴 준비가 되어 있습니다.",
+    "guides": "도움 센터",
+    "guides_desc": "상세한 가이드와 튜토리얼로 빠르게 시작하세요.",
+    "community": "커뮤니티 포럼",
+    "community_desc": "다른 사용자들과 연결하고, 팁과 아이디어를 공유하세요.",
+    "contact": "문의하기",
+    "contact_desc": "질문이 있으신가요? 이메일을 보내주세요.",
+    "visit": "도움 센터 방문",
+    "join": "커뮤니티 가입",
+    "email": "이메일 보내기"
+  },
+  "contact_page": {
+    "page": {
+      "title": "문의하기",
+      "desc": "도와드리겠습니다"
+    },
+    "methods": {
+      "title": "연락 방법",
+      "intro": "질문이나 제안이 있으시면 언제든지 연락해 주세요:"
+    },
+    "email": {
+      "title": "이메일 지원",
+      "text": "이메일 보내기:",
+      "response": "평일에는 보통 24시간 이내에 응답합니다"
+    },
+    "online": {
+      "title": "온라인 지원",
+      "hours": "운영 시간: 월요일부터 금요일 9:00 - 18:00",
+      "chat": "운영 시간 동안 채팅 지원 제공"
+    },
+    "feedback": {
+      "title": "피드백 양식",
+      "visit": "도움 센터를 방문하여 피드백을 제출하세요",
+      "note": "모든 피드백을 진지하게 받아들입니다"
+    },
+    "social": {
+      "title": "소셜 미디어",
+      "follow": "최신 소식을 팔로우하세요",
+      "platforms": "WeChat, Weibo, Twitter"
+    },
+    "telegram": {
+      "title": "Telegram",
+      "join": "Telegram 그룹에 참여하세요:",
+      "help": "빠른 지원과 최신 뉴스"
+    },
+    "faq": {
+      "title": "자주 묻는 질문",
+      "intro": "문의하기 전에 자주 묻는 질문을 확인해 보세요:",
+      "page": "FAQ 페이지",
+      "help": "도움 센터"
+    }
+  },
+  "api_page": {
+    "page": {
+      "title": "API 문서",
+      "desc": "AI 비디오 생성 기능을 애플리케이션에 통합합니다."
+    },
+    "quick_start": {
+      "title": "빠른 시작",
+      "desc": "Sedgo API를 사용하면 AI 비디오 생성 기능을 쉽게 통합할 수 있습니다."
+    },
+    "auth": {
+      "title": "인증 방법",
+      "desc": "모든 API 요청은 API 키로 인증이 필요합니다. 다음 헤더를 추가하세요:"
+    },
+    "create_task": {
+      "title": "비디오 태스크 생성",
+      "desc": "POST /v1/tasks 엔드포인트를 사용하여 비디오 생성 태스크를 생성합니다:"
+    },
+    "query_status": {
+      "title": "태스크 상태 조회",
+      "desc": "GET /v1/tasks/{task_id} 엔드포인트를 사용하여 태스크 상태를 조회합니다:"
+    },
+    "models": {
+      "title": "사용 가능한 모델",
+      "sedgo_fast": "sedgo-fast - 빠른 생성 모델, 빠른 미리보기에 적합",
+      "sedgo": "sedgo - 고품질 모델, 최종 출력에 적합"
+    },
+    "response": {
+      "title": "응답 형식"
+    }
+  },
+  "support_page": {
+    "page": {
+      "title": "도움 받기",
+      "desc": "도와드리겠습니다."
+    },
+    "help_center": {
+      "title": "도움 센터",
+      "intro": "상세한 가이드와 튜토리얼로 빠르게 시작하세요.",
+      "guide": "📖 시작 가이드 - 사용 방법 배우기",
+      "tutorial": "🎬 비디오 튜토리얼 - 고급 기술 마스터",
+      "api": "⚙️ API 문서 - 앱에 통합",
+      "billing": "💰 청구 정보 - 가격 및 충전 이해"
+    },
+    "faq": {
+      "title": "자주 묻는 질문",
+      "q1": "Q: 비디오 생성에 얼마나 걸립니까?",
+      "a1": "A: 비디오 생성 시간은 비디오 길이와 선택한 모델에 따라 다릅니다. 일반적으로 10초 비디오는 1-2분 걸립니다.",
+      "q2": "Q: 어떤 해상도가 지원됩니까?",
+      "a2": "A: 720p, 1080p, 4K 해상도를 지원합니다.",
+      "q3": "Q: API 키를 어떻게 얻나요?",
+      "a3": "A: 로그인 후 프로필의 API 설정에서 API 키를 생성 및 관리할 수 있습니다."
+    },
+    "community": {
+      "title": "커뮤니티 포럼",
+      "intro": "다른 사용자들과 연결하고, 팁과 아이디어를 공유하세요. 커뮤니티에서:",
+      "share": "작품 공유",
+      "inspiration": "창작 영감 얻기",
+      "suggest": "제안과 피드백 제출",
+      "help": "다른 사용자 돕기"
+    },
+    "contact": {
+      "title": "문의하기",
+      "intro": "질문이나 제안이 있으시면 이메일을 보내주세요:",
+      "email": "support@sedgo.ai",
+      "response": "평일에는 일반적으로 24시간 이내에 답변합니다."
+    }
+  },
+  "privacy_page": {
+    "page": {
+      "title": "개인정보 처리방침",
+      "desc": "프라이버시를 존중합니다",
+      "intro": "당신의 프라이버시를 소중히 여기며, 이 정책은 우리가 정보를 수집하고 보호하는 방법을 설명합니다"
+    },
+    "info": {
+      "title": "1. 소개",
+      "intro": "SedGoAI(이하「당신」또는「플랫폼」)에 오신 것을 환영합니다. 우리는 당신의 프라이버시를 소중히 여기며, 이 개인정보 처리방침은 우리가 당신의 개인정보를 어떻게 수집, 사용, 저장, 보호하는지 설명합니다.",
+      "account": "개인 식별 정보: 이름, 이메일 주소, 전화번호",
+      "usage": "계정 정보: 비밀번호(암호화 저장), API 키",
+      "technical": "사용 데이터: 생성된 콘텐츠, 프롬프트, 사용 빈도"
+    },
+    "usage": {
+      "title": "2. 정보 수집",
+      "service": "등록 및 서비스 사용 과정에서 제공하는 정보를 수집합니다:",
+      "improve": "수집한 정보를 다음 목적으로 사용합니다:",
+      "security": "서비스 제공 및 유지",
+      "billing": "결제 및 청구 처리",
+      "communication": "제품 및 서비스 개선",
+      "access": "중요한 알림 및 업데이트 전송"
+    },
+    "sharing": {
+      "title": "3. 정보 사용",
+      "intro": "우리는 당신의 개인정보를 판매하지 않습니다. 다음 경우에만 정보를 공유합니다:",
+      "consent": "명시적인 동의를 얻은 경우",
+      "legal": "법적 요구사항 준수",
+      "partners": "플랫폼 및 사용자 보안 보호"
+    },
+    "security": {
+      "title": "4. 정보 공유",
+      "intro": "우리는 업계 표준 보안 조치를 사용하여 데이터를 보호합니다. 암호화된 데이터 전송, 저장소 암호화, 액세스 제어 등을 포함합니다. 그러나 어떠한 보안 조치도 절대적으로 안전하지는 않다는 점에 유의하세요."
+    },
+    "rights": {
+      "title": "5. 데이터 보안",
+      "intro": "당신은 개인정보에 접근, 수정, 삭제하거나 당사의 데이터 처리를 제한할 권리가 있습니다. 요청을 하려면 support@sedgo.ai로 연락하세요."
+    },
+    "changes": {
+      "title": "6. 사용자 권리",
+      "intro": "이 정책을 수시로 업데이트할 수 있습니다. 중요한 변경사항은 이메일로 알려드리겠습니다."
+    },
+    "contact": {
+      "title": "7. 정책 업데이트",
+      "intro": "질문이 있으시면 이메일을 보내주세요:",
+      "email": "support@sedgo.ai"
+    }
+  },
+  "terms_page": {
+    "page": {
+      "title": "서비스 약관",
+      "desc": "SedGo ai 서비스 이용 약관",
+      "intro": "서비스를 사용함으로써 다음 약관에 동의하는 것입니다"
+    },
+    "acceptance": {
+      "title": "1. 약관 동의",
+      "intro": "SedGoAI 서비스를 사용함으로써 이 서비스 약관에 동의하는 것입니다. 동의하지 않으시면 서비스를 사용하지 마세요."
+    },
+    "service": {
+      "title": "2. 서비스 설명",
+      "intro": "SedGoAI는 텍스트에서 비디오로, 이미지에서 비디오로 등의 AI 기반 비디오 생성 서비스를 제공합니다."
+    },
+    "user": {
+      "title": "3. 사용자 계정",
+      "intro": "다음에 동의하지 않습니다:",
+      "legal": "모든 적용 가능한 법률 및 규정 준수",
+      "account": "서비스를 사용하려면 계정을 등록해야 합니다. 계정 보안과 계정 아래의 모든 활동에 대한 책임을집니다.",
+      "content": "불법적이거나 유해한 콘텐츠 생성 금지",
+      "respect": "서비스 남용 또는 공격 금지"
+    },
+    "payment": {
+      "title": "4. 사용 규칙",
+      "intro": "일부 서비스는 결제가 필요할 수 있습니다. 다음에 동의합니다:",
+      "charges": "6. 요금 및 결제",
+      "billing": "서비스에 요금이 발생할 수 있습니다. 모든 요금(세금 포함) 지불 책임집니다. 미결제 시 서비스 중단될 수 있습니다."
+    },
+    "intellectual": {
+      "title": "5. 콘텐츠 소유권",
+      "intro": "서비스를 사용하여 생성된 콘텐츠의 소유권은 사용자에게 있습니다. 서비스 개선을 위해 생성된 콘텐츠를 사용할 권리를 보유합니다."
+    },
+    "termination": {
+      "title": "7. 서비스 변경",
+      "intro": "언제든지 서비스를 변경하거나 종료할 권리를 보유합니다. 중대한 변경은 사전에 통지합니다.",
+      "violation": "9. 종료",
+      "abuse": "약관에 위반될 경우 사전 통지 없이 언제든지 계정을 종료하거나 일시 중단할 수 있습니다."
+    },
+    "limitation": {
+      "title": "8. 면책 조항",
+      "intro": "서비스는 «있는 그대로» 제공되며 어떠한 보증도 하지 않습니다. 서비스 사용으로 인해 발생한 손해에 대해 책임지지 않습니다."
+    },
+    "contact": {
+      "title": "10. 문의하기",
+      "intro": "질문이 있으시면 이메일을 보내주세요:",
+      "email": "support@sedgo.ai"
+    }
+  },
+  "refund_page": {
+    "page": {
+      "title": "환불 정책",
+      "desc": "환불 정책 알아보기",
+      "intro": "환불 규칙 및 절차에 대해 알아보세요"
+    },
+    "scope": {
+      "title": "1. 적용 범위",
+      "intro": "이 환불 정책은 SedGoAI를 통해 구매한 모든 서비스 및 크레딧에 적용됩니다."
+    },
+    "credits": {
+      "title": "2. 크레딧 환불",
+      "intro": "구매한 크레딧은 미사용 시 구매 후 7일 이내에 전액 환불을 신청할 수 있습니다. 사용된 크레딧은 환불할 수 없습니다."
+    },
+    "subscription": {
+      "title": "3. 구독 환불",
+      "monthly": "월간 구독은 언제든지 취소할 수 있습니다. 취소 후 서비스는 현재 청구 주기가 끝날 때 종료되며 환불되지 않습니다.",
+      "yearly": "연간 구독은 구매 후 7일 이내에 전액 환불을 신청할 수 있습니다. 7일이 지나면 환불이 불가능합니다."
+    },
+    "process": {
+      "title": "4. 환불 신청",
+      "intro": "환불을 신청하려면 support@sedgo.ai로 다음 정보를 포함하여 이메일을 보내주세요:",
+      "email": "등록된 이메일",
+      "order": "주문 번호",
+      "date": "구매 날짜",
+      "reason": "환불 사유"
+    },
+    "timeline": {
+      "title": "5. 처리 시간",
+      "intro": "환불 신청은 접수 후 5영업일 이내에 처리됩니다. 환불은 원래 결제 계좌로 반환되며, 도착 시간은 결제 방식에 따라 다릅니다."
+    },
+    "exceptions": {
+      "title": "6. 예외"
+    },
+    "ineligible": {
+      "title": "다음 경우에는 환불이 불가능합니다:",
+      "intro": "다음 경우에는 환불이 불가능합니다:",
+      "used": "사용된 크레딧",
+      "expired": "환불 기간이 지난 주문",
+      "terminated": "서비스 약관 위반으로 종료된 계정"
+    },
+    "contact": {
+      "title": "7. 문의하기",
+      "intro": "질문이 있으시면 이메일을 보내주세요:",
+      "email": "support@sedgo.ai"
+    }
+  }
+}

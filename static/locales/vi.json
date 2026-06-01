@@ -1,0 +1,930 @@
+{
+  "nav": {
+    "video": "AI Video",
+    "image": "AI Hình ảnh",
+    "guide": "Hướng dẫn",
+    "pricing": "Bảng giá",
+    "signin": "Đăng nhập",
+    "home": "Trang chủ",
+    "features": "Tính năng",
+    "api": "API",
+    "support": "Hỗ trợ",
+    "signup": "Dùng thử miễn phí"
+  },
+  "hero": {
+    "badge": "Đã sẵn sàng — Sedgo Với Âm thanh",
+    "sub": "Trải nghiệm tạo video AI đa mô hình thực sự: hình ảnh, video, âm thanh và văn bản hoạt động liền mạch cùng nhau."
+  },
+  "tabs": {
+    "video": "Tạo Video",
+    "image": "AI Hình ảnh",
+    "video_agent": "Trợ lý Video",
+    "drama": "Phòng làm phim Kịch",
+    "developing": "Đang phát triển"
+  },
+  "gen": {
+    "desc": "Đầu vào đa mô hình, khả năng tham chiếu mạnh mẽ",
+    "resolution": "Độ phân giải",
+    "duration": "Thời lượng",
+    "ratio": "Tỷ lệ khung",
+    "ratio_auto": "Tự động",
+    "upload_label": "Tải lên",
+    "upload_count": "0 / 1 (PNG/JPG/WEBP)",
+    "add_ref": "Thêm hình ảnh hoặc video tham chiếu",
+    "files": "tệp",
+    "real_people": "Chứa người thật",
+    "last_frame": "Trả về khung cuối",
+    "advanced": "Cài đặt nâng cao",
+    "prompt_placeholder": "Mô tả video của bạn... Sử dụng @image1, @video1 để tham chiếu đến các tệp đã tải lên.",
+    "generate": "Tạo ✦",
+    "prompt_eg": "ví dụ",
+    "prompt_example": "Một cảnh phim...",
+    "hint1": "Kế hoạch video bất kỳ độ dài nào với trợ lý AI và tài liệu tham chiếu.",
+    "hint2": "Tải lên 1-9 hình ảnh hoặc video tham chiếu và sử dụng @ để tạo tương tác. Ví dụ: Sử dụng @Image 1 làm khung đầu, @Image 2 làm khung cuối, và để họ nhảy như @Video 1.",
+    "hint3": "Tạo nhanh clip đơn lẻ với kiểm soát trực tiếp prompt.",
+    "reference": "Tham chiếu",
+    "images": "Hình ảnh",
+    "hint_video_1": "Kế hoạch video bất kỳ độ dài nào với trợ lý AI và tài liệu tham chiếu.",
+    "hint_video_2": "Tải lên 1-9 hình ảnh hoặc video tham chiếu và sử dụng @ để tạo tương tác. Ví dụ: Sử dụng @Image 1 làm khung đầu, @Image 2 làm khung cuối, và để họ nhảy như @Video 1.",
+    "hint_aivideo_1": "Tạo nhanh clip đơn lẻ với kiểm soát trực tiếp prompt.",
+    "hint_aivideo_2": "Tải lên 1-9 hình ảnh hoặc video tham chiếu và sử dụng @ để tạo tương tác. Ví dụ: Sử dụng @Image 1 làm khung đầu, @Image 2 làm khung cuối, và để họ nhảy như @Video 1.",
+    "hint_image_1": "Tạo AI hình ảnh từ văn bản và hình ảnh tham chiếu.",
+    "hint_image_2": "Tải lên tối đa 14 hình ảnh tham chiếu và mô tả chi tiết hình ảnh mục tiêu của bạn.",
+    "prompt_placeholder_video": "Mô tả video của bạn... Sử dụng @image1, @video1 để tham chiếu đến các tệp đã tải lên.",
+    "prompt_placeholder_aivideo": "Mô tả video của bạn...",
+    "prompt_placeholder_image": "Mô tả hình ảnh của bạn...",
+    "prompt_placeholder_drama": "Tải lên kịch bản, tiểu thuyết hoặc nhập ý tưởng câu chuyện của bạn. Trợ lý AI sẽ lập kế hoạch kịch bản và tạo video.",
+    "auto": "Tự động",
+    "custom": "Tùy chỉnh",
+    "upload_script": "Tải lên Kịch bản/Tiểu thuyết",
+    "single_episode": "Tập đơn",
+    "series": "Phim bộ",
+    "pro_writer": "Nhà viết chuyên nghiệp",
+    "ai_enhance": "Tối ưu AI",
+    "ai_enhance_text": "AI Tối ưu",
+    "original_prompt": "Mô tả gốc",
+    "enhanced_prompt": "Prompt AI Tối ưu",
+    "enhanced_badge": "AI Tạo",
+    "use_enhanced": "✓ Sử dụng tối ưu",
+    "use_enhanced_text": "Sử dụng tối ưu",
+    "clear_enhanced": "✕ Xóa",
+    "edit_enhanced": "Chỉnh sửa",
+    "save_edit": "Lưu",
+    "ref_mode": "Chế độ Tham chiếu",
+    "ref_mode_title": "Chế độ Tham chiếu",
+    "text2vid": "Text to Video",
+    "first_last_frame": "Tham chiếu Khung đầu và cuối",
+    "multi_ref": "Tham chiếu Hình ảnh+Video+Âm thanh",
+    "text2vid_desc": "Tạo video từ văn bản",
+    "ref_hint_text2vid": "Gợi ý: Khung cuối bắt buộc, khung đầu tùy chọn",
+    "ref_hint_first_last_frame": "Chế độ này sử dụng tham chiếu khung đầu và khung cuối theo thứ tự.",
+    "ref_hint_multi_ref": "Chế độ này hỗ trợ tối đa 9 ảnh tham chiếu.",
+    "img2vid": "Hình ảnh Tham chiếu",
+    "img2vid_desc": "Tải ảnh lên làm tham chiếu",
+    "vid2vid": "Video Tham chiếu",
+    "vid2vid_desc": "Tải video lên làm tham chiếu",
+    "audio2vid": "Âm thanh Tham chiếu",
+    "audio2vid_desc": "Tạo video từ âm thanh",
+    "ref_image": "Hình ảnh Tham chiếu",
+    "ref_video": "Video Tham chiếu",
+    "ref_audio": "Âm thanh Tham chiếu",
+    "ref_hint_img2vid": "Gợi ý: Hình ảnh Tham chiếu ×9 + Video Tham chiếu ×3 + Âm thanh Tham chiếu ×3",
+    "ref_hint_vid2vid": "Gợi ý: Video Tham chiếu ×3",
+    "real_people_title": "Tài nguyên Người thật",
+    "use_real_people": "Người thật",
+    "real_people_hint": "Hình ảnh tải lên sẽ được sử dụng làm loại tài nguyên đã chọn",
+    "avatar_id": "ID Ảnh đại diện",
+    "asset_library": "Thư viện Tài nguyên",
+    "asset_library_id": "ID Thư viện Tài nguyên",
+    "real_human_portrait_id": "ID Chân dung Người thật",
+    "action_id": "ID Hành động",
+    "background_id": "ID Nền",
+    "voice_id": "ID Giọng nói",
+    "subtitle_removal_title": "Xóa Phụ đề",
+    "subtitle_removal": "Xóa Phụ đề",
+    "upload": "Tải lên tệp",
+    "optimize_fail": "Tối ưu hóa thất bại",
+    "optimizing": "Đang tối ưu hóa...",
+    "please_enter_prompt": "Vui lòng nhập gợi ý",
+    "ref_image_placeholder": "Tải ảnh hoặc chọn từ thư viện",
+    "ref_video_placeholder": "Tải video hoặc chọn từ thư viện",
+    "ref_audio_placeholder": "Tải âm thanh hoặc chọn từ thư viện",
+    "optimize_success": "Tối ưu hóa prompt thành công!"
+  },
+  "features": {
+    "label": "Tại sao chọn Sedgo",
+    "title": "Tất cả những gì bạn cần để tạo",
+    "desc": "Sáu khả năng mạnh mẽ, thống nhất trong một mô hình.",
+    "f1_title": "Đầu vào Đa mô hình",
+    "f1_desc": "Kết hợp hình ảnh, video, clip âm thanh và prompt văn bản trong một yêu cầu tạo để có kiểm soát sáng tạo chưa từng có.",
+    "f2_title": "Tham chiếu bất cứ thứ gì",
+    "f2_desc": "Đánh dấu đến 9 hình ảnh và 3 video làm tham chiếu. Mô hình trích xuất phong cách, chủ thể và chuyển động với độ trung thực cao.",
+    "f3_title": "Sự nhất quán vượt trội",
+    "f3_desc": "Nhân vật, môi trường và phong cách duy trì nhất quán qua các khung hình và nhiều lần tạo.",
+    "f4_title": "Kiểm soát camera chính xác",
+    "f4_desc": "Lặp lại chính xác các mô hình chuyển động và chuyển động camera từ video tham chiếu với độ chính xác cấp khung.",
+    "f5_title": "Mở rộng và Chỉnh sửa Video",
+    "f5_desc": "Mở rộng video hiện có, sửa đổi cảnh, và lặp lại mà không cần bắt đầu từ đầu.",
+    "f6_title": "Tạo Âm thanh nội bộ",
+    "f6_desc": "Tạo âm thanh cục bộ đồng bộ với đầu ra video — nhạc, hiệu ứng âm thanh hoặc giọng nói."
+  },
+  "usecases": {
+    "label": "Trường hợp sử dụng",
+    "title": "Dành cho mọi nhà sáng tạo",
+    "desc": "Từ các nhà sáng tạo độc lập đến các studio doanh nghiệp, Sedgo trao quyền lực cho tất cả mọi người.",
+    "ad": "Quảng cáo",
+    "ad_desc": "Video thương hiệu có tác động mạnh",
+    "edu": "Giáo dục",
+    "edu_desc": "Nội dung giải thích thu hút",
+    "story": "Truyền thuyết",
+    "story_desc": "Cảnh được thúc đẩy bằng câu chuyện",
+    "social": "Mạng xã hội",
+    "social_desc": "Nội dung viral dạng ngắn",
+    "dance": "Chuyển động/Nhảy",
+    "dance_desc": "Diễn đạo và bắt chuyển động",
+    "edit": "Chỉnh sửa Video",
+    "edit_desc": "Sản xuất hậu kỳ hỗ trợ AI",
+    "film": "Phân cảnh phim",
+    "film_desc": "Làm cho storyboard trở nên sống động",
+    "realestate": "Bất động sản",
+    "realestate_desc": "Triển lãm bất động sản đắm chìm",
+    "music": "Đồng bộ Nhạc",
+    "music_desc": "Video phản ứng âm thanh"
+  },
+  "how": {
+    "label": "Cách thức hoạt động",
+    "title": "Tạo video trong 3 bước",
+    "desc": "Từ ý tưởng đến video cuối cùng chỉ trong vài phút.",
+    "s1_title": "Tải lên Tài sản",
+    "s1_desc": "Thêm hình ảnh, video và âm thanh làm tham chiếu — lên đến 12 tệp.",
+    "s2_title": "Mô tả Tầm nhìn của bạn",
+    "s2_desc": "Viết prompt và sử dụng thẻ <code>@image1</code>, <code>@video1</code> để tham chiếu đến các tệp đã tải lên.",
+    "s3_title": "Tạo và Tải xuống",
+    "s3_desc": "Chờ AI tạo video của bạn, sau đó tải xuống và chia sẻ hoặc chỉnh sửa."
+  },
+  "faq": {
+    "label": "FAQ",
+    "title": "Câu hỏi thường gặp",
+    "desc": "Tất cả những gì bạn cần biết về Sedgo.",
+    "q1": "Tôi có thể tải lên bao nhiêu tệp tham chiếu?",
+    "a1": "Lên đến 12 tệp: 9 hình ảnh, 3 video (≤15s), và 3 clip âm thanh (≤15s).",
+    "q2": "Các độ dài video nào được hỗ trợ?",
+    "a2": "Sedgo hỗ trợ tạo video từ 4 đến 15 giây, mặc định là 5 giây.",
+    "q3": "Video được tạo có dấu nước không?",
+    "a3": "Không có dấu nước. Bạn có quyền sở hữu đầy đủ nội dung được tạo.",
+    "q4": "Các định dạng hình ảnh/video nào được hỗ trợ?",
+    "a4": "Hình ảnh: PNG, JPG, JPEG, WEBP. Video: MP4, MOV, WEBM. Âm thanh: MP3, WAV, AAC.",
+    "q5": "Điểm được tính như thế nào?",
+    "a5": "Điểm được tiêu thụ mỗi giây video được tạo, với tỷ lệ phụ thuộc vào mô hình và độ phân giải được chọn. Điểm không bao giờ hết hạn.",
+    "q6": "Làm cách nào để liên hệ với hỗ trợ khách hàng?",
+    "a6": "Gửi email đến support@sedgo.ai. Phản hồi thường trong vòng 24 giờ vào ngày làm việc."
+  },
+  "pricing": {
+    "label": "Bảng giá",
+    "title": "Chọn gói phù hợp nhất",
+    "desc": "Tất cả gói đều bao gồm các chức năng cốt lõi và hỗ trợ kỹ thuật.",
+    "trial": "Dùng thử miễn phí",
+    "trial_desc": "Trải nghiệm độc quyền cho người dùng mới",
+    "pro": "Pro",
+    "pro_desc": "Đối với nhà sáng tạo cá nhân",
+    "team": "Team",
+    "team_desc": "Đối với hợp tác nhóm",
+    "enterprise": "Doanh nghiệp",
+    "enterprise_desc": "Giải pháp tùy chỉnh",
+    "monthly": "Tháng",
+    "yearly": "Năm",
+    "annual": "Năm",
+    "save": "Tiết kiệm 40%",
+    "billed_yearly": "Hóa đơn hàng năm",
+    "points": "Điểm",
+    "points_per_month": "Điểm/tháng",
+    "minutes": "Phút",
+    "max_batch_size": "Kích thước batch tối đa",
+    "max_concurrent_tasks": "Số nhiệm vụ đồng thời tối đa",
+    "full_hd": "Full HD",
+    "hd": "HD",
+    "output_support": "Hỗ trợ đầu ra",
+    "priority_support": "Hỗ trợ ưu tiên",
+    "custom_watermark": "Dấu nước tùy chỉnh",
+    "seedance_video": "Sedgo AI Video",
+    "multi_models": "Nhiều mô hình video AI",
+    "private_space": "Không gian video riêng tư",
+    "recommended": "Khuyến nghị",
+    "annual_total": "Tổng cộng hàng năm",
+    "subscribe_now": "Đăng ký Ngay",
+    "free_trial": "Dùng thử miễn phí",
+    "start_free_trial": "Bắt đầu dùng thử miễn phí",
+    "tab": {
+      "team": "Gói",
+      "credits": "Gói điểm"
+    },
+    "credits": {
+      "basic": "Gói mới",
+      "basic_desc": "Phù hợp cho người mới bắt đầu và người dùng cá nhân",
+      "creator": "Gói sáng tạo",
+      "creator_desc": "Phù hợp cho hầu hết nhà sáng tạo nội dung",
+      "elite": "Gói ưu tú",
+      "elite_desc": "Phù hợp cho người dùng chuyên nghiệp",
+      "advanced": "Gói nâng cao",
+      "advanced_desc": "Phù hợp cho người dùng có nhu cầu lớn",
+      "super": "Gói siêu",
+      "super_desc": "Phù hợp cho người dùng doanh nghiệp",
+      "points_1k": "✓ 1,000 Điểm",
+      "points_3k": "✓ 3,000 Điểm",
+      "points_8k": "✓ 8,000 Điểm",
+      "points_30k": "✓ 30,000 Điểm",
+      "points_100k": "✓ 100,000 Điểm",
+      "all_features": "✓ Bao gồm tất cả chức năng",
+      "no_expire": "✓ Điểm không hết hạn",
+      "buy_now": "Mua ngay"
+    },
+    "plans": {
+      "name_1": "Dùng thử miễn phí",
+      "desc_1": "Gói dùng thử độc quyền cho người dùng mới",
+      "name_2": "Đội nhóm",
+      "desc_2": "Dành cho đội nhóm nhỏ và trung bình",
+      "name_3": "Đội nhóm Pro",
+      "desc_3": "Dành cho đội nhóm chuyên nghiệp và doanh nghiệp"
+    },
+    "model_pricing": "Giá điểm mô hình Sedgo",
+    "points_per_second": "Số điểm tiêu thụ mỗi giây tạo",
+    "series": "Dòng Sedgo",
+    "series_v1": "Dòng Sedgo 1.x",
+    "table": {
+      "model": "Mô hình",
+      "resolution": "Độ phân giải",
+      "points_per_sec": "Điểm/giây",
+      "cost_5s": "Chi phí 5s",
+      "cost_10s": "Chi phí 10s",
+      "cost_15s": "Chi phí 15s"
+    },
+    "monthly_annual": "Hàng tháng (Hàng năm)"
+  },
+  "js": {
+    "created": "Tạo nhiệm vụ thất bại: ",
+    "gen_failed": "Tạo thất bại: ",
+    "timeout": "Hết thời gian chờ, vui lòng thử lại sau.",
+    "error": "Lỗi: ",
+    "download": "⬇ Tải xuống",
+    "uploading": "⏳ Đang tải lên…",
+    "attached": " tệp đã đính kèm",
+    "signin_first": "Vui lòng đăng nhập trước.",
+    "signed_in": "Đã đăng nhập",
+    "signed_in_alt": "Đã đăng nhập ✓",
+    "unknown_error": "Lỗi không xác định",
+    "subscribe_success": "Đăng ký thành công",
+    "subscribe_failed": "Đăng ký thất bại",
+    "select_endpoint": "Vui lòng chọn điểm cuối",
+    "auto": "Tự động",
+    "no_endpoints": "Không có điểm cuối khả dụng",
+    "load_failed": "Tải thất bại",
+    "no_description": "Không có mô tả",
+    "status_processing": "Đang xử lý",
+    "status_success": "Thành công",
+    "status_failed": "Thất bại",
+    "status_pending": "Chờ xử lý",
+    "status_unknown": "Không xác định",
+    "time_just_now": "Vừa xong",
+    "time_minutes_ago": "phút trước",
+    "time_hours_ago": "giờ trước",
+    "generate_image": "Tạo Hình ảnh",
+    "video_generation": "Tạo Video",
+    "no_data": "Không có dữ liệu",
+    "load_error": "Tải thất bại",
+    "select_asset_first": "Vui lòng chọn tài sản trước",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "retry_generate": "↺ Tạo lại",
+    "status_cancelled": "Đã hủy",
+    "status_error": "Lỗi",
+    "task_cancelled": "Nhiệm vụ đã bị hủy",
+    "network_error_retry": "Lỗi mạng, vui lòng thử lại thủ công",
+    "retry_failed": "Tạo lại thất bại",
+    "create_failed": "Tạo nhiệm vụ thất bại: ",
+    "generate": "Tạo",
+    "generating": "Đang tạo...",
+    "max_files": "Tối đa {n} tệp được phép",
+    "processing": "Đang xử lý…",
+    "upload_error": "Lỗi tải lên",
+    "upload_failed": "Tải lên thất bại",
+    "loading": "Đang tải...",
+    "confirm_select": "Xác nhận chọn",
+    "no_uploads": "Không có tệp đã tải lên",
+    "asset_unavailable": "Tính năng này yêu cầu quyền truy cập đặc biệt. Vui lòng liên hệ hỗ trợ.",
+    "admin_sender": "Quản trị viên",
+    "billing_annual": "Hàng năm",
+    "billing_monthly": "Hàng tháng",
+    "choose_topup": "Chọn gói nạp tiền",
+    "current_plan": "Gói hiện tại",
+    "delete": "🗑 Xóa",
+    "expires_at": "Hết hạn",
+    "me_sender": "Tôi",
+    "no_tickets": "Chưa có yêu cầu",
+    "payment_success": "Thanh toán thành công!",
+    "payment_success_desc": "Tín dụng/đăng ký đã được kích hoạt",
+    "points_unit": "Điểm",
+    "remaining_points": "Điểm còn lại",
+    "reply_empty": "Vui lòng nhập nội dung trả lời",
+    "request_fail": "Yêu cầu thất bại",
+    "segment_progress": "Đoạn {done}/{total} · {pct}%",
+    "send": "Gửi",
+    "sub_active": "Đang hoạt động",
+    "sub_cancelled": "Đã hủy",
+    "sub_expired": "Đã hết hạn",
+    "sub_pending": "Đang chờ",
+    "ticket_active": "Đang mở",
+    "ticket_closed": "Yêu cầu đã đóng",
+    "ticket_closed_label": "Đã đóng",
+    "ticket_reply_placeholder": "Tiếp tục trả lời...",
+    "type_admin_adjust": "Điều chỉnh quản trị",
+    "type_consume": "Đã dùng",
+    "type_earn": "Nhận được",
+    "type_image": "🖼️ Hình ảnh",
+    "type_long_video": "🎬 Video dài",
+    "type_subscription": "Đăng ký",
+    "type_video": "🎬 Video",
+    "unknown": "Không rõ",
+    "upgrade_hint": "Nâng cấp ngay để nhận thêm điểm và tính năng"
+  },
+  "modal": {
+    "description": "Mô tả",
+    "status": "Trạng thái",
+    "created_at": "Thời gian tạo",
+    "points_consumed": "Điểm đã tiêu",
+    "title": "Chi tiết nhiệm vụ"
+  },
+  "results": {
+    "title": "Kết quả tạo",
+    "refresh": "Làm mới",
+    "empty": "Không có kết quả tạo",
+    "empty_hint": "Nhấn nút trên để bắt đầu tạo"
+  },
+  "lang": {
+    "zh": "中文",
+    "zh-TW": "繁體中文",
+    "en": "English",
+    "ja": "日本語",
+    "ko": "한국어",
+    "ru": "Русский",
+    "vi": "Tiếng Việt",
+    "es": "Español"
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "confirm_password": "Xác nhận mật khẩu",
+    "display_name": "Tên hiển thị",
+    "remember_me": "Ghi nhớ tôi",
+    "forgot_password": "Quên mật khẩu?",
+    "no_account": "Chưa có tài khoản?",
+    "already_have_account": "Đã có tài khoản?",
+    "loginBtn": "Đăng nhập",
+    "registerBtn": "Đăng ký",
+    "processing": "Đang xử lý…",
+    "google": "Đăng nhập với Google",
+    "download": "Tải xuống",
+    "copy_link": "Sao chép liên kết",
+    "link_copied": "Đã sao chép liên kết vào clipboard",
+    "enter_video_desc": "Nhập mô tả video",
+    "enter_image_desc": "Nhập mô tả hình ảnh",
+    "fillAll": "Vui lòng điền đầy đủ các trường bắt buộc",
+    "passwordMismatch": "Mật khẩu không khớp",
+    "passwordTooShort": "Mật khẩu phải ít nhất 6 ký tự",
+    "title": "Chào mừng",
+    "subtitle": "Đăng nhập hoặc đăng ký để bắt đầu",
+    "or": "hoặc",
+    "namePlaceholder": "Tên hiển thị của bạn",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "displayName": "Tên hiển thị",
+    "agree": "Tôi đã đọc và đồng ý với",
+    "terms": "Điều khoản dịch vụ",
+    "and": "và",
+    "privacy": "Chính sách bảo mật",
+    "please_login": "Vui lòng đăng nhập để sử dụng AI enhancement",
+    "loginFailed": "Đăng nhập thất bại",
+    "registerFailed": "Đăng ký thất bại",
+    "agreeRequired": "Vui lòng đọc và đồng ý với Điều khoản dịch vụ và Chính sách quyền riêng tư"
+  },
+  "user": {
+    "profile": "Hồ sơ",
+    "apiKeys": "Khóa API",
+    "subscription": "Đăng ký",
+    "logout": "Đăng xuất",
+    "apiKeyHint": "Khóa truy cập API",
+    "currentSub": "Đăng ký hiện tại",
+    "noSub": "Không có đăng ký",
+    "points": "Điểm"
+  },
+  "footer": {
+    "txt2vid": "Văn bản sang Video",
+    "img2vid": "Hình ảnh sang Video",
+    "terms": "Điều khoản Dịch vụ",
+    "privacy": "Chính sách Quyền riêng tư",
+    "refund": "Chính sách Hoàn tiền",
+    "contact": "Liên hệ"
+  },
+  "profile": {
+    "title": "Trung tâm Người dùng - Sedgo 2",
+    "menu": {
+      "works": "Công trình của tôi",
+      "subscription": "Đăng ký",
+      "team": "Nhóm",
+      "credits": "Lịch sử tín dụng",
+      "orders": "Lịch sử đơn hàng",
+      "profile": "Hồ sơ",
+      "contact": "Liên hệ",
+      "logout": "Đăng xuất"
+    },
+    "page": {
+      "works": {
+        "title": "Công trình của tôi",
+        "desc": "Quản lý và xem tất cả video và hình ảnh bạn đã tạo"
+      },
+      "contact": {
+        "desc": "Có vấn đề? Gửi yêu cầu hỗ trợ",
+        "title": "Gửi yêu cầu"
+      },
+      "credits": {
+        "desc": "Xem lịch sử điểm",
+        "title": "Lịch sử điểm"
+      },
+      "orders": {
+        "desc": "Lịch sử đơn hàng",
+        "title": "Lịch sử đơn hàng"
+      },
+      "profile": {
+        "desc": "Quản lý tài khoản",
+        "title": "Hồ sơ"
+      },
+      "subscription": {
+        "desc": "Quản lý gói đăng ký",
+        "title": "Đăng ký"
+      }
+    },
+    "section": {
+      "works": {
+        "title": "Tác phẩm của tôi",
+        "desc": "Quản lý video và ảnh đã tạo",
+        "create": "+ Tạo Video Mới"
+      },
+      "subscription": {
+        "title": "Đăng ký",
+        "desc": "Quản lý gói. Có thể hủy bất cứ lúc nào."
+      },
+      "team": {
+        "title": "Nhóm",
+        "desc": "Bạn chưa tham gia bất kỳ nhóm nào. Đăng ký gói nhóm để tạo nhóm của riêng bạn, hoặc chờ mời từ chủ sở hữu nhóm."
+      },
+      "credits": {
+        "title": "Lịch sử điểm",
+        "desc": "Xem lịch sử điểm."
+      },
+      "orders": {
+        "title": "Lịch sử đơn hàng",
+        "desc": "Lịch sử đơn hàng."
+      },
+      "profile": {
+        "title": "Hồ sơ",
+        "desc": "Quản lý tài khoản"
+      },
+      "contact": {
+        "title": "Gửi yêu cầu",
+        "desc": "Gặp vấn đề? Hãy gửi yêu cầu hỗ trợ."
+      }
+    },
+    "tabs": {
+      "video": "Video",
+      "image": "Hình ảnh"
+    },
+    "filter": {
+      "all": "Tất cả Video",
+      "text": "Văn bản sang Video",
+      "image": "Hình ảnh sang Video",
+      "date": "📅 Lọc theo Ngày"
+    },
+    "empty": {
+      "works": {
+        "title": "Không tìm thấy Video",
+        "desc": "Bạn chưa tạo bất kỳ video nào. Bắt đầu tạo video đầu tiên của bạn!"
+      },
+      "team": {
+        "title": "Chưa có nhóm",
+        "desc": "Bạn chưa tham gia bất kỳ nhóm nào. Đăng ký gói nhóm để tạo nhóm của riêng bạn, hoặc chờ mời từ chủ sở hữu nhóm."
+      },
+      "credits": "Không tìm thấy lịch sử tín dụng.",
+      "orders": "Không tìm thấy đơn hàng.",
+      "image_desc": "Lịch sử tạo ảnh sẽ hiển thị ở đây",
+      "image_title": "Chưa có ảnh nào"
+    },
+    "team": {
+      "create": "Tạo Gói Nhóm"
+    },
+    "credits": {
+      "buy": "Mua Thêm Tín dụng"
+    },
+    "subscription": {
+      "unlock": "Mở khóa Sedgo Pro",
+      "no_plan": "Bạn chưa đăng ký bất kỳ gói nào. Nâng cấp ngay để nhận mô hình tạo video AI đa mô thức cách mạng của Sedgo.",
+      "choose": "Chọn Gói Hoàn hảo →",
+      "annual_subscribe": "Đăng ký hàng năm",
+      "concurrent_tasks": "Tác vụ đồng thời",
+      "current_plan_btn": "Gói hiện tại",
+      "max_resolution": "Độ phân giải tối đa",
+      "monthly_subscribe": "Đăng ký hàng tháng",
+      "points_per_month": "Điểm/tháng"
+    },
+    "features": {
+      "multimodal": "Đầu vào Đa mô thức",
+      "consistency": "Tính nhất quán Nhân vật",
+      "audio": "Tạo Âm thanh",
+      "fast": "Tạo Nhanh",
+      "edit": "Chỉnh sửa Chính xác",
+      "privacy": "Bảo vệ Quyền riêng tư"
+    },
+    "team_btn": {
+      "create": "Tạo Gói Nhóm"
+    },
+    "credits_btn": {
+      "buy": "Mua Thêm Tín dụng"
+    },
+    "table": {
+      "date": "Ngày",
+      "type": "Loại",
+      "details": "Chi tiết",
+      "amount": "Số tiền",
+      "onetime_credits": "Tín dụng Một lần",
+      "subscription_credits": "Tín dụng Đăng ký",
+      "product": "Sản phẩm",
+      "status": "Trạng thái",
+      "action": "Hành động",
+      "credits_change": "Thay đổi điểm"
+    },
+    "pagination": {
+      "records": "Tổng cộng 0 bản ghi",
+      "orders": "0 đơn hàng",
+      "prev": "Trước",
+      "next": "Tiếp",
+      "per_page": "trang",
+      "page": "Trang 1 / 0"
+    },
+    "form": {
+      "avatar": "Ảnh đại diện",
+      "change_avatar": "Thay đổi Ảnh đại diện",
+      "username": "Tên người dùng",
+      "username_placeholder": "Nhập tên người dùng",
+      "email": "Email",
+      "password": "Mật khẩu",
+      "password_placeholder": "Nhập mật khẩu mới",
+      "confirm_password": "Xác nhận Mật khẩu",
+      "confirm_password_placeholder": "Xác nhận mật khẩu mới",
+      "save": "Lưu Thay đổi",
+      "confirm_new_password": "Xác nhận mật khẩu mới",
+      "confirm_new_password_placeholder": "Nhập lại mật khẩu mới",
+      "new_password": "Mật khẩu mới",
+      "new_password_placeholder": "Mật khẩu mới (ít nhất 6 ký tự)",
+      "old_password": "Mật khẩu cũ",
+      "old_password_placeholder": "Mật khẩu cũ (để trống nếu không đổi)"
+    },
+    "contact": {
+      "email": "Email",
+      "email_placeholder": "Nhập email của bạn",
+      "subject": "Chủ đề",
+      "subject_placeholder": "Nhập chủ đề",
+      "message": "Tin nhắn",
+      "message_placeholder": "Nhập tin nhắn của bạn",
+      "send": "Gửi Tin nhắn",
+      "info": "Thông tin Liên hệ",
+      "hours": "Thứ Hai-Thứ Sáu 9:00 - 18:00",
+      "attach_label": "Tệp đính kèm (tùy chọn, mỗi file tối đa 20MB)",
+      "dropzone": "Nhấp hoặc kéo thả để tải lên",
+      "email_label": "Email liên hệ",
+      "fill_all": "Vui lòng điền đầy đủ thông tin",
+      "hours_label": "Giờ làm việc",
+      "message_label": "Mô tả chi tiết",
+      "my_tickets": "Yêu cầu của tôi",
+      "other": "Phương thức liên hệ khác",
+      "send_fail": "Gửi thất bại",
+      "sending": "Đang gửi...",
+      "sent": "Yêu cầu đã được gửi! Chúng tôi sẽ xử lý sớm nhất.",
+      "subject_label": "Tiêu đề yêu cầu",
+      "submit": "Gửi yêu cầu",
+      "title": "Gửi yêu cầu"
+    },
+    "logout_confirm": "Bạn có chắc chắn muốn đăng xuất?",
+    "avatar_success": "Cập nhật ảnh đại diện thành công",
+    "avatar_fail": "Cập nhật ảnh đại diện thất bại",
+    "enter_username": "Vui lòng nhập tên người dùng",
+    "profile_success": "Cập nhật hồ sơ thành công",
+    "address_copied": "Đã sao chép địa chỉ",
+    "attachment": "Tệp đính kèm",
+    "buy_plan": "Mua gói",
+    "choose_plan": "Chọn gói",
+    "credits_empty": "Không có lịch sử điểm",
+    "credits_records": "Tổng {total} bản ghi, trang {page}/{totalPages}",
+    "credits_topup": "₮ Nạp điểm",
+    "delete_confirm": "Xóa tác phẩm này? Không thể hoàn tác.",
+    "delete_fail": "Xóa thất bại",
+    "load_fail": "Tải thất bại",
+    "loading": "Đang tải...",
+    "orders_count": "0 đơn",
+    "orders_empty": "Chưa có đơn hàng",
+    "orders_one": "1 đơn",
+    "payment": {
+      "cancelled": "Đã hủy",
+      "copy_address": "Sao chép địa chỉ",
+      "create_fail": "Tạo thất bại",
+      "expired": "Hết hạn",
+      "generating": "Đang tạo đơn hàng...",
+      "net_error": "Lỗi mạng, thử lại",
+      "order_status": "Đơn hàng",
+      "remaining": "Thời gian còn lại",
+      "waiting": "Đang chờ chuyển khoản..."
+    },
+    "pw_mismatch": "Mật khẩu không khớp",
+    "pw_too_short": "Mật khẩu mới phải có ít nhất 6 ký tự",
+    "pw_update_fail": "Cập nhật mật khẩu thất bại",
+    "save_fail": "Lưu thất bại",
+    "update_fail": "Cập nhật thất bại",
+    "upload_fail": "Tải lên thất bại"
+  },
+  "api": {
+    "label": "Phát triển",
+    "title": "Tài liệu API",
+    "desc": "Tích hợp khả năng tạo video AI vào ứng dụng của bạn.",
+    "docs": "Tài liệu API",
+    "docs_desc": "Tài liệu tham khảo API đầy đủ với tất cả các endpoint, tham số và ví dụ.",
+    "sdk": "Công cụ SDK",
+    "sdk_desc": "SDK cho Python, JavaScript, Go và các ngôn ngữ lập trình phổ biến khác.",
+    "playground": "API Playground",
+    "playground_desc": "Kiểm tra API trực tuyến và xem yêu cầu và phản hồi theo thời gian thực.",
+    "view_docs": "Xem tài liệu",
+    "download_sdk": "Tải SDK",
+    "try_now": "Thử ngay"
+  },
+  "support": {
+    "label": "Hỗ trợ",
+    "title": "Nhận trợ giúp",
+    "desc": "Chúng tôi sẵn sàng giúp bạn.",
+    "guides": "Trung tâm trợ giúp",
+    "guides_desc": "Hướng dẫn chi tiết và hướng dẫn để giúp bạn bắt đầu.",
+    "community": "Diễn đàn cộng đồng",
+    "community_desc": "Kết nối với người dùng khác, chia sẻ mẹo và ý tưởng.",
+    "contact": "Liên hệ",
+    "contact_desc": "Có câu hỏi? Gửi email cho chúng tôi.",
+    "visit": "Thăm trung tâm trợ giúp",
+    "join": "Tham gia cộng đồng",
+    "email": "Gửi email"
+  },
+  "contact_page": {
+    "page": {
+      "title": "Liên hệ",
+      "desc": "Chúng tôi sẵn sàng giúp đỡ bạn"
+    },
+    "methods": {
+      "title": "Phương thức liên hệ",
+      "intro": "Nếu bạn có câu hỏi hoặc đề xuất, vui lòng liên hệ với chúng tôi:"
+    },
+    "email": {
+      "title": "Hỗ trợ qua email",
+      "text": "Gửi email đến:",
+      "response": "Thường phản hồi trong vòng 24 giờ vào ngày làm việc"
+    },
+    "online": {
+      "title": "Hỗ trợ trực tuyến",
+      "hours": "Giờ làm việc: Thứ Hai đến Thứ Sáu 9:00 - 18:00",
+      "chat": "Hỗ trợ chat có sẵn trong giờ làm việc"
+    },
+    "feedback": {
+      "title": "Mẫu phản hồi",
+      "visit": "Vui lòng truy cập Trung tâm trợ giúp của chúng tôi để gửi phản hồi",
+      "note": "Chúng tôi nghiêm túc với mọi phản hồi"
+    },
+    "social": {
+      "title": "Mạng xã hội",
+      "follow": "Theo dõi chúng tôi để cập nhật mới nhất",
+      "platforms": "WeChat, Weibo, Twitter"
+    },
+    "telegram": {
+      "title": "Telegram",
+      "join": "Tham gia nhóm Telegram của chúng tôi:",
+      "help": "Nhận trợ giúp nhanh và tin tức mới nhất"
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp",
+      "intro": "Trước khi liên hệ, bạn có thể muốn xem FAQ của chúng tôi:",
+      "page": "Trang FAQ",
+      "help": "Trung tâm trợ giúp"
+    }
+  },
+  "api_page": {
+    "page": {
+      "title": "Tài liệu API",
+      "desc": "Tích hợp khả năng tạo video AI vào ứng dụng của bạn."
+    },
+    "quick_start": {
+      "title": "Bắt đầu nhanh",
+      "desc": "Với Sedgo API, bạn có thể dễ dàng tích hợp khả năng tạo video AI vào ứng dụng của mình."
+    },
+    "auth": {
+      "title": "Xác thực",
+      "desc": "Tất cả các yêu cầu API đều cần xác thực qua API Key. Thêm tiêu đề sau:"
+    },
+    "create_task": {
+      "title": "Tạo nhiệm vụ video",
+      "desc": "Sử dụng điểm cuối POST /v1/tasks để tạo nhiệm vụ tạo video:"
+    },
+    "query_status": {
+      "title": "Truy vấn trạng thái nhiệm vụ",
+      "desc": "Sử dụng điểm cuối GET /v1/tasks/{task_id} để truy vấn trạng thái nhiệm vụ:"
+    },
+    "models": {
+      "title": "Mô hình có sẵn",
+      "sedgo_fast": "sedgo-fast - Mô hình tạo nhanh, phù hợp để xem trước nhanh",
+      "sedgo": "sedgo - Mô hình chất lượng cao, phù hợp để xuất cuối cùng"
+    },
+    "response": {
+      "title": "Định dạng phản hồi"
+    }
+  },
+  "support_page": {
+    "page": {
+      "title": "Nhận trợ giúp",
+      "desc": "Chúng tôi sẵn sàng giúp đỡ bạn."
+    },
+    "help_center": {
+      "title": "Trung tâm trợ giúp",
+      "intro": "Hướng dẫn chi tiết và hướng dẫn để giúp bạn bắt đầu.",
+      "guide": "📖 Hướng dẫn bắt đầu - Tìm hiểu cách bắt đầu sử dụng",
+      "tutorial": "🎬 Hướng dẫn video - Làm chủ các kỹ thuật nâng cao",
+      "api": "⚙️ Tài liệu API - Tích hợp vào ứng dụng",
+      "billing": "💰 Thông tin thanh toán - Hiểu giá và nạp tiền"
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp",
+      "q1": "Q: Tạo video mất bao lâu?",
+      "a1": "A: Thời gian tạo video phụ thuộc vào độ dài video và mô hình đã chọn. Thông thường, video 10 giây mất 1-2 phút.",
+      "q2": "Q: Độ phân giải nào được hỗ trợ?",
+      "a2": "A: Chúng tôi hỗ trợ độ phân giải 720p, 1080p và 4K.",
+      "q3": "Q: Làm thế nào để lấy API Key?",
+      "a3": "A: Sau khi đăng nhập, bạn có thể tạo và quản lý API Keys của mình trong cài đặt API trong hồ sơ."
+    },
+    "community": {
+      "title": "Diễn đàn cộng đồng",
+      "intro": "Kết nối với người dùng khác, chia sẻ mẹo và ý tưởng. Trong cộng đồng bạn có thể:",
+      "share": "Chia sẻ công việc của bạn",
+      "inspiration": "Nhận cảm hứng sáng tạo",
+      "suggest": "Gửi đề xuất và phản hồi",
+      "help": "Giúp người dùng khác"
+    },
+    "contact": {
+      "title": "Liên hệ",
+      "intro": "Nếu bạn có câu hỏi hoặc đề xuất, hãy gửi email đến:",
+      "email": "support@sedgo.ai",
+      "response": "Thường phản hồi trong vòng 24 giờ vào ngày làm việc."
+    }
+  },
+  "privacy_page": {
+    "page": {
+      "title": "Chính sách quyền riêng tư",
+      "desc": "Chúng tôi tôn trọng quyền riêng tư của bạn",
+      "intro": "Chúng tôi coi trọng quyền riêng tư của bạn. Chính sách này giải thích cách chúng tôi thu thập và bảo vệ thông tin của bạn"
+    },
+    "info": {
+      "title": "1. Giới thiệu",
+      "intro": "Chào mừng đến với SedGoAI (sau đây gọi là \"chúng tôi\" hoặc \"nền tảng\"). Chúng tôi coi trọng quyền riêng tư của bạn. Chính sách quyền riêng tư này giải thích cách chúng tôi thu thập, sử dụng, lưu trữ và bảo vệ thông tin cá nhân của bạn.",
+      "account": "Thông tin nhận dạng cá nhân: Tên, địa chỉ email, số điện thoại",
+      "usage": "Thông tin tài khoản: Mật khẩu (lưu trữ mã hóa), API Key",
+      "technical": "Dữ liệu sử dụng: Nội dung được tạo, lời nhắc, tần suất sử dụng"
+    },
+    "usage": {
+      "title": "2. Thu thập thông tin",
+      "service": "Chúng tôi thu thập thông tin bạn cung cấp trong quá trình đăng ký và sử dụng dịch vụ:",
+      "improve": "Chúng tôi sử dụng thông tin thu thập được để:",
+      "security": "Cung cấp và duy trì dịch vụ",
+      "billing": "Xử lý thanh toán và hóa đơn",
+      "communication": "Cải thiện sản phẩm và dịch vụ",
+      "access": "Gửi thông báo quan trọng và cập nhật"
+    },
+    "sharing": {
+      "title": "3. Sử dụng thông tin",
+      "intro": "Chúng tôi không bán thông tin cá nhân của bạn. Chúng tôi chỉ chia sẻ thông tin trong các trường hợp sau:",
+      "consent": "Với sự đồng ý rõ ràng của bạn",
+      "legal": "Để tuân thủ yêu cầu pháp lý",
+      "partners": "Để bảo vệ an ninh nền tảng và người dùng"
+    },
+    "security": {
+      "title": "4. Chia sẻ thông tin",
+      "intro": "Chúng tôi sử dụng các biện pháp bảo mật tiêu chuẩn ngành để bảo vệ dữ liệu của bạn, bao gồm mã hóa truyền dữ liệu, mã hóa lưu trữ và kiểm soát truy cập. Tuy nhiên, xin lưu ý rằng không có biện pháp bảo mật nào là tuyệt đối an toàn."
+    },
+    "rights": {
+      "title": "5. Bảo mật dữ liệu",
+      "intro": "Bạn có quyền truy cập, sửa đổi, xóa thông tin cá nhân của mình hoặc hạn chế việc chúng tôi xử lý dữ liệu của bạn. Vui lòng liên hệ support@sedgo.ai để đưa ra yêu cầu."
+    },
+    "changes": {
+      "title": "6. Quyền của người dùng",
+      "intro": "Chúng tôi có thể cập nhật chính sách này theo thời gian. Các thay đổi quan trọng sẽ được thông báo qua email."
+    },
+    "contact": {
+      "title": "7. Cập nhật chính sách",
+      "intro": "Nếu bạn có câu hỏi, vui lòng gửi email đến:",
+      "email": "support@sedgo.ai"
+    }
+  },
+  "terms_page": {
+    "page": {
+      "title": "Điều khoản dịch vụ",
+      "desc": "Điều khoản và điều kiện sử dụng dịch vụ SedGo ai",
+      "intro": "Bằng cách sử dụng dịch vụ của chúng tôi, bạn đồng ý tuân thủ các điều khoản sau"
+    },
+    "acceptance": {
+      "title": "1. Chấp nhận điều khoản",
+      "intro": "Sử dụng dịch vụ SedGoAI có nghĩa là bạn đồng ý tuân thủ các Điều khoản Dịch vụ này. Nếu bạn không đồng ý, vui lòng không sử dụng dịch vụ của chúng tôi."
+    },
+    "service": {
+      "title": "2. Mô tả dịch vụ",
+      "intro": "SedGoAI cung cấp dịch vụ tạo video dựa trên AI, bao gồm văn bản thành video, hình ảnh thành video và các tính năng khác."
+    },
+    "user": {
+      "title": "3. Tài khoản người dùng",
+      "intro": "Bạn đồng ý không:",
+      "legal": "Vi phạm bất kỳ luật hoặc quy định nào",
+      "account": "Bạn cần đăng ký tài khoản để sử dụng dịch vụ. Bạn chịu trách nhiệm duy trì bảo mật tài khoản và tất cả hoạt động dưới tài khoản của mình.",
+      "content": "Tạo nội dung bất hợp pháp hoặc có hại",
+      "respect": "Lạm dụng hoặc tấn công dịch vụ"
+    },
+    "payment": {
+      "title": "4. Quy tắc sử dụng",
+      "intro": "Một số dịch vụ có thể yêu cầu thanh toán. Bạn đồng ý:",
+      "charges": "6. Phí và Thanh toán",
+      "billing": "Dịch vụ có thể phát sinh phí. Bạn chịu trách nhiệm thanh toán tất cả các khoản phí, bao gồm thuế. Không thanh toán có thể dẫn đến tạm ngừng dịch vụ."
+    },
+    "intellectual": {
+      "title": "5. Quyền sở hữu nội dung",
+      "intro": "Bạn giữ quyền sở hữu nội dung được tạo bằng dịch vụ của chúng tôi. Chúng tôi giữ quyền sử dụng nội dung được tạo để cải thiện dịch vụ."
+    },
+    "termination": {
+      "title": "7. Thay đổi dịch vụ",
+      "intro": "Chúng tôi giữ quyền thay đổi hoặc chấm dứt dịch vụ bất cứ lúc nào. Thay đổi quan trọng sẽ được thông báo trước.",
+      "violation": "9. Chấm dứt",
+      "abuse": "Chúng tôi có thể chấm dứt hoặc tạm ngừng tài khoản của bạn bất cứ lúc nào mà không cần thông báo trước nếu bạn vi phạm các điều khoản."
+    },
+    "limitation": {
+      "title": "8. Tuyên bố miễn trừ",
+      "intro": "Dịch vụ được cung cấp 'nguyên trạng' mà không có bất kỳ bảo đảm nào. Chúng tôi không chịu trách nhiệm về bất kỳ tổn thất nào phát sinh từ việc sử dụng dịch vụ của chúng tôi."
+    },
+    "contact": {
+      "title": "10. Liên hệ",
+      "intro": "Nếu bạn có câu hỏi, vui lòng gửi email đến:",
+      "email": "support@sedgo.ai"
+    }
+  },
+  "refund_page": {
+    "page": {
+      "title": "Chính sách hoàn tiền",
+      "desc": "Tìm hiểu về chính sách hoàn tiền của chúng tôi",
+      "intro": "Tìm hiểu về các quy tắc và quy trình hoàn tiền của chúng tôi"
+    },
+    "scope": {
+      "title": "1. Phạm vi áp dụng",
+      "intro": "Chính sách hoàn tiền này áp dụng cho tất cả các dịch vụ và tín dụng được mua qua SedGoAI."
+    },
+    "credits": {
+      "title": "2. Hoàn tiền tín dụng",
+      "intro": "Tín dụng đã mua có thể được hoàn tiền đầy đủ trong vòng 7 ngày sau khi mua nếu chưa sử dụng. Tín dụng đã sử dụng không được hoàn tiền."
+    },
+    "subscription": {
+      "title": "3. Hoàn tiền đăng ký",
+      "monthly": "Đăng ký hàng tháng có thể hủy bất cứ lúc nào. Sau khi hủy, dịch vụ sẽ kết thúc vào cuối chu kỳ thanh toán hiện tại và không được hoàn tiền.",
+      "yearly": "Đăng ký hàng năm có thể được hoàn tiền đầy đủ trong vòng 7 ngày sau khi mua. Sau 7 ngày, không có hoàn tiền."
+    },
+    "process": {
+      "title": "4. Yêu cầu hoàn tiền",
+      "intro": "Để yêu cầu hoàn tiền, vui lòng gửi email đến support@sedgo.ai với thông tin sau:",
+      "email": "Email đã đăng ký",
+      "order": "Số đơn hàng",
+      "date": "Ngày mua",
+      "reason": "Lý do hoàn tiền"
+    },
+    "timeline": {
+      "title": "5. Thời gian xử lý",
+      "intro": "Yêu cầu hoàn tiền sẽ được xử lý trong vòng 5 ngày làm việc kể từ khi nhận được. Hoàn tiền sẽ được hoàn trả vào tài khoản thanh toán ban đầu, thời gian đến phụ thuộc vào phương thức thanh toán."
+    },
+    "exceptions": {
+      "title": "6. Ngoại lệ"
+    },
+    "ineligible": {
+      "title": "Các trường hợp sau không được hoàn tiền:",
+      "intro": "Các trường hợp sau không được hoàn tiền:",
+      "used": "Tín dụng đã sử dụng",
+      "expired": "Đơn hàng quá thời hạn hoàn tiền",
+      "terminated": "Tài khoản bị chấm dứt do vi phạm Điều khoản dịch vụ"
+    },
+    "contact": {
+      "title": "7. Liên hệ",
+      "intro": "Nếu bạn có câu hỏi, vui lòng gửi email đến:",
+      "email": "support@sedgo.ai"
+    }
+  }
+}

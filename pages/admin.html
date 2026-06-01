@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  
+  <!-- Admin pages should not be indexed -->
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="googlebot" content="noindex, nofollow" />
+  
+  <!-- Basic SEO -->
+  <meta name="description" content="SedGo AI Admin Dashboard | Management Console for AI Video Generation Platform. Secure admin panel to manage users, subscriptions, and system settings." />
+  <meta name="keywords" content="SedGo admin, AI video platform admin, admin dashboard, user management, subscription management, admin panel, SedGo管理后台, AI视频平台管理" />
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://sedgo.ai/pages/admin" />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/static/favicon.png" />
+  
+  <title>SedGo Admin Dashboard | 管理后台</title>
+  <link rel="stylesheet" href="/static/css/admin.css">
+</head>
+<body>
+
+<!-- 登录界面 -->
+<div id="loginPage" class="login-page">
+  <div class="login-card">
+    <h2>🔐 SedGoAI 管理后台 <span style="font-size:10px;color:var(--t3);font-weight:400;vertical-align:middle">v2.1</span></h2>
+    <p>请使用管理员账户登录</p>
+    <form id="loginForm" onsubmit="return false;">
+    <label>账号</label>
+    <input type="text" id="loginEmail" placeholder="admin" />
+    <label>密码</label>
+    <input type="password" id="loginPwd" placeholder="••••••" />
+    <div class="login-error" id="loginError"></div>
+    <button type="button" class="login-btn" id="loginBtn">登 录</button>
+    </form>
+  </div>
+</div>
+
+<!-- 主界面 -->
+<div id="appMain" style="display:none">
+
+  <!-- 移动端侧边栏遮罩 -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">S</div>
+      <div class="sidebar-logo-text">SedGo</div>
+    </div>
+    <div class="sidebar-nav">
+      <button class="sidebar-item active" data-page="dashboard" onclick="switchPage('dashboard')">
+        <span>📊</span> 仪表盘
+      </button>
+      <button class="sidebar-item" data-page="users" onclick="switchPage('users')">
+        <span>👥</span> 用户管理
+      </button>
+      <button class="sidebar-item" data-page="plans" onclick="switchPage('plans')">
+        <span>📦</span> 套餐管理
+      </button>
+      <button class="sidebar-item" data-page="subscriptions" onclick="switchPage('subscriptions')">
+        <span>📝</span> 订阅记录
+      </button>
+      <button class="sidebar-item" data-page="channels" onclick="switchPage('channels')">
+        <span>🔌</span> 渠道管理
+      </button>
+      <button class="sidebar-item" data-page="points" onclick="switchPage('points')">
+        <span>💰</span> 积分配置
+      </button>
+      <button class="sidebar-item" data-page="tasks" onclick="switchPage('tasks')">
+        <span>🎬</span> 任务监控
+      </button>
+      <button class="sidebar-item" data-page="billing" onclick="switchPage('billing')">
+        <span>🧾</span> 账单管理
+      </button>
+      <button class="sidebar-item" data-page="payments" onclick="switchPage('payments')">
+        <span>⚙️</span> 支付与设置
+      </button>
+      <button class="sidebar-item" data-page="contacts" onclick="switchPage('contacts')">
+        <span>🎫</span> 工单管理
+      </button>
+    </div>
+    <div class="sidebar-footer">
+      <span class="sidebar-user" id="sidebarUser"></span>
+      <button class="logout-btn" onclick="doLogout()">退出</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title" id="topbarTitle">仪表盘</div>
+      </div>
+      <div class="topbar-actions">
+        <a href="/index.html" style="color:var(--t2);text-decoration:none;font-size:13px;">← 返回主页</a>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="page-content active" id="page-dashboard">
+      <div class="page-title">平台总览</div>
+      <div class="page-desc">查看 SedGo 平台运行状况</div>
+      <div class="stats-grid" id="dashStats"></div>
+
+      <div class="chart-row">
+        <div class="chart-card">
+          <div class="chart-title">📈 任务趋势（近7天）</div>
+          <div class="chart-bars" id="taskChart"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">👤 用户增长（近7天）</div>
+          <div class="chart-bars" id="userChart"></div>
+        </div>
+      </div>
+
+      <div class="status-grid" id="taskStatusGrid"></div>
+    </div>
+
+    <!-- Users -->
+    <div class="page-content" id="page-users">
+      <div class="page-title">用户管理</div>
+      <div class="page-desc">管理平台用户账户</div>
+      <div class="toolbar">
+        <input type="text" id="userSearch" placeholder="搜索邮箱或昵称..." onkeydown="if(event.key==='Enter'){userPage=1;loadUsers();}" />
+        <button class="toolbar-btn" onclick="userPage=1;loadUsers()">搜索</button>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>邮箱</th><th>昵称</th><th>角色</th><th>状态</th><th>积分</th><th>套餐</th><th>注册时间</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="userTableBody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="userPagination"></div>
+    </div>
+
+    <!-- Plans -->
+    <div class="page-content" id="page-plans">
+      <div class="page-title">套餐管理</div>
+      <div class="page-desc">管理订阅套餐方案</div>
+      <div class="toolbar">
+        <button class="toolbar-btn" onclick="openPlanModal()">+ 新建套餐</button>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>名称</th><th>价格(美分)</th><th>周期(天)</th>
+              <th>月积分</th><th>批量上限</th><th>分辨率</th><th>状态</th><th>排序</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="planTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Subscriptions -->
+    <div class="page-content" id="page-subscriptions">
+      <div class="page-title">订阅记录</div>
+      <div class="page-desc">查看和管理用户订阅</div>
+      <div class="toolbar">
+        <button class="toolbar-btn" onclick="openSubModal()">+ 新增订阅</button>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>用户</th><th>套餐</th><th>状态</th>
+              <th>开始时间</th><th>到期时间</th><th>续费</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="subTableBody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="subPagination"></div>
+    </div>
+
+    <!-- Channels -->
+    <div class="page-content" id="page-channels">
+      <div class="page-title">渠道管理</div>
+      <div class="page-desc">管理 BytePlus 等渠道配置</div>
+      <div class="toolbar">
+        <button class="toolbar-btn" onclick="openChannelModal()">+ 新建渠道</button>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>名称</th><th>提供商</th><th>API地址</th><th>项目ID</th><th>优先级</th><th>状态</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="channelTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Endpoints -->
+    <div class="page-content" id="page-endpoints">
+      <div class="page-title">接入点管理</div>
+      <div class="page-desc">管理渠道的接入点配置</div>
+      <div class="toolbar">
+        <button class="toolbar-btn outline" onclick="goBackToChannels()">← 返回渠道</button>
+        <button class="toolbar-btn" onclick="openEndpointModal()">+ 新建接入点</button>
+      </div>
+      <div id="currentChannelInfo" style="margin-bottom:16px;padding:12px;background:var(--bg-card);border-radius:8px;"></div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>接入点ID</th><th>名称</th><th>类型</th><th>默认</th><th>状态</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="endpointTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Model Config (merged) -->
+      <div style="margin-top:32px;">
+        <div class="page-title" style="font-size:16px;margin-bottom:4px;">🤖 模型配置</div>
+        <div class="page-desc" style="margin-bottom:16px;">管理前端可用的视频和图片生成模型</div>
+        <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);">
+          <button class="points-tab active" id="model-tab-video" onclick="switchModelTab('video')">🎬 视频模型</button>
+          <button class="points-tab" id="model-tab-image" onclick="switchModelTab('image')">🖼️ 图片模型</button>
+        </div>
+        <div id="model-tab-content-video">
+          <div class="toolbar">
+            <button class="toolbar-btn" onclick="addModelRow('video')">+ 添加模型</button>
+            <button class="toolbar-btn primary" onclick="saveModelsConfig('video')">💾 保存</button>
+          </div>
+          <div class="table-container">
+            <table class="data-table" id="videoModelTable">
+              <thead><tr><th>排序</th><th>模型ID</th><th>显示名称</th><th>支持分辨率</th><th>支持时长(秒)</th><th>默认</th><th>启用</th><th>操作</th></tr></thead>
+              <tbody id="videoModelBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="model-tab-content-image" style="display:none;">
+          <div class="toolbar">
+            <button class="toolbar-btn" onclick="addModelRow('image')">+ 添加模型</button>
+            <button class="toolbar-btn primary" onclick="saveModelsConfig('image')">💾 保存</button>
+          </div>
+          <div class="table-container">
+            <table class="data-table" id="imageModelTable">
+              <thead><tr><th>排序</th><th>模型ID</th><th>显示名称</th><th>支持尺寸</th><th>默认</th><th>启用</th><th>操作</th></tr></thead>
+              <tbody id="imageModelBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Points -->
+    <div class="page-content" id="page-points">
+      <div class="page-title">积分管理</div>
+      <div class="page-desc">配置每5秒积分消耗、查看记录和统计</div>
+
+      <!-- 选项卡 -->
+      <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);">
+        <button class="points-tab active" onclick="switchPointsTab('config')">⚙️ 积分配置</button>
+        <button class="points-tab" onclick="switchPointsTab('packages')">🎁 积分包</button>
+        <button class="points-tab" onclick="switchPointsTab('records')">📋 记录</button>
+        <button class="points-tab" onclick="switchPointsTab('stats')">📊 统计</button>
+      </div>
+
+      <!-- 配置面板 -->
+      <div id="points-tab-config">
+        <div class="toolbar">
+          <button class="toolbar-btn" onclick="loadPricingConfig()">🔄 刷新</button>
+          <button class="toolbar-btn primary" onclick="savePricingConfig()">💾 保存配置</button>
+        </div>
+        
+        <!-- 积分汇率配置 -->
+        <div style="background:var(--bg2);border-radius:12px;padding:20px;border:1px solid var(--bg4);margin-bottom:24px;">
+          <div style="font-size:15px;font-weight:600;margin-bottom:16px;">💰 积分汇率配置</div>
+          <div style="display:flex;flex-direction:column;gap:12px;max-width:800px;">
+            <div style="padding:12px;background:var(--bg3);border-radius:8px;font-size:13px;color:var(--t3);">
+              <strong style="color:var(--t1);">换算规则：</strong><br>
+              积分 = 美元价格 × 汇率（四舍五入）<br>
+              美元 = 积分 / 汇率（保留2位小数）
+            </div>
+            <div>
+              <label style="font-size:12px;color:var(--t3);display:block;margin-bottom:4px;">美元兑积分汇率（1 USD = X 积分）</label>
+              <input type="number" id="pointsRate" min="1" max="10000" style="width:200px;padding:8px 12px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;color:var(--t1);font-size:13px;" placeholder="100" />
+            </div>
+            
+            <div id="pricingConfigMsg" style="font-size:13px;color:#4ade80;display:none;"></div>
+          </div>
+        </div>
+        
+        <!-- 按模型设置成本 -->
+        <div style="background:var(--bg2);border-radius:12px;padding:20px;border:1px solid var(--bg4);margin-bottom:24px;">
+          <div style="font-size:15px;font-weight:600;margin-bottom:16px;">🤖 生成成本（按模型）</div>
+          <div style="padding:12px;background:var(--bg3);border-radius:8px;font-size:13px;color:var(--t3);margin-bottom:16px;">
+            <strong style="color:var(--t1);">配置说明：</strong><br>
+            为每个模型设置在不同分辨率/尺寸下的生成成本积分。<br>
+            <span style="color:#f87171;">如果不设置，系统将无法正确计算成本！</span>
+          </div>
+          
+          <!-- 视频模型成本 -->
+          <div id="modelVideoCosts" style="margin-bottom:16px;">
+            <div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:8px;">📹 视频模型</div>
+            <div id="videoModelCostsList"></div>
+          </div>
+          
+          <!-- 图片模型成本 -->
+          <div id="modelImageCosts">
+            <div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:8px;">🖼️ 图片模型</div>
+            <div id="imageModelCostsList"></div>
+          </div>
+          
+          <div style="margin-top:16px;">
+            <button class="toolbar-btn primary" onclick="saveModelPricingConfig()" style="margin-right:8px;">💾 保存模型成本配置</button>
+          </div>
+          <div id="modelPricingMsg" style="font-size:13px;color:#4ade80;display:none;margin-top:16px;"></div>
+        </div>
+        
+        <!-- 旧版 PointsConfig 配置区域（保留但隐藏） -->
+        <div id="pointsConfigArea" style="display:none;"></div>
+      </div>
+
+      <!-- 积分包面板 -->
+      <div id="points-tab-packages" style="display:none;">
+        <div class="toolbar">
+          <button class="toolbar-btn" onclick="addPackageRow()">+ 添加积分包</button>
+          <button class="toolbar-btn primary" onclick="savePackagesConfig()">💾 保存</button>
+        </div>
+        <div class="table-container">
+          <table class="data-table" id="packagesTable">
+            <thead><tr><th>Key</th><th>名称</th><th>积分数</th><th>价格(美分)</th><th>推荐</th><th>操作</th></tr></thead>
+            <tbody id="packagesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 记录面板 -->
+      <div id="points-tab-records" style="display:none;">
+        <div class="toolbar">
+          <input type="text" id="pointsRecordSearch" placeholder="搜索用户ID或邮箱..." onkeydown="if(event.key==='Enter'){pointsRecordPage=1;loadPointsRecords();}" style="min-width:200px;" />
+          <button class="toolbar-btn" onclick="pointsRecordPage=1;loadPointsRecords()">搜索</button>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th><th>用户</th><th>积分变化</th><th>余额</th><th>类型</th><th>描述</th><th>时间</th>
+              </tr>
+            </thead>
+            <tbody id="pointsRecordTableBody"></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="pointsRecordPagination"></div>
+      </div>
+
+      <!-- 统计面板 -->
+      <div id="points-tab-stats" style="display:none;">
+        <div class="toolbar">
+          <select id="pointsStatsDays" onchange="loadPointsStats()">
+            <option value="7">近7天</option>
+            <option value="30" selected>近30天</option>
+            <option value="90">近90天</option>
+          </select>
+          <button class="toolbar-btn" onclick="loadPointsStats()">刷新</button>
+        </div>
+        <div class="stats-grid" id="pointsStatsGrid"></div>
+        <div class="chart-card" style="margin-top:16px;">
+          <div class="chart-title">📈 积分趋势</div>
+          <div class="chart-bars" id="pointsStatsChart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tasks -->
+    <div class="page-content" id="page-tasks">
+      <div class="page-title">任务监控</div>
+      <div class="page-desc">查看视频生成任务状态</div>
+      <div class="toolbar">
+        <select id="taskStatusFilter" onchange="loadTasks(1)">
+          <option value="">全部状态</option>
+          <option value="pending">待处理</option>
+          <option value="processing">处理中</option>
+          <option value="success">成功</option>
+          <option value="failed">失败</option>
+        </select>
+        <button class="toolbar-btn" onclick="loadTasks(1)">刷新</button>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>用户</th><th>模型</th><th>状态</th><th>进度</th><th>积分</th><th>创建时间</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="taskTableBody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="taskPagination"></div>
+    </div>
+
+    <!-- Billing -->
+    <div class="page-content" id="page-billing">
+      <div class="page-title">账单管理</div>
+      <div class="page-desc">查看所有用户的订阅账单记录</div>
+      <div class="toolbar">
+        <input type="text" id="billingSearch" placeholder="搜索用户邮箱..." style="padding:8px 12px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;color:var(--t1);font-size:13px;min-width:200px;" oninput="loadBilling(1)">
+        <button class="toolbar-btn" onclick="loadBilling(1)">刷新</button>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>用户</th><th>方案</th><th>周期</th><th>状态</th><th>金额</th><th>积分/月</th><th>开始日期</th><th>到期日期</th>
+            </tr>
+          </thead>
+          <tbody id="billingTableBody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="billingPagination"></div>
+    </div>
+
+    <!-- 支付与设置 -->
+    <div class="page-content" id="page-payments">
+      <div class="page-title">支付与设置</div>
+      <div class="page-desc">配置 USDT 收款、网站联系方式等</div>
+
+      <!-- 网站设置 -->
+      <div style="background:var(--bg2);border-radius:12px;padding:20px;border:1px solid var(--bg4);margin-bottom:24px;">
+        <div style="font-size:15px;font-weight:600;margin-bottom:16px;">网站设置</div>
+        <div style="display:flex;flex-direction:column;gap:12px;max-width:600px;">
+          <div>
+            <label style="font-size:12px;color:var(--t3);display:block;margin-bottom:4px;">Telegram 链接（用户工单页和支持页显示）</label>
+            <input id="settingTelegramUrl" type="text" style="width:100%;box-sizing:border-box;padding:8px 12px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;color:var(--t1);font-size:13px;" placeholder="https://t.me/your_username" />
+          </div>
+          <div>
+            <label style="font-size:12px;color:var(--t3);display:block;margin-bottom:4px;">Telegram 显示名称（如 @your_username）</label>
+            <input id="settingTelegramName" type="text" style="width:100%;box-sizing:border-box;padding:8px 12px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;color:var(--t1);font-size:13px;" placeholder="@sedgo_support" />
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="toolbar-btn primary" onclick="saveSiteConfig()">保存设置</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 收款配置 -->
+      <div style="background:var(--bg2);border-radius:12px;padding:20px;border:1px solid var(--bg4);margin-bottom:24px;">
+        <div style="font-size:15px;font-weight:600;margin-bottom:16px;">收款配置</div>
+        <div style="display:flex;flex-direction:column;gap:12px;max-width:600px;">
+          <div>
+            <label style="font-size:12px;color:var(--t3);display:block;margin-bottom:4px;">TRC20 收款地址（每行一个，支持多地址）</label>
+            <textarea id="usdtAddresses" rows="4" style="width:100%;padding:10px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;color:var(--t1);font-size:13px;font-family:monospace;resize:vertical;" placeholder="TRC20钱包地址，每行一个&#10;例如：TXyz1234..."></textarea>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-end;">
+            <div style="flex:1;">
+              <label style="font-size:12px;color:var(--t3);display:block;margin-bottom:4px;">USD → USDT 汇率（1 USD = X USDT，通常填 1.0）</label>
+              <input type="number" id="usdtRate" step="0.01" min="0.01" style="width:100%;padding:8px 12px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;color:var(--t1);font-size:13px;" placeholder="1.00" />
+            </div>
+            <div style="flex:1;">
+              <label style="font-size:12px;color:var(--t3);display:block;margin-bottom:4px;">启用状态</label>
+              <select id="usdtEnabled" style="width:100%;padding:8px 12px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;color:var(--t1);font-size:13px;">
+                <option value="true">已启用</option>
+                <option value="false">已禁用</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="toolbar-btn" onclick="loadUsdtConfig()">刷新</button>
+            <button class="toolbar-btn primary" onclick="saveUsdtConfig()">保存配置</button>
+          </div>
+          <div id="usdtConfigMsg" style="font-size:13px;color:#4ade80;display:none;"></div>
+        </div>
+      </div>
+
+
+
+      <!-- 订单列表 -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div style="font-size:15px;font-weight:600;">支付订单</div>
+        <div style="display:flex;gap:8px;">
+          <select id="paymentStatusFilter" style="padding:6px 10px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;color:var(--t1);font-size:13px;" onchange="loadPaymentOrders(1)">
+            <option value="">全部</option>
+            <option value="pending">待付款</option>
+            <option value="completed">已完成</option>
+            <option value="expired">已过期</option>
+            <option value="cancelled">已取消</option>
+          </select>
+          <button class="toolbar-btn" onclick="loadPaymentOrders(1)">刷新</button>
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>订单号</th><th>用户ID</th><th>类型</th><th>金额(USDT)</th><th>收款地址</th><th>交易哈希</th><th>状态</th><th>创建时间</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="paymentOrdersBody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="paymentOrdersPagination"></div>
+    </div>
+
+    <div class="page-content" id="page-contacts">
+      <div class="page-title">工单管理</div>
+      <div class="page-desc">查看和回复用户提交的工单</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <label style="font-size:13px;color:var(--t2);">
+            <input type="checkbox" id="contactUnreadOnly" onchange="loadContactMessages(1)" style="margin-right:4px;">
+            只看未读
+          </label>
+        </div>
+        <button class="toolbar-btn" onclick="loadContactMessages(1)">刷新</button>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>邮箱</th><th>主题</th><th>内容</th><th>状态</th><th>提交时间</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="contactMessagesBody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="contactMessagesPagination"></div>
+    </div>
+
+    <!-- 工单详情 Modal -->
+    <div class="modal-overlay" id="contactDetailModal" style="display:none;" onclick="if(event.target===this)closeContactDetail()">
+      <div class="modal-box" style="max-width:620px;height:85vh;display:flex;flex-direction:column;overflow:hidden;">
+        <!-- 头部 -->
+        <div style="flex-shrink:0;padding:0 0 12px 0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div class="modal-title" style="margin:0;">工单详情</div>
+            <span id="cdStatusBadge" style="font-size:12px;padding:2px 10px;border-radius:20px;font-weight:600;"></span>
+          </div>
+          <div style="display:flex;gap:16px;font-size:12px;color:var(--t3);">
+            <span>邮箱：<span id="cdEmail" style="color:var(--t2);"></span></span>
+            <span>主题：<span id="cdSubject" style="color:var(--t1);font-weight:600;"></span></span>
+          </div>
+        </div>
+        <!-- 对话线程 -->
+        <div id="cdThread" style="flex:1;overflow-y:auto;padding:4px 0 8px 0;display:flex;flex-direction:column;gap:10px;"></div>
+        <!-- 回复区 -->
+        <div id="cdReplyArea" style="flex-shrink:0;padding-top:12px;border-top:1px solid var(--bg4);">
+          <textarea id="cdReplyInput" rows="3" style="width:100%;box-sizing:border-box;padding:10px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;color:var(--t1);font-size:13px;resize:none;" placeholder="输入回复内容..."></textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:8px;">
+            <div style="display:flex;gap:6px;">
+              <button class="toolbar-btn outline" id="cdCloseBtn" onclick="closeTicket()">关闭工单</button>
+              <button class="toolbar-btn outline" id="cdReopenBtn" onclick="reopenTicket()" style="display:none;">重新开启</button>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button class="toolbar-btn outline" onclick="closeContactDetail()">取消</button>
+              <button class="toolbar-btn primary" id="cdReplyBtn" onclick="submitContactReply()">发送回复</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 弹窗：套餐编辑 -->
+<div class="modal-overlay" id="planModal">
+  <div class="modal">
+    <h3 id="planModalTitle">新建套餐</h3>
+    <input type="hidden" id="planEditId" />
+    <label>名称 *</label><input type="text" id="planName" placeholder="套餐名称" />
+    <label>描述</label><input type="text" id="planDesc" placeholder="套餐描述" />
+    <label>价格（美分）</label><input type="number" id="planPrice" value="0" />
+    <label>周期（天）</label><input type="number" id="planDays" value="30" />
+    <label>每月积分（自动计算）</label><input type="text" id="planPoints" value="0" readonly />
+    <label>批量生成上限</label><input type="number" id="planBatch" value="1" />
+    <label>最大并发任务</label><input type="number" id="planConcurrent" value="1" />
+    <label>最大分辨率</label>
+    <select id="planRes">
+      <option value="480p">480p</option>
+      <option value="720p" selected>720p</option>
+      <option value="1080p">1080p</option>
+    </select>
+    <label>排序</label><input type="number" id="planSort" value="0" />
+    <div class="modal-actions">
+      <button class="toolbar-btn outline" onclick="closePlanModal()">取消</button>
+      <button class="toolbar-btn" onclick="savePlan()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 弹窗：渠道编辑 -->
+<div class="modal-overlay" id="channelModal">
+  <div class="modal">
+    <h3 id="channelModalTitle">新建渠道</h3>
+    <input type="hidden" id="channelEditId" />
+    
+    <label>名称 *</label><input type="text" id="chName" placeholder="渠道名称" />
+    <label>提供商</label><input type="text" id="chProvider" placeholder="byteplus" value="byteplus" />
+    
+    <div style="border-top:1px solid var(--border);margin:12px 0;padding-top:12px;">
+      <span style="font-size:12px;color:var(--t3);font-weight:600;">API配置</span>
+      <label>API基础地址 *</label><input type="text" id="chApiBase" placeholder="https://..." />
+      <label>文件上传地址</label><input type="text" id="chFileUrl" placeholder="可选" />
+      <label>任务地址</label><input type="text" id="chTaskUrl" placeholder="可选" />
+    </div>
+    
+    <div style="border-top:1px solid var(--border);margin:12px 0;padding-top:12px;">
+      <span style="font-size:12px;color:var(--t3);font-weight:600;">AK/SK配置</span>
+      <label>Access Key (AK)</label><input type="text" id="chAk" placeholder="AK" />
+      <label>Secret Key (SK)</label><input type="password" id="chSk" placeholder="SK" />
+    </div>
+    
+    <div style="border-top:1px solid var(--border);margin:12px 0;padding-top:12px;">
+      <span style="font-size:12px;color:var(--t3);font-weight:600;">API Key配置（推荐）</span>
+      <label>API Key</label><input type="password" id="chApiKey" placeholder="ARK API Key" />
+    </div>
+    
+    <div style="border-top:1px solid var(--border);margin:12px 0;padding-top:12px;">
+      <span style="font-size:12px;color:var(--t3);font-weight:600;">项目配置</span>
+      <label>项目ID</label><input type="text" id="chProjectId" placeholder="project-id" />
+      <label>真人素材分组ID</label><input type="text" id="chPortraitGroupId" placeholder="group-xxx（用于真人生成参考图上传）" />
+      <label>公网访问地址</label><input type="text" id="chPublicBaseUrl" placeholder="https://your-domain.com（用于素材库上传）" />
+    </div>
+    
+    <label>优先级</label><input type="number" id="chPriority" value="0" />
+    
+    <div class="modal-actions">
+      <button class="toolbar-btn outline" onclick="closeChannelModal()">取消</button>
+      <button class="toolbar-btn" onclick="saveChannel()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 弹窗：接入点编辑 -->
+<div class="modal-overlay" id="endpointModal">
+  <div class="modal">
+    <h3 id="endpointModalTitle">新建接入点</h3>
+    <input type="hidden" id="endpointEditId" />
+    <input type="hidden" id="endpointChannelId" />
+    
+    <div style="border-top:1px solid var(--border);margin:12px 0;padding-top:12px;">
+      <span style="font-size:12px;color:var(--t3);font-weight:600;">接入点配置</span>
+      <label>接入点ID *</label><input type="text" id="epEndpointId" placeholder="endpoint-id" />
+      <label>接入点名称</label><input type="text" id="epEndpointName" placeholder="接入点名称" />
+    </div>
+    
+    <div style="border-top:1px solid var(--border);margin:12px 0;padding-top:12px;">
+      <span style="font-size:12px;color:var(--t3);font-weight:600;">类型配置</span>
+      <label>类型</label>
+      <select id="epType">
+        <option value="default">通用</option>
+        <option value="video">视频生成</option>
+        <option value="image">图片生成</option>
+        <option value="inference">推理</option>
+      </select>
+      <label style="display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="epIsDefault" /> 设置为默认接入点
+      </label>
+    </div>
+    
+    <div style="border-top:1px solid var(--border);margin:12px 0;padding-top:12px;">
+      <span style="font-size:12px;color:var(--t3);font-weight:600;">模型映射</span>
+      <label>支持的模型（JSON数组）</label><textarea id="epModels" placeholder='["model1", "model2"]' rows="3"></textarea>
+      <span style="font-size:12px;color:var(--t3);">示例: ["sedgo-fast", "sedgo"]</span>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="toolbar-btn outline" onclick="closeEndpointModal()">取消</button>
+      <button class="toolbar-btn" onclick="saveEndpoint()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 弹窗：订阅 -->
+<div class="modal-overlay" id="subModal">
+  <div class="modal">
+    <h3>新增订阅</h3>
+    <label>用户ID</label><input type="number" id="subUserId" placeholder="用户ID" />
+    <label>套餐</label>
+    <select id="subPlanId"><option value="">选择套餐</option></select>
+    <label>时长（天，留空使用套餐默认）</label><input type="number" id="subDaysDays" placeholder="可选" />
+    <div class="modal-actions">
+      <button class="toolbar-btn outline" onclick="closeSubModal()">取消</button>
+      <button class="toolbar-btn" onclick="saveSub()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 弹窗：积分调整 -->
+<div class="modal-overlay" id="pointsModal">
+  <div class="modal">
+    <h3>调整积分</h3>
+    <input type="hidden" id="pointsUserId" />
+    <label>当前余额</label><input type="text" id="pointsCurrent" readonly />
+    <label>调整金额（正数增加，负数减少）</label><input type="number" id="pointsAmount" placeholder="例如：100 或 -50" />
+    <label>备注（可选）</label><input type="text" id="pointsReason" placeholder="调整原因" />
+    <div class="modal-actions">
+      <button class="toolbar-btn outline" onclick="closePointsModal()">取消</button>
+      <button class="toolbar-btn" onclick="savePoints()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 弹窗：修改订阅 -->
+<div class="modal-overlay" id="userSubModal">
+  <div class="modal">
+    <h3>修改订阅</h3>
+    <input type="hidden" id="userSubUserId" />
+    <label>套餐</label>
+    <select id="userSubPlanId"><option value="">选择套餐</option></select>
+    <label>计费周期</label>
+    <select id="userSubCycle">
+      <option value="monthly">月付</option>
+      <option value="annual">年付</option>
+    </select>
+    <label>时长（天）</label><input type="number" id="userSubDuration" placeholder="留空则根据计费周期自动计算" />
+    <label>状态</label>
+    <select id="userSubStatus">
+      <option value="ACTIVE">激活</option>
+      <option value="CANCELLED">已取消</option>
+      <option value="EXPIRED">已过期</option>
+    </select>
+    <div class="modal-actions">
+      <button class="toolbar-btn outline" onclick="closeUserSubModal()">取消</button>
+      <button class="toolbar-btn" onclick="saveUserSub()">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/static/js/admin.js?v=4"></script>
+</body>
+</html>

@@ -1,0 +1,926 @@
+{
+  "nav": {
+    "video": "AI ビデオ",
+    "image": "AI 画像",
+    "guide": "ガイド",
+    "pricing": "価格",
+    "signin": "ログイン",
+    "home": "ホーム",
+    "features": "機能",
+    "api": "API",
+    "support": "サポート",
+    "signup": "無料トライアル"
+  },
+  "hero": {
+    "badge": "現在利用可能 — Sedgo オーディオ付き",
+    "sub": "画像、動画、音声、テキストがシームレスに連携する真のマルチモーダル AI ビデオ作成を体験してください。"
+  },
+  "tabs": {
+    "video": "ビデオ生成",
+    "image": "AI 画像",
+    "video_agent": "ビデオエージェント",
+    "drama": "ドラマスタジオ",
+    "developing": "開発中"
+  },
+  "gen": {
+    "desc": "マルチモーダル入力、強力なリファレンス機能",
+    "resolution": "解像度",
+    "duration": "期間",
+    "ratio": "アスペクト比",
+    "ratio_auto": "自動",
+    "upload_label": "アップロード",
+    "upload_count": "0 / 1 (PNG/JPG/WEBP)",
+    "add_ref": "画像または動画リファレンスを追加",
+    "files": "ファイル",
+    "real_people": "実際の人物を含む",
+    "last_frame": "最終フレームに戻る",
+    "advanced": "高度な設定",
+    "prompt_placeholder": "ビデオを記述... @image1、@video1 を使用してアップロードしたファイルを参照します。",
+    "generate": "生成 ✦",
+    "prompt_eg": "例えば",
+    "prompt_example": "映画のようなシーン...",
+    "hint1": "AI アシスタントとリファレンス素材で任意の長さのビデオを計画します。",
+    "hint2": "1-9 枚のリファレンス画像または動画をアップロードし、@ 参照を使用して対話を作成します。例：@Image 1 を最初のフレームとして使用し、@Image 2 を最後のフレームとして使用し、@Video 1 のように踊らせます。",
+    "hint3": "プロンプトを直接制御して単一クリップをすばやく生成します。",
+    "reference": "リファレンス",
+    "images": "画像",
+    "hint_video_1": "AI アシスタントとリファレンス素材で任意の長さのビデオを計画します。",
+    "hint_video_2": "1-9 枚のリファレンス画像または動画をアップロードし、@ 参照を使用して対話を作成します。例：@Image 1 を最初のフレームとして使用し、@Image 2 を最後のフレームとして使用し、@Video 1 のように踊らせます。",
+    "hint_aivideo_1": "プロンプトを直接制御して単一クリップをすばやく生成します。",
+    "hint_aivideo_2": "1-9 枚のリファレンス画像または動画をアップロードし、@ 参照を使用して対話を作成します。例：@Image 1 を最初のフレームとして使用し、@Image 2 を最後のフレームとして使用し、@Video 1 のように踊らせます。",
+    "hint_image_1": "テキストとリファレンス画像からAI画像を生成します。",
+    "hint_image_2": "最大14枚のリファレンス画像をアップロードし、ターゲット画像を詳細に記述してください。",
+    "prompt_placeholder_video": "ビデオを記述... @image1、@video1 を使用してアップロードしたファイルを参照します。",
+    "prompt_placeholder_aivideo": "ビデオを記述...",
+    "prompt_placeholder_image": "画像を記述...",
+    "prompt_placeholder_drama": "脚本、小説をアップロードするか、ストーリーのアイデアを入力してください。AIアシスタントが脚本を計画し、ビデオを生成します。",
+    "auto": "自動",
+    "custom": "カスタム",
+    "upload_script": "脚本/小説をアップロード",
+    "single_episode": "単話",
+    "series": "シリーズ",
+    "pro_writer": "プロライター",
+    "ai_enhance": "AI プロンプト最適化",
+    "ai_enhance_text": "AI最適化",
+    "original_prompt": "元の記述",
+    "enhanced_prompt": "AI最適化プロンプト",
+    "enhanced_badge": "AI生成",
+    "use_enhanced": "✓ 最適化を使用",
+    "use_enhanced_text": "最適化を使用",
+    "clear_enhanced": "✕ クリア",
+    "edit_enhanced": "編集",
+    "save_edit": "保存",
+    "please_enter_prompt": "プロンプトを入力してください",
+    "optimizing": "最適化中...",
+    "optimize_success": "プロンプト最適化成功！",
+    "optimize_fail": "プロンプト最適化に失敗しました、再試行してください",
+    "ref_mode": "リファレンスモード",
+    "ref_mode_title": "リファレンスモード",
+    "text2vid": "テキストから動画",
+    "first_last_frame": "最初と最後のフレーム参照",
+    "multi_ref": "画像+動画+音声参照",
+    "text2vid_desc": "テキストのみで動画を生成",
+    "ref_hint_text2vid": "ヒント: 最終フレーム必須、最初のフレーム任意",
+    "ref_hint_first_last_frame": "このモードは最初のフレームと最後のフレームを順番に参照します。",
+    "ref_hint_multi_ref": "このモードは最大9枚の画像参照をサポートします。",
+    "img2vid": "画像リファレンス",
+    "img2vid_desc": "画像をアップロードしてリファレンス",
+    "vid2vid": "動画リファレンス",
+    "vid2vid_desc": "動画をアップロードしてリファレンス",
+    "audio2vid": "音声リファレンス",
+    "audio2vid_desc": "音声から動画を生成",
+    "ref_image": "画像リファレンス",
+    "ref_video": "動画リファレンス",
+    "ref_audio": "音声リファレンス",
+    "ref_hint_img2vid": "ヒント: 画像リファレンス ×9 + 動画リファレンス ×3 + 音声リファレンス ×3",
+    "ref_hint_vid2vid": "ヒント: 動画リファレンス ×3",
+    "real_people_title": "リアルヒューマンアセット",
+    "use_real_people": "リアルヒューマンアセットを使用",
+    "real_people_hint": "アップロードした画像が選択したアセットタイプとして使用されます",
+    "avatar_id": "アバターID",
+    "asset_library": "アセットライブラリ",
+    "asset_library_id": "アセットライブラリID",
+    "real_human_portrait_id": "リアルヒューマンポートレートID",
+    "action_id": "アクションID",
+    "background_id": "背景ID",
+    "voice_id": "ボイスID",
+    "subtitle_removal_title": "字幕削除",
+    "subtitle_removal": "字幕削除",
+    "upload": "ファイルをアップロード",
+    "ref_image_placeholder": "画像をアップロードまたはライブラリから選択",
+    "ref_video_placeholder": "動画をアップロードまたはライブラリから選択",
+    "ref_audio_placeholder": "音声をアップロードまたはライブラリから選択"
+  },
+  "features": {
+    "label": "Sedgo を選ぶ理由",
+    "title": "作成に必要なすべて",
+    "desc": "6 つの強力な機能が 1 つのモデルに統合されています。",
+    "f1_title": "マルチモーダル入力",
+    "f1_desc": "単一の生成リクエストで画像、動画、音声クリップ、テキストプロンプトを組み合わせ、前例のない創造的な制御を実現します。",
+    "f2_title": "あらゆるものを参照",
+    "f2_desc": "最大 9 枚の画像と 3 本の動画をリファレンスとしてタグ付けします。モデルは高忠実度でスタイル、被写体、モーションを抽出します。",
+    "f3_title": "優れた一貫性",
+    "f3_desc": "キャラクター、環境、スタイルはフレーム間および複数の生成パスで一貫して保持されます。",
+    "f4_title": "高精度カメラ制御",
+    "f4_desc": "リファレンス動画からモーションパターンとカメラの動きをフレーム単位で正確に複製します。",
+    "f5_title": "ビデオ拡張と編集",
+    "f5_desc": "既存のビデオを拡張し、シーンを変更し、最初からやり直すことなく反復します。",
+    "f6_title": "内蔵オーディオ生成",
+    "f6_desc": "ビデオ出力と同期してローカルオーディオ（音楽、効果音、音声）を生成します。"
+  },
+  "usecases": {
+    "label": "ユースケース",
+    "title": "すべてのクリエイターのために",
+    "desc": "独立クリエイターから企業スタジオまで、Sedgo はすべての人に力を与えます。",
+    "ad": "広告",
+    "ad_desc": "高インパクトなブランドビデオ",
+    "edu": "教育",
+    "edu_desc": "魅力的な解説コンテンツ",
+    "story": "ストーリーテリング",
+    "story_desc": "物語駆動のシーン",
+    "social": "ソーシャルメディア",
+    "social_desc": "ショートフォームの人気コンテンツ",
+    "dance": "モーション/ダンス",
+    "dance_desc": "振り付けとモーションキャプチャ",
+    "edit": "ビデオ編集",
+    "edit_desc": "AI 支援の後期制作",
+    "film": "映画プレビジュアライゼーション",
+    "film_desc": "ストーリーボードを生き生きとさせる",
+    "realestate": "不動産",
+    "realestate_desc": "没入型物件展示",
+    "music": "音楽シンク",
+    "music_desc": "オーディオレスポンシブビデオ"
+  },
+  "how": {
+    "label": "使い方",
+    "title": "3 ステップでビデオ作成",
+    "desc": "アイデアから最終ビデオまで数分で。",
+    "s1_title": "アセットをアップロード",
+    "s1_desc": "画像、動画、音声をリファレンスとして追加 — 最大 12 ファイル。",
+    "s2_title": "ビジョンを記述",
+    "s2_desc": "プロンプトを書き、<code>@image1</code>、<code>@video1</code> タグを使用してアップロードしたファイルを参照します。",
+    "s3_title": "生成とダウンロード",
+    "s3_desc": "AI がビデオを生成するのを待ち、ダウンロードして共有または編集します。"
+  },
+  "faq": {
+    "label": "FAQ",
+    "title": "よくある質問",
+    "desc": "Sedgo に関するすべての情報。",
+    "q1": "参照ファイルは最大でいくつアップロードできますか？",
+    "a1": "最大12ファイル：最大9枚の画像、3本の動画（≤15秒）、3本のオーディオ（≤15秒）。",
+    "q2": "どの長さのビデオがサポートされていますか？",
+    "a2": "Sedgo は4秒から15秒のビデオ生成をサポートし、デフォルトは5秒です。",
+    "q3": "生成されたビデオに透かしはありますか？",
+    "a3": "透かしはありません。生成されたコンテンツの完全な所有権があります。",
+    "q4": "どの画像/ビデオフォーマットがサポートされていますか？",
+    "a4": "画像：PNG、JPG、JPEG、WEBP。ビデオ：MP4、MOV、WEBM。オーディオ：MP3、WAV、AAC。",
+    "q5": "ポイントはどのように計算されますか？",
+    "a5": "生成されたビデオの1秒あたりのポイント消費で、料金は選択したモデルと解像度によって異なります。ポイントは期限切れになりません。",
+    "q6": "カスタマーサポートに連絡するにはどうすればよいですか？",
+    "a6": "support@sedgo.ai にメールを送信してください。平日は通常24時間以内に回答します。"
+  },
+  "pricing": {
+    "label": "価格",
+    "title": "最適なプランを選択",
+    "desc": "すべてのプランにはコア機能とテクニカルサポートが含まれます。",
+    "trial": "無料トライアル",
+    "trial_desc": "新規ユーザー専用体験",
+    "pro": "プロ",
+    "pro_desc": "個人クリエイター向け",
+    "team": "チーム",
+    "team_desc": "チーム協働向け",
+    "enterprise": "エンタープライズ",
+    "enterprise_desc": "カスタムソリューション",
+    "monthly": "月額",
+    "yearly": "年額",
+    "annual": "年額",
+    "save": "40% OFF",
+    "billed_yearly": "年払い",
+    "points": "ポイント",
+    "points_per_month": "ポイント/月",
+    "minutes": "分",
+    "max_batch_size": "最大バッチサイズ",
+    "max_concurrent_tasks": "最大同時タスク数",
+    "full_hd": "フルHD",
+    "hd": "HD",
+    "output_support": "出力サポート",
+    "priority_support": "優先サポート",
+    "custom_watermark": "カスタム透かし",
+    "seedance_video": "Sedgo AI ビデオ",
+    "multi_models": "複数のAIビデオモデル",
+    "private_space": "プライベートビデオスペース",
+    "recommended": "おすすめ",
+    "annual_total": "年間合計",
+    "subscribe_now": "今すぐ購入",
+    "free_trial": "無料トライアル",
+    "start_free_trial": "無料トライアルを開始",
+    "tab": {
+      "team": "プラン",
+      "credits": "クレジットパック"
+    },
+    "credits": {
+      "basic": "スターターパック",
+      "basic_desc": "初心者と個人ユーザーに最適",
+      "creator": "クリエイターパック",
+      "creator_desc": "ほとんどのコンテンツクリエイターに最適",
+      "elite": "エリートパック",
+      "elite_desc": "プロフェッショナルユーザーに最適",
+      "advanced": "アドバンスドパック",
+      "advanced_desc": "大量の需要があるユーザーに最適",
+      "super": "スーパーパック",
+      "super_desc": "エンタープライズユーザーに最適",
+      "points_1k": "✓ 1,000 ポイント",
+      "points_3k": "✓ 3,000 ポイント",
+      "points_8k": "✓ 8,000 ポイント",
+      "points_30k": "✓ 30,000 ポイント",
+      "points_100k": "✓ 100,000 ポイント",
+      "all_features": "✓ すべての機能が含まれる",
+      "no_expire": "✓ ポイントは期限切れしない",
+      "buy_now": "今すぐ購入"
+    },
+    "plans": {
+      "name_1": "無料トライアル",
+      "desc_1": "新規ユーザー向け特別トライアルパッケージ",
+      "name_2": "チーム",
+      "desc_2": "中小規模チーム向け",
+      "name_3": "チームPro",
+      "desc_3": "プロフェッショナルチームおよび企業向け"
+    },
+    "model_pricing": "Sedgo モデル ポイント価格",
+    "points_per_second": "生成1秒あたりのポイント消費量",
+    "series": "Sedgo シリーズ",
+    "series_v1": "Sedgo 1.x シリーズ",
+    "table": {
+      "model": "モデル",
+      "resolution": "解像度",
+      "points_per_sec": "ポイント/秒",
+      "cost_5s": "5秒の費用",
+      "cost_10s": "10秒の費用",
+      "cost_15s": "15秒の費用"
+    },
+    "monthly_annual": "月払い（年間）"
+  },
+  "js": {
+    "created": "タスクの作成に失敗しました：",
+    "gen_failed": "生成に失敗しました：",
+    "timeout": "タイムアウトしました。後でもう一度お試しください。",
+    "error": "エラー：",
+    "download": "⬇ ダウンロード",
+    "uploading": "⏳ アップロード中…",
+    "attached": " ファイルが添付されています",
+    "signin_first": "先にログインしてください。",
+    "signed_in": "ログイン済み",
+    "signed_in_alt": "ログイン済み ✓",
+    "unknown_error": "不明なエラー",
+    "subscribe_success": "購読成功",
+    "subscribe_failed": "購読失敗",
+    "select_endpoint": "エンドポイントを選択してください",
+    "auto": "自動",
+    "no_endpoints": "利用可能なエンドポイントがありません",
+    "load_failed": "読み込みに失敗しました",
+    "no_description": "説明なし",
+    "status_processing": "処理中",
+    "status_success": "成功",
+    "status_failed": "失敗",
+    "status_pending": "保留中",
+    "status_unknown": "不明",
+    "time_just_now": "たった今",
+    "time_minutes_ago": "分前",
+    "time_hours_ago": "時間前",
+    "generate_image": "画像生成",
+    "video_generation": "ビデオ生成",
+    "no_data": "データがありません",
+    "load_error": "読み込みに失敗しました",
+    "select_asset_first": "アセットを選択してください",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "retry_generate": "↺ 再生成",
+    "status_cancelled": "キャンセル済み",
+    "status_error": "エラー",
+    "task_cancelled": "タスクがキャンセルされました",
+    "network_error_retry": "ネットワークエラー、手動で再試行してください",
+    "retry_failed": "再生成に失敗しました",
+    "create_failed": "タスクの作成に失敗しました：",
+    "generate": "生成",
+    "generating": "生成中...",
+    "max_files": "最大 {n} ファイルまでアップロード可能",
+    "processing": "処理中…",
+    "upload_error": "アップロードエラー",
+    "upload_failed": "アップロードに失敗しました",
+    "loading": "読み込み中...",
+    "confirm_select": "選択を確認",
+    "no_uploads": "アップロードされたファイルがありません",
+    "asset_unavailable": "この機能は特別なアクセスが必要です。サポートにお問い合わせください。",
+    "admin_sender": "管理者",
+    "billing_annual": "年払い",
+    "billing_monthly": "月払い",
+    "choose_topup": "チャージパッケージを選択",
+    "current_plan": "現在のプラン",
+    "delete": "🗑 削除",
+    "expires_at": "有効期限",
+    "me_sender": "自分",
+    "no_tickets": "チケットなし",
+    "payment_success": "支払い成功！",
+    "payment_success_desc": "クレジット/サブスク有効化済み",
+    "points_unit": "クレジット",
+    "remaining_points": "残クレジット",
+    "reply_empty": "返信内容を入力してください",
+    "request_fail": "リクエスト失敗",
+    "segment_progress": "セグメント {done}/{total} · {pct}%",
+    "send": "送信",
+    "sub_active": "有効",
+    "sub_cancelled": "キャンセル済み",
+    "sub_expired": "期限切れ",
+    "sub_pending": "保留中",
+    "ticket_active": "対応中",
+    "ticket_closed": "チケットをクローズしました",
+    "ticket_closed_label": "クローズ",
+    "ticket_reply_placeholder": "続けて返信...",
+    "type_admin_adjust": "管理者調整",
+    "type_consume": "消費",
+    "type_earn": "獲得",
+    "type_image": "🖼️ 画像",
+    "type_long_video": "🎬 長編動画",
+    "type_subscription": "サブスク",
+    "type_video": "🎬 動画",
+    "unknown": "不明",
+    "upgrade_hint": "今すぐアップグレードしてクレジットと機能を増やす"
+  },
+  "modal": {
+    "description": "説明",
+    "status": "ステータス",
+    "created_at": "作成日時",
+    "points_consumed": "消費ポイント",
+    "title": "タスクの詳細"
+  },
+  "results": {
+    "title": "生成結果",
+    "refresh": "更新",
+    "empty": "生成結果がありません",
+    "empty_hint": "上のボタンをクリックして生成を開始してください"
+  },
+  "lang": {
+    "zh": "中文",
+    "zh-TW": "繁體中文",
+    "en": "English",
+    "ja": "日本語",
+    "ko": "한국어",
+    "ru": "Русский",
+    "vi": "Tiếng Việt",
+    "es": "Español"
+  },
+  "auth": {
+    "login": "ログイン",
+    "register": "登録",
+    "email": "メール",
+    "password": "パスワード",
+    "confirm_password": "パスワード確認",
+    "display_name": "表示名",
+    "remember_me": "ログイン情報を記憶",
+    "forgot_password": "パスワードをお忘れですか？",
+    "no_account": "アカウントをお持ちではありませんか？",
+    "already_have_account": "既にアカウントをお持ちですか？",
+    "loginBtn": "ログイン",
+    "registerBtn": "登録",
+    "processing": "処理中…",
+    "google": "Google でログイン",
+    "download": "ダウンロード",
+    "copy_link": "リンクをコピー",
+    "link_copied": "リンクをクリップボードにコピーしました",
+    "enter_video_desc": "ビデオの説明を入力してください",
+    "enter_image_desc": "画像の説明を入力してください",
+    "fillAll": "必須項目をすべて入力してください",
+    "passwordMismatch": "パスワードが一致しません",
+    "passwordTooShort": "パスワードは少なくとも6文字必要です",
+    "title": "ようこそ",
+    "subtitle": "開始するにはログインまたは登録してください",
+    "or": "または",
+    "namePlaceholder": "表示名",
+    "confirmPassword": "パスワード確認",
+    "displayName": "表示名",
+    "agree": "利用規約とプライバシーポリシーに同意します",
+    "terms": "利用規約",
+    "and": "と",
+    "privacy": "プライバシーポリシー",
+    "please_login": "AI機能を使用するにはログインしてください",
+    "loginFailed": "ログインに失敗しました",
+    "registerFailed": "登録に失敗しました",
+    "agreeRequired": "サービス利用規約とプライバシーポリシーに同意してください"
+  },
+  "user": {
+    "profile": "プロフィール",
+    "apiKeys": "API キー",
+    "subscription": "サブスクリプション",
+    "logout": "ログアウト",
+    "apiKeyHint": "APIアクセス用のキー",
+    "currentSub": "現在のサブスクリプション",
+    "noSub": "サブスクリプションなし",
+    "points": "ポイント"
+  },
+  "footer": {
+    "txt2vid": "テキストからビデオ",
+    "img2vid": "画像からビデオ",
+    "terms": "利用規約",
+    "privacy": "プライバシーポリシー",
+    "refund": "返金ポリシー",
+    "contact": "お問い合わせ"
+  },
+  "profile": {
+    "title": "ユーザーセンター - Sedgo 2",
+    "menu": {
+      "works": "マイ作品",
+      "subscription": "サブスクリプション",
+      "team": "チーム",
+      "credits": "クレジット履歴",
+      "orders": "注文履歴",
+      "profile": "プロフィール",
+      "contact": "お問い合わせ",
+      "logout": "ログアウト"
+    },
+    "page": {
+      "works": {
+        "title": "マイ作品",
+        "desc": "生成した動画と画像を管理・閲覧"
+      },
+      "contact": {
+        "desc": "問題や提案はチケットで送信してください",
+        "title": "チケット送信"
+      },
+      "credits": {
+        "desc": "クレジット記録を表示",
+        "title": "クレジット履歴"
+      },
+      "orders": {
+        "desc": "注文履歴を表示",
+        "title": "注文履歴"
+      },
+      "profile": {
+        "desc": "アカウント情報を管理",
+        "title": "プロフィール"
+      },
+      "subscription": {
+        "desc": "プランと請求を管理",
+        "title": "サブスクリプション"
+      }
+    },
+    "section": {
+      "works": {
+        "create": "+ 新しい動画を作成",
+        "desc": "生成した動画と画像を管理",
+        "title": "マイワーク"
+      },
+      "contact": {
+        "desc": "問題や提案があればチケットを送信してください。",
+        "title": "チケット送信"
+      },
+      "credits": {
+        "desc": "クレジット記録を確認。",
+        "title": "クレジット履歴"
+      },
+      "orders": {
+        "desc": "注文履歴を確認。",
+        "title": "注文履歴"
+      },
+      "profile": {
+        "desc": "アカウント情報を管理",
+        "title": "プロフィール"
+      },
+      "subscription": {
+        "desc": "プランと請求を管理。いつでもキャンセル可。",
+        "title": "サブスクリプション"
+      }
+    },
+    "tabs": {
+      "video": "動画",
+      "image": "画像"
+    },
+    "filter": {
+      "all": "すべての動画",
+      "text": "テキストから動画",
+      "image": "画像から動画",
+      "date": "📅 日付で絞り込み"
+    },
+    "empty": {
+      "works": {
+        "title": "動画が見つかりません",
+        "desc": "まだ動画を生成していません。最初の動画を作成しましょう！"
+      },
+      "team": {
+        "title": "チームがありません",
+        "desc": "まだチームに参加していません。チームプランに登録して自分のチームを作成するか、チームオーナーの招待をお待ちください。"
+      },
+      "credits": "クレジット履歴が見つかりません。",
+      "orders": "注文が見つかりません。",
+      "image_desc": "画像生成記録がここに表示されます",
+      "image_title": "画像記録なし"
+    },
+    "team": {
+      "create": "チームプランを作成"
+    },
+    "credits": {
+      "buy": "クレジットを購入"
+    },
+    "subscription": {
+      "unlock": "Sedgo Proを解除",
+      "no_plan": "まだサブスクリプションプランがありません。今すぐアップグレードして、Sedgoの革命的なマルチモーダルAI動画生成モデルを入手してください。",
+      "choose": "完璧なプランを選択 →",
+      "annual_subscribe": "年間サブスクリプション",
+      "concurrent_tasks": "同時タスク数",
+      "current_plan_btn": "現在のプラン",
+      "max_resolution": "最大解像度",
+      "monthly_subscribe": "月間サブスクリプション",
+      "points_per_month": "クレジット/月"
+    },
+    "features": {
+      "multimodal": "マルチモーダル入力",
+      "consistency": "キャラクター一貫性",
+      "audio": "音声生成",
+      "fast": "高速生成",
+      "edit": "正確な編集",
+      "privacy": "プライバシー保護"
+    },
+    "team_btn": {
+      "create": "チームプランを作成"
+    },
+    "credits_btn": {
+      "buy": "クレジットを購入"
+    },
+    "table": {
+      "date": "日付",
+      "type": "タイプ",
+      "details": "詳細",
+      "amount": "金額",
+      "onetime_credits": "ワンタイムクレジット",
+      "subscription_credits": "サブスクリプションクレジット",
+      "product": "商品",
+      "status": "ステータス",
+      "action": "アクション",
+      "credits_change": "クレジット変動"
+    },
+    "pagination": {
+      "records": "0件の記録",
+      "orders": "0件の注文",
+      "prev": "前へ",
+      "next": "次へ",
+      "per_page": "ページ",
+      "page": "ページ 1 / 0"
+    },
+    "form": {
+      "avatar": "アバター",
+      "change_avatar": "アバターを変更",
+      "username": "ユーザー名",
+      "username_placeholder": "ユーザー名を入力",
+      "email": "メール",
+      "password": "パスワード",
+      "password_placeholder": "新しいパスワードを入力",
+      "confirm_password": "パスワード確認",
+      "confirm_password_placeholder": "新しいパスワードを確認",
+      "save": "変更を保存",
+      "confirm_new_password": "新しいパスワードを確認",
+      "confirm_new_password_placeholder": "新しいパスワードを再入力",
+      "new_password": "新しいパスワード",
+      "new_password_placeholder": "新しいパスワード（6文字以上）",
+      "old_password": "現在のパスワード",
+      "old_password_placeholder": "現在のパスワード（変更しない場合は空欄）"
+    },
+    "contact": {
+      "email": "メール",
+      "email_placeholder": "メールアドレスを入力",
+      "subject": "件名",
+      "subject_placeholder": "件名を入力",
+      "message": "メッセージ",
+      "message_placeholder": "メッセージを入力",
+      "send": "メッセージを送信",
+      "info": "連絡先情報",
+      "hours": "月曜日〜金曜日 9:00 - 18:00",
+      "attach_label": "添付（任意、画像/動画/PDF、各20MBまで）",
+      "dropzone": "クリックまたはドラッグしてアップロード",
+      "email_label": "連絡先メール",
+      "fill_all": "すべての項目を入力してください",
+      "hours_label": "営業時間",
+      "message_label": "詳細説明",
+      "my_tickets": "マイチケット",
+      "other": "その他の連絡方法",
+      "send_fail": "送信に失敗しました",
+      "sending": "送信中...",
+      "sent": "チケット送信完了！できるだけ早く対応します。",
+      "subject_label": "チケットのタイトル",
+      "submit": "チケットを送信",
+      "title": "チケットを送信"
+    },
+    "avatar_fail": "アバターの更新に失敗しました",
+    "avatar_success": "アバターを更新しました",
+    "enter_username": "ユーザー名を入力してください",
+    "logout_confirm": "ログアウトしますか？",
+    "profile_success": "プロフィールを更新しました",
+    "address_copied": "アドレスをコピーしました",
+    "attachment": "添付ファイル",
+    "buy_plan": "プランを購入",
+    "choose_plan": "プランを選択",
+    "credits_empty": "クレジット記録なし",
+    "credits_records": "全 {total} 件、{page}/{totalPages} ページ",
+    "credits_topup": "₮ クレジット追加",
+    "delete_confirm": "この作品を削除しますか？元に戻せません。",
+    "delete_fail": "削除に失敗しました",
+    "load_fail": "読み込み失敗",
+    "loading": "読み込み中...",
+    "orders_count": "0 件",
+    "orders_empty": "注文なし",
+    "orders_one": "1 件",
+    "payment": {
+      "cancelled": "キャンセル",
+      "copy_address": "アドレスをコピー",
+      "create_fail": "作成失敗",
+      "expired": "期限切れ",
+      "generating": "注文を生成中...",
+      "net_error": "ネットワークエラー、再試行してください",
+      "order_status": "注文",
+      "remaining": "残り時間",
+      "waiting": "送金を待っています..."
+    },
+    "pw_mismatch": "パスワードが一致しません",
+    "pw_too_short": "新しいパスワードは6文字以上必要",
+    "pw_update_fail": "パスワード更新失敗",
+    "save_fail": "保存に失敗しました",
+    "update_fail": "更新失敗",
+    "upload_fail": "アップロード失敗"
+  },
+  "api": {
+    "label": "開発者",
+    "title": "APIドキュメント",
+    "desc": "AI動画生成機能をアプリケーションに統合します。",
+    "docs": "APIドキュメント",
+    "docs_desc": "すべてのエンドポイント、パラメータ、例を含む包括的なAPIリファレンス。",
+    "sdk": "SDKツール",
+    "sdk_desc": "Python、JavaScript、Goなどの人気プログラミング言語用のSDK。",
+    "playground": "APIプレイグラウンド",
+    "playground_desc": "オンラインでAPIをテストし、リアルタイムでリクエストとレスポンスを表示。",
+    "view_docs": "ドキュメントを表示",
+    "download_sdk": "SDKをダウンロード",
+    "try_now": "今すぐ試す"
+  },
+  "support": {
+    "label": "サポート",
+    "title": "ヘルプを取得",
+    "desc": "お手伝いいたします。",
+    "guides": "ヘルプセンター",
+    "guides_desc": "詳細なガイドとチュートリアルですぐに始められます。",
+    "community": "コミュニティフォーラム",
+    "community_desc": "他のユーザーと交流し、ヒントやアイデアを共有します。",
+    "contact": "お問い合わせ",
+    "contact_desc": "質問がありますか？メールを送信してください。",
+    "visit": "ヘルプセンターを訪問",
+    "join": "コミュニティに参加",
+    "email": "メールを送信"
+  },
+  "contact_page": {
+    "page": {
+      "title": "お問い合わせ",
+      "desc": "お手伝いいたします"
+    },
+    "methods": {
+      "title": "連絡方法",
+      "intro": "ご質問やご提案がございましたら、以下の方法でお気軽にお問い合わせください："
+    },
+    "email": {
+      "title": "メールサポート",
+      "text": "メールを送信：",
+      "response": "平日は通常24時間以内に回答します"
+    },
+    "online": {
+      "title": "オンラインサポート",
+      "hours": "営業時間：月曜日から金曜日 9:00 - 18:00",
+      "chat": "営業時間内にチャットサポートをご利用いただけます"
+    },
+    "feedback": {
+      "title": "フィードバックフォーム",
+      "visit": "ヘルプセンターにアクセスしてフィードバックを送信してください",
+      "note": "すべてのフィードバックを真剣に受け取ります"
+    },
+    "social": {
+      "title": "ソーシャルメディア",
+      "follow": "最新情報をフォローしてください",
+      "platforms": "WeChat、Weibo、Twitter"
+    },
+    "telegram": {
+      "title": "Telegram",
+      "join": "Telegramグループに参加：",
+      "help": "迅速なサポートと最新ニュース"
+    },
+    "faq": {
+      "title": "よくある質問",
+      "intro": "お問い合わせの前に、よくある質問をご確認ください：",
+      "page": "FAQページ",
+      "help": "ヘルプセンター"
+    }
+  },
+  "api_page": {
+    "page": {
+      "title": "APIドキュメント",
+      "desc": "AI動画生成機能をアプリケーションに統合します。"
+    },
+    "quick_start": {
+      "title": "クイックスタート",
+      "desc": "Sedgo APIを使用すると、AI動画生成機能を簡単に統合できます。"
+    },
+    "auth": {
+      "title": "認証方法",
+      "desc": "すべてのAPIリクエストはAPIキーで認証が必要です。以下のヘッダーを追加してください："
+    },
+    "create_task": {
+      "title": "動画タスク作成",
+      "desc": "POST /v1/tasksエンドポイントを使用して動画生成タスクを作成します："
+    },
+    "query_status": {
+      "title": "タスクステータス照会",
+      "desc": "GET /v1/tasks/{task_id}エンドポイントを使用してタスクステータスを照会します："
+    },
+    "models": {
+      "title": "利用可能なモデル",
+      "sedgo_fast": "sedgo-fast - 高速生成モデル、プレビューに適しています",
+      "sedgo": "sedgo - 高品質モデル、最終出力に適しています"
+    },
+    "response": {
+      "title": "レスポンス形式"
+    }
+  },
+  "support_page": {
+    "page": {
+      "title": "ヘルプを取得",
+      "desc": "お手伝いいたします。"
+    },
+    "help_center": {
+      "title": "ヘルプセンター",
+      "intro": "詳細なガイドとチュートリアルですぐに始められます。",
+      "guide": "📖 入門ガイド - 使用方法を学ぶ",
+      "tutorial": "🎬 ビデオチュートリアル - 上級テクニックを習得",
+      "api": "⚙️ APIドキュメント - アプリに統合",
+      "billing": "💰 請求情報 - 料金とチャージを理解"
+    },
+    "faq": {
+      "title": "よくある質問",
+      "q1": "Q: ビデオ生成にどのくらい時間がかかりますか？",
+      "a1": "A: ビデオ生成時間はビデオの長さと選択したモデルによります。通常、10秒のビデオは1-2分かかります。",
+      "q2": "Q: どの解像度がサポートされていますか？",
+      "a2": "A: 720p、1080p、4K解像度をサポートしています。",
+      "q3": "Q: APIキーを取得するにはどうすればよいですか？",
+      "a3": "A: ログイン後、プロフィールのAPI設定でAPIキーを生成・管理できます。"
+    },
+    "community": {
+      "title": "コミュニティフォーラム",
+      "intro": "他のユーザーと交流し、ヒントやアイデアを共有します。コミュニティでは：",
+      "share": "作品を共有",
+      "inspiration": "創作のインスピレーションを得る",
+      "suggest": "提案とフィードバックを提出",
+      "help": "他のユーザーを助ける"
+    },
+    "contact": {
+      "title": "お問い合わせ",
+      "intro": "質問や提案がございましたら、メールを送信してください：",
+      "email": "support@sedgo.ai",
+      "response": "平日には通常24時間以内に回答します。"
+    }
+  },
+  "privacy_page": {
+    "page": {
+      "title": "プライバシーポリシー",
+      "desc": "プライバシーを尊重します",
+      "intro": "私たちはあなたのプライバシーを大切にしています。このポリシーでは、情報の収集と保護方法について説明します"
+    },
+    "info": {
+      "title": "1. はじめに",
+      "intro": "SedGoAI（以下「私たち」または「プラットフォーム」）へようこそ。私たちはあなたのプライバシーを大切にしています。このプライバシーポリシーでは、私たちがあなたの個人情報をどのように収集、使用、保管、保護するかについて説明します。",
+      "account": "個人識別情報：名前、メールアドレス、電話番号",
+      "usage": "アカウント情報：パスワード（暗号化保存）、APIキー",
+      "technical": "使用データ：生成されたコンテンツ、プロンプト、使用頻度"
+    },
+    "usage": {
+      "title": "2. 情報の収集",
+      "service": "登録時およびサービス使用時に提供する情報を収集します：",
+      "improve": "収集した情報を以下の目的で使用します：",
+      "security": "サービスの提供と維持",
+      "billing": "決済と請求の処理",
+      "communication": "製品とサービスの改善",
+      "access": "重要な通知と更新の送信"
+    },
+    "sharing": {
+      "title": "3. 情報の使用",
+      "intro": "私たちはあなたの個人情報を売却しません。以下の条件下でのみ情報を共有します：",
+      "consent": "明示的な同意を得た場合",
+      "legal": "法的要件への準拠",
+      "partners": "プラットフォームとユーザーの安全保護"
+    },
+    "security": {
+      "title": "4. 情報の共有",
+      "intro": "私たちは業界標準のセキュリティ対策を使用してデータを保護します。暗号化された数据传输、ストレージ暗号化、アクセス制御などを含みます。ただし、どのセキュリティ対策も絶対安全ではないことに注意してください。"
+    },
+    "rights": {
+      "title": "5. データセキュリティ",
+      "intro": "あなたはあなたの個人情報にアクセス、修正、削除、または私たちのデータ処理を制限する権利があります。リクエストする場合は support@sedgo.ai までご連絡ください。"
+    },
+    "changes": {
+      "title": "6. ユーザーの権利",
+      "intro": "このポリシーは随時更新される場合があります。重要な変更はメールでお知らせします。"
+    },
+    "contact": {
+      "title": "7. ポリシー更新",
+      "intro": "ご質問がある場合は、メールをお送りください：",
+      "email": "support@sedgo.ai"
+    }
+  },
+  "terms_page": {
+    "page": {
+      "title": "利用規約",
+      "desc": "SedGo aiサービスの利用規約",
+      "intro": "当サービスを利用することで、以下の利用規約に同意したものとみなされます"
+    },
+    "acceptance": {
+      "title": "1. 規約の同意",
+      "intro": "SedGoAIサービスを利用することで、利用規約に同意したものとみなされます。同意されない場合は、当サービスを利用しないでください。"
+    },
+    "service": {
+      "title": "2. サービス説明",
+      "intro": "SedGoAIは、テキストから動画へ、画像から動画へなどのAI駆動の動画生成サービスを提供します。"
+    },
+    "user": {
+      "title": "3. ユーザーアカウント",
+      "intro": "以下に同意しないことを約束します：",
+      "legal": "適用される法律や規制に違反しない",
+      "account": "サービスを使用するにはアカウント登録が必要です。アカウントのセキュリティとアカウント下のすべての活動に対して責任を持ちます。",
+      "content": "違法または有害なコンテンツを生成しない",
+      "respect": "サービスを乱用または攻撃しない"
+    },
+    "payment": {
+      "title": "4. 使用規則",
+      "intro": "一部のサービスは支払いが必要な場合があります。以下に同意します：",
+      "charges": "6. 料金と支払い",
+      "billing": "サービスには料金が発生する場合があります。すべての料金（税金を含む）の支払い 책임を持ちます。未払いの場合、サービスの停止が行われる可能性があります。"
+    },
+    "intellectual": {
+      "title": "5. コンテンツ所有権",
+      "intro": "当サービスを使用して生成したコンテンツの所有権はユーザーにあります。サービスの改善のために生成されたコンテンツを使用する権利を留保します。"
+    },
+    "termination": {
+      "title": "7. サービスの変更",
+      "intro": "いつでもサービスを変更または終了する権利を留保します。重大な変更は事前に通知します。",
+      "violation": "9. 終了",
+      "abuse": "ユーザーが利用規約に違反した場合、事前通知なしにいつでもアカウントを終了または一時停止できます。"
+    },
+    "limitation": {
+      "title": "8. 免責事項",
+      "intro": "サービスは「現状のまま」で提供され、いかなる保証もしません。当サービスの使用によって生じた損失について責任を負いません。"
+    },
+    "contact": {
+      "title": "10. お問い合わせ",
+      "intro": "ご質問がある場合は、メールを送信してください：",
+      "email": "support@sedgo.ai"
+    }
+  },
+  "refund_page": {
+    "page": {
+      "title": "返金ポリシー",
+      "desc": "返金ポリシーについて",
+      "intro": "返金のルールと手続きについて"
+    },
+    "scope": {
+      "title": "1. 適用範囲",
+      "intro": "この返金ポリシーは、SedGoAIを通じて購入されたすべてのサービスとクレジットに適用されます。"
+    },
+    "credits": {
+      "title": "2. クレジットの返金",
+      "intro": "未使用のクレジットは、購入後7日以内に全額返金を申請できます。使用済みクレジットは返金できません。"
+    },
+    "subscription": {
+      "title": "3. サブスクリプションの返金",
+      "monthly": "月額サブスクリプションはいつでもキャンセルできます。キャンセル後、サービスは現在の請求期間の終了時に終了し、返金されません。",
+      "yearly": "年額サブスクリプションは、購入後7日以内に全額返金を申請できます。7日を過ぎた後は返金できません。"
+    },
+    "process": {
+      "title": "4. 返金申請",
+      "intro": "返金を申請するには、support@sedgo.ai まで以下の情報を含むメールを送信してください：",
+      "email": "登録メール",
+      "order": "注文番号",
+      "date": "購入日",
+      "reason": "返金理由"
+    },
+    "timeline": {
+      "title": "5. 処理時間",
+      "intro": "返金申請は、受領後5営業日以内に処理されます。返金は元の支払いアカウントに返金され、到着時間は支払い方法によって異なります。"
+    },
+    "exceptions": {
+      "title": "6. 例外"
+    },
+    "ineligible": {
+      "title": "以下の場合は返金できません：",
+      "intro": "以下の場合は返金できません：",
+      "used": "使用済みクレジット",
+      "expired": "返金期間を過ぎた注文",
+      "terminated": "利用規約違反で終了したアカウント"
+    },
+    "contact": {
+      "title": "7. お問い合わせ",
+      "intro": "ご質問がある場合は、メールをお送りください：",
+      "email": "support@sedgo.ai"
+    }
+  }
+}
