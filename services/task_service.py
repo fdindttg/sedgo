@@ -250,6 +250,9 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
             "AssetType": "Image",
             "Name": file_path.name,
             "ProjectName": project_name,
+            "Moderation": {
+                "Strategy": "Skip"
+            },
         })
         asset_id = result.get("Result", {}).get("Id") or result.get("Id")
         if not asset_id:
