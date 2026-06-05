@@ -521,6 +521,10 @@ document.querySelectorAll('.mode-tab').forEach(tab => {
     if (activeContent) {
       activeContent.classList.add('active');
     }
+    // Load drama projects when drama tab is activated
+    if (mode === 'drama') {
+      loadDramaProjects();
+    }
   });
 });
 
@@ -685,7 +689,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Setup type buttons (drama mode)
-  document.querySelectorAll('.type-btn').forEach(function(btn) {
+  document.querySelectorAll('#mode-drama .type-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
       e.stopPropagation();
       var parent = btn.parentElement;
@@ -696,42 +700,271 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Drama mode "生成" button → redirect with prompt
+  // ── Drama API helper ──
+  function dramaApi(path, opts) {
+    var token = localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey');
+    var headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    return fetch('/api/drama' + path, { ...opts, headers: { ...headers, ...((opts && opts.headers) || {}) } })
+      .then(function(r) { if (!r.ok) return r.text().then(function(t) { throw new Error(t); }); return r.json(); });
+  }
+
+  // ── Load drama projects ──
+  function loadDramaProjects() {
+    var grid = document.getElementById('dramaProjectGrid');
+    grid.innerHTML = '<div style="text-align:center;padding:30px;color:var(--t3);font-size:13px;">加载中...</div>';
+    dramaApi('/projects').then(function(data) {
+      var projects = data.projects || [];
+      if (projects.length === 0) {
+        grid.innerHTML = '<div style="text-align:center;padding:30px;color:var(--t3);font-size:13px;">还没有短剧项目，输入想法开始创作吧！</div>';
+        return;
+      }
+      var statusMap = { draft: '草稿', generating: '生成中', completed: '已完成', failed: '失败' };
+      grid.innerHTML = projects.map(function(p) {
+        return '<div class="drama-project-card" data-id="' + p.id + '" style="background:var(--bg3);border-radius:10px;padding:14px;cursor:pointer;border:1px solid transparent;transition:all 0.2s;">' +
+          '<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:6px;">' +
+          '<span style="font-size:11px;padding:1px 8px;border-radius:8px;background:#FF4757;color:#fff;">' + (p.genre || '短剧') + '</span>' +
+          '<span style="font-size:11px;padding:1px 8px;border-radius:8px;background:rgba(255,255,255,0.08);color:var(--t2);">' + (statusMap[p.status] || p.status) + '</span>' +
+          '</div>' +
+          '<div style="font-size:14px;font-weight:500;margin-bottom:4px;">' + p.title + '</div>' +
+          '<div style="font-size:12px;color:var(--t3);">' + (p.episode_count || 0) + '/' + p.total_episodes + ' 集</div>' +
+          '</div>';
+      }).join('');
+      // Click to open detail
+      grid.querySelectorAll('.drama-project-card').forEach(function(card) {
+        card.addEventListener('click', function() { openDramaDetail(parseInt(card.dataset.id)); });
+      });
+    }).catch(function(e) {
+      grid.innerHTML = '<div style="text-align:center;padding:30px;color:var(--t3);font-size:13px;">加载失败</div>';
+    });
+  }
+
+  // ── Open project detail ──
+  function openDramaDetail(projectId) {
+    document.getElementById('dramaProjectList').style.display = 'none';
+    document.getElementById('dramaDetailView').style.display = 'block';
+    document.getElementById('dramaScenePanel').style.display = 'none';
+    document.getElementById('dramaExportPanel').style.display = 'none';
+    document.getElementById('dramaDetailView').dataset.projectId = projectId;
+    loadDramaDetail(projectId);
+  }
+
+  function loadDramaDetail(projectId) {
+    var titleEl = document.getElementById('dramaDetailTitle');
+    var statusEl = document.getElementById('dramaDetailStatus');
+    var listEl = document.getElementById('dramaEpisodeList');
+    listEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--t3);font-size:13px;">加载中...</div>';
+
+    dramaApi('/projects/' + projectId).then(function(project) {
+      titleEl.textContent = project.title + (project.genre ? ' (' + project.genre + ')' : '');
+      var statusMap = { draft: '草稿', generating: '生成中', completed: '已完成', failed: '失败' };
+      statusEl.textContent = statusMap[project.status] || project.status;
+      statusEl.style.background = project.status === 'draft' ? 'rgba(255,255,255,0.08)' : project.status === 'generating' ? 'rgba(34,197,94,0.15)' : project.status === 'completed' ? 'rgba(255,71,87,0.15)' : 'rgba(239,68,68,0.15)';
+      statusEl.style.color = project.status === 'draft' ? 'var(--t2)' : project.status === 'generating' ? '#22c55e' : project.status === 'completed' ? '#FF4757' : '#ef4444';
+
+      var eps = project.episodes || [];
+      if (eps.length === 0) {
+        listEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--t3);font-size:13px;">还没有剧集，点击「生成剧本」开始创作</div>';
+        return;
+      }
+      listEl.innerHTML = eps.map(function(ep) {
+        var icon = ep.status === 'draft' ? '📝' : ep.status === 'generating' ? '⏳' : ep.status === 'completed' ? '✅' : '❌';
+        return '<div class="drama-episode-card" data-ep="' + ep.id + '" style="background:var(--bg2);border-radius:8px;padding:12px;cursor:pointer;border:1px solid transparent;transition:all 0.15s;">' +
+          '<div style="font-size:12px;color:#FF4757;font-weight:600;">' + icon + ' 第 ' + ep.episode_number + ' 集</div>' +
+          '<div style="font-size:14px;margin:4px 0;">' + (ep.title || '未命名') + '</div>' +
+          (ep.hook ? '<div style="font-size:12px;color:var(--t3);font-style:italic;">🎣 ' + ep.hook.substring(0, 50) + (ep.hook.length > 50 ? '...' : '') + '</div>' : '') +
+          '<div style="font-size:11px;color:var(--t3);margin-top:4px;">' + (ep.scene_count || 0) + ' 个分镜</div>' +
+          '</div>';
+      }).join('');
+      listEl.querySelectorAll('.drama-episode-card').forEach(function(card) {
+        card.addEventListener('click', function() { showDramaScene(parseInt(card.dataset.ep)); });
+      });
+    }).catch(function(e) {
+      listEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--t3);font-size:13px;">加载失败</div>';
+    });
+  }
+
+  // ── Show scene detail ──
+  var _currentEpisodeId = null;
+  function showDramaScene(episodeId) {
+    _currentEpisodeId = episodeId;
+    var panel = document.getElementById('dramaScenePanel');
+    panel.style.display = 'block';
+    panel.innerHTML = '<div style="text-align:center;padding:20px;color:var(--t3);font-size:13px;">加载中...</div>';
+    document.getElementById('dramaExportPanel').style.display = 'none';
+
+    dramaApi('/episodes/' + episodeId).then(function(ep) {
+      var html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">' +
+        '<div><strong>第 ' + ep.episode_number + ' 集</strong><span style="margin-left:8px;font-size:13px;color:var(--t3);">' + (ep.title || '') + '</span></div>' +
+        '<div style="display:flex;gap:6px;">' +
+        '<button class="drama-inline-btn" data-action="breakdown-ep" style="padding:5px 12px;border-radius:6px;border:none;cursor:pointer;font-size:11px;background:rgba(255,255,255,0.1);color:var(--t1);">🎯 拆解分镜</button>' +
+        '<button class="drama-inline-btn" data-action="render-ep" style="padding:5px 12px;border-radius:6px;border:none;cursor:pointer;font-size:11px;background:#22c55e;color:#fff;">🎬 渲染</button>' +
+        '<button class="drama-inline-btn" data-action="export-ep" style="padding:5px 12px;border-radius:6px;border:none;cursor:pointer;font-size:11px;background:rgba(255,255,255,0.1);color:var(--t1);">📋 导出</button>' +
+        '</div></div>';
+      if (ep.hook) html += '<div style="font-size:12px;color:var(--t3);margin-bottom:6px;">🎣 钩子：' + ep.hook + '</div>';
+      if (ep.cliffhanger) html += '<div style="font-size:12px;color:var(--t3);margin-bottom:6px;">🔚 悬念：' + ep.cliffhanger + '</div>';
+
+      var scenes = ep.scenes || [];
+      if (scenes.length > 0) {
+        html += '<div style="font-size:12px;color:var(--t2);margin-bottom:6px;">🎥 分镜 (' + scenes.length + ')</div>';
+        scenes.forEach(function(s) {
+          var sIcon = s.status === 'draft' ? '📝' : s.status === 'generating' ? '⏳' : s.status === 'completed' ? '✅' : '❌';
+          html += '<div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:10px;margin-bottom:6px;">' +
+            '<div style="display:flex;justify-content:space-between;font-size:12px;">' +
+            '<span>' + sIcon + ' 场景#' + s.scene_number + (s.location ? ' — ' + s.location : '') + '</span>' +
+            '<span style="color:var(--t3);">' + (s.duration || 5) + 's</span></div>' +
+            (s.camera_instruction ? '<div style="font-size:11px;color:#FF6B81;margin:2px 0;">📷 ' + s.camera_instruction + '</div>' : '') +
+            '<div style="font-size:11px;color:var(--t3);word-break:break-all;">' + (s.prompt_text ? s.prompt_text.substring(0, 100) + (s.prompt_text.length > 100 ? '...' : '') : '') + '</div>' +
+            (s.selected_url ? '<div style="margin-top:4px;"><video src="' + s.selected_url + '" controls style="width:100%;max-height:150px;border-radius:4px;"></video></div>' : '') +
+            (s.quality_score ? '<div style="font-size:11px;margin-top:2px;">⭐ ' + s.quality_score + '/10</div>' : '') +
+            '</div>';
+        });
+      }
+      panel.innerHTML = html;
+
+      // Inline action buttons
+      panel.querySelectorAll('.drama-inline-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var action = btn.dataset.action;
+          if (action === 'breakdown-ep') doBreakdown(episodeId);
+          else if (action === 'render-ep') doRenderEpisode(episodeId);
+          else if (action === 'export-ep') doExport(episodeId);
+        });
+      });
+    }).catch(function(e) {
+      panel.innerHTML = '<div style="color:#FF4757;font-size:13px;">加载失败：' + e.message + '</div>';
+    });
+  }
+
+  // ── Dramaa actions ──
+  function doGenerateScript() {
+    var pid = document.getElementById('dramaDetailView').dataset.projectId;
+    if (!pid) return;
+    document.getElementById('dramaDetailActions').innerHTML = '<span style="font-size:13px;color:var(--t3);">⏳ AI 策划剧本中...</span>';
+    dramaApi('/projects/' + pid + '/generate-script', { method: 'POST', body: '{}' }).then(function(r) {
+      alert('✅ ' + r.message);
+      loadDramaDetail(parseInt(pid));
+    }).catch(function(e) { alert('生成失败：' + e.message); loadDramaDetail(parseInt(pid)); });
+  }
+
+  function doBreakdown(episodeId) {
+    dramaApi('/episodes/' + episodeId + '/breakdown', { method: 'POST' }).then(function(r) {
+      alert('✅ ' + r.message);
+      showDramaScene(episodeId);
+    }).catch(function(e) { alert('拆解失败：' + e.message); });
+  }
+
+  function doRenderEpisode(episodeId) {
+    dramaApi('/render', { method: 'POST', body: JSON.stringify({ episode_ids: [episodeId] }) }).then(function(r) {
+      alert('✅ ' + r.message);
+    }).catch(function(e) { alert('渲染失败：' + e.message); });
+  }
+
+  function doRenderAll() {
+    var pid = document.getElementById('dramaDetailView').dataset.projectId;
+    if (!pid) return;
+    dramaApi('/render', { method: 'POST', body: JSON.stringify({}) }).then(function(r) {
+      alert('✅ ' + r.message);
+    }).catch(function(e) { alert('渲染失败：' + e.message); });
+  }
+
+  function doSync() {
+    dramaApi('/tasks/sync').then(function(r) {
+      alert('✅ 同步完成：' + r.synced + ' 个场景已更新');
+      var pid = document.getElementById('dramaDetailView').dataset.projectId;
+      if (pid) loadDramaDetail(parseInt(pid));
+      if (_currentEpisodeId) showDramaScene(_currentEpisodeId);
+    }).catch(function(e) { alert('同步失败：' + e.message); });
+  }
+
+  function doExport(episodeId) {
+    dramaApi('/episodes/' + episodeId + '/export').then(function(manifest) {
+      var panel = document.getElementById('dramaExportPanel');
+      panel.style.display = 'block';
+      var clips = manifest.clips || [];
+      var html = '<div style="font-size:14px;font-weight:500;margin-bottom:8px;">📋 成片清单 — ' + (manifest.title || '') + ' (' + (manifest.total_duration || 0) + 's, ' + (clips.length) + ' 片段)</div>';
+      if (clips.length === 0) {
+        html += '<div style="color:var(--t3);font-size:13px;">暂无可用视频</div>';
+      } else {
+        clips.forEach(function(c, i) {
+          html += '<div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:8px;margin-bottom:4px;font-size:12px;">' +
+            '片段 ' + (i+1) + ' — 场景#' + c.scene_number + ' (' + (c.duration || 0) + 's)' +
+            (c.camera ? '<br><span style="color:#FF6B81;">📷 ' + c.camera + '</span>' : '') +
+            (c.video_url ? '<br><video src="' + c.video_url + '" controls style="width:100%;max-height:120px;border-radius:4px;margin-top:4px;"></video>' : '<br><span style="color:#FF4757;">❌ 无视频</span>') +
+            '</div>';
+        });
+      }
+      panel.innerHTML = html;
+    }).catch(function(e) { alert('导出失败：' + e.message); });
+  }
+
+  // ── Detail action buttons ──
+  document.getElementById('dramaDetailActions').addEventListener('click', function(e) {
+    var btn = e.target.closest('.drama-action-btn');
+    if (!btn) return;
+    var action = btn.dataset.action;
+    if (action === 'script') doGenerateScript();
+    else if (action === 'breakdown') { if (_currentEpisodeId) doBreakdown(_currentEpisodeId); else alert('请先选择一个剧集'); }
+    else if (action === 'render') doRenderAll();
+    else if (action === 'sync') doSync();
+  });
+
+  // ── Back button ──
+  document.getElementById('dramaBackBtn').addEventListener('click', function() {
+    document.getElementById('dramaDetailView').style.display = 'none';
+    document.getElementById('dramaProjectList').style.display = 'block';
+    loadDramaProjects();
+  });
+
+  // ── Create project ──
   document.getElementById('gen-btn-drama').addEventListener('click', function() {
     var token = localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey');
-    if (!token) {
-      openAuthModal();
-      return;
-    }
+    if (!token) { openAuthModal(); return; }
     var prompt = document.getElementById('prompt-drama').value.trim();
-    var url = '/pages/drama.html';
-    if (prompt) {
-      url += '?prompt=' + encodeURIComponent(prompt);
-    }
-    window.location.href = url;
+    if (!prompt) { alert('请输入故事想法或上传剧本'); return; }
+    var genre = document.getElementById('dramaGenre').value;
+    var episodes = parseInt(document.getElementById('dramaEpisodeCount').value) || 10;
+    var title = prompt.substring(0, 20) + (prompt.length > 20 ? '...' : '');
+
+    var btn = document.getElementById('gen-btn-drama');
+    btn.disabled = true;
+    btn.textContent = '创建中...';
+
+    fetch('/api/drama/projects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey')) },
+      body: JSON.stringify({ title: title, genre: genre, logline: prompt, total_episodes: episodes })
+    }).then(function(r) { return r.json(); }).then(function(project) {
+      // Generate script
+      return fetch('/api/drama/projects/' + project.id + '/generate-script', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey')) },
+        body: '{}'
+      }).then(function() { return project; });
+    }).then(function(project) {
+      btn.disabled = false;
+      btn.textContent = '开始创作';
+      document.getElementById('prompt-drama').value = '';
+      document.getElementById('drama-upload-btn').innerHTML = '<span>📄</span> 上传剧本';
+      openDramaDetail(project.id);
+    }).catch(function(e) {
+      btn.disabled = false;
+      btn.textContent = '开始创作';
+      alert('创建失败：' + e.message);
+    });
   });
 
-  // Drama upload button → trigger file picker and read content
-  document.querySelector('.drama-upload-btn').addEventListener('click', function() {
-    var token = localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey');
-    if (!token) {
-      openAuthModal();
-      return;
-    }
+  // ── Upload script ──
+  document.querySelector('#mode-drama .drama-upload-btn').addEventListener('click', function() {
     document.getElementById('drama-script-input').click();
   });
-
-  // Handle script file selection
   document.getElementById('drama-script-input').addEventListener('change', function(e) {
     var file = e.target.files[0];
     if (!file) return;
     var reader = new FileReader();
     reader.onload = function(ev) {
-      var content = ev.target.result;
-      document.getElementById('prompt-drama').value = content;
-      // Update button text to show filename
-      var btn = document.querySelector('.drama-upload-btn');
-      btn.innerHTML = '<span>📄</span> ' + file.name;
+      document.getElementById('prompt-drama').value = ev.target.result;
+      document.querySelector('#mode-drama .drama-upload-btn').innerHTML = '<span>📄</span> ' + file.name;
     };
     reader.readAsText(file);
   });
