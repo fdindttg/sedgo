@@ -598,6 +598,7 @@ def submit_scene_tasks(
         config = dict(task_config_base)
         config["prompt"] = scene.prompt_text
         config["duration_seconds"] = scene.duration
+        config["duration"] = scene.duration  # for points calculation
         
         # 注入角色 Seed 确保一致性
         if scene.character_seeds:

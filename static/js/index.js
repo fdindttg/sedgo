@@ -1966,8 +1966,40 @@ function updateDramaCostDisplay() {
   const costDisplay = document.getElementById('cost-display-drama');
   if (!costDisplay) return;
   const costValue = costDisplay.querySelector('.cost-value');
-  if (costValue) {
-    costValue.textContent = '7.5';
+  if (!costValue) return;
+
+  // Get params from drama control panel
+  var modelSelect = document.getElementById('modelSelect-drama');
+  var resDropdown = document.getElementById('resDropdown-drama');
+  var durDropdown = document.getElementById('durDropdown-drama');
+  var epCount = document.getElementById('dramaEpisodeCount');
+
+  var model = modelSelect ? modelSelect.value : '';
+  var resolution = resDropdown ? resDropdown.textContent.trim().replace(/[▢◎▭▯◻▮▰⬌⬍]/g, '').trim() : '720p';
+  var durationText = durDropdown ? durDropdown.textContent.trim().replace(/[▢◎▭▯◻▮▰⬌⬍]/g, '').trim() : '60s';
+  var totalEpisodes = _dramaIsSingleEpisode ? 1 : (epCount ? parseInt(epCount.value) : 10);
+
+  // Parse duration: "60s" → 60, "auto" → estimate 60s per episode
+  var totalSeconds = 0;
+  if (durationText === 'auto' || durationText.toLowerCase() === 'auto') {
+    // Estimate: 8 scenes × 5s per scene × episodes = 40s per episode
+    totalSeconds = 40 * totalEpisodes;
+  } else {
+    var match = durationText.match(/(\d+)/);
+    var perEpisodeSeconds = match ? parseInt(match[1]) : 60;
+    totalSeconds = perEpisodeSeconds * totalEpisodes;
+  }
+
+  // Calculate using points config
+  var config = _pointsPerSecCache || {};
+  var table = config[model] || {};
+  var perSec = table[resolution] || table['720p'] || 0;
+
+  if (perSec > 0) {
+    var cost = Math.max(0.1, Math.round(perSec * totalSeconds * 10) / 10);
+    costValue.textContent = cost;
+  } else {
+    costValue.textContent = '?';
   }
 }
 
@@ -3463,6 +3495,7 @@ function initModelChangeHandlers() {
     dramaModelSelect.addEventListener('change', (e) => {
       const selectedModel = e.target.value;
       showReferenceModeSelector('drama', selectedModel);
+      updateDramaCostDisplay();
     });
   }
   
