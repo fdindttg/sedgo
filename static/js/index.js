@@ -709,17 +709,22 @@ document.addEventListener('DOMContentLoaded', function() {
       var parent = btn.parentElement;
       parent.querySelectorAll('.type-btn').forEach(function(b) {
         b.classList.remove('active');
+        b.style.background = 'transparent';
+        b.style.border = '1px solid var(--border)';
+        b.style.color = 'var(--t2)';
       });
       btn.classList.add('active');
+      btn.style.background = 'var(--primary)';
+      btn.style.border = '1px solid var(--primary)';
+      btn.style.color = '#fff';
 
       var epCount = document.getElementById('dramaEpisodeCount');
-       if (epCount) {
-         var isSingle = btn.getAttribute('data-i18n') === 'gen.single_episode';
-         _dramaIsSingleEpisode = isSingle;
-         epCount.style.display = isSingle ? 'none' : 'inline-block';
-         // Update episode count to 1 when single mode
-         if (isSingle) epCount.value = '1';
-       }
+      if (epCount) {
+        var isSingle = btn.getAttribute('data-i18n') === 'gen.single_episode';
+        _dramaIsSingleEpisode = isSingle;
+        epCount.style.display = isSingle ? 'none' : 'inline-block';
+        if (isSingle) epCount.value = '1';
+      }
     });
   });
 
