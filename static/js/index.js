@@ -284,6 +284,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (imageModelSelect) {
     imageModelSelect.addEventListener('change', updateImageCostDisplay);
   }
+
+  // Handle ?drama=ID query param → navigate to drama tab and open project
+  var dramaParam = new URLSearchParams(window.location.search).get('drama');
+  if (dramaParam) {
+    var dramaTab = document.querySelector('.mode-tab[data-mode="drama"]');
+    if (dramaTab) {
+      dramaTab.click();
+      // Wait for projects to load, then open detail
+      var checkLoaded = setInterval(function() {
+        var grid = document.getElementById('dramaProjectGrid');
+        if (grid && grid.querySelector('.drama-project-card')) {
+          clearInterval(checkLoaded);
+          openDramaDetail(parseInt(dramaParam));
+        }
+      }, 300);
+      // Timeout fallback
+      setTimeout(function() { clearInterval(checkLoaded); }, 10000);
+    }
+  }
 });
 
 // i18next 初始化

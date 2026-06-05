@@ -932,7 +932,7 @@ async function loadDramaWorks() {
     const statusLabels = { draft: '草稿', generating: '生成中', completed: '已完成', failed: '失败' };
     grid.innerHTML = projects.map(function(p) {
       const statusClass = 'status-' + p.status;
-      return '<div class="work-card" onclick="window.location.href=\'/pages/drama.html?id=' + p.id + '\'" style="cursor:pointer;">' +
+      return '<div class="work-card" onclick="window.location.href=\'/?drama=' + p.id + '\'" style="cursor:pointer;">' +
         '<div class="work-card-header">' +
         '<span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;background:#FF4757;color:#fff;">' + (p.genre || '短剧') + '</span>' +
         '</div>' +
