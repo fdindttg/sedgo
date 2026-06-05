@@ -354,5 +354,30 @@ function resetActions() {
 
 // ── Init ──
 document.addEventListener('DOMContentLoaded', () => {
-  loadProjects();
+  // Read URL parameters
+  const params = new URLSearchParams(window.location.search);
+  const promptParam = params.get('prompt');
+  const projectId = params.get('id');
+
+  if (promptParam) {
+    // Pre-fill the create modal with the prompt as logline
+    document.getElementById('newLogline').value = promptParam;
+    // Auto-generate a title from first 20 chars
+    var title = promptParam.substring(0, 20) + (promptParam.length > 20 ? '...' : '');
+    document.getElementById('newTitle').value = title || '新短剧项目';
+  }
+
+  if (projectId) {
+    // Directly open project detail
+    showProjectDetail(parseInt(projectId));
+  } else {
+    loadProjects();
+  }
+
+  // Auto-open create modal if prompt was passed and no project id
+  if (promptParam && !projectId) {
+    setTimeout(function() {
+      showCreateModal();
+    }, 500);
+  }
 });

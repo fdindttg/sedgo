@@ -696,24 +696,44 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Drama mode "生成" button → redirect to full drama studio
+  // Drama mode "生成" button → redirect with prompt
   document.getElementById('gen-btn-drama').addEventListener('click', function() {
     var token = localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey');
     if (!token) {
       openAuthModal();
       return;
     }
-    window.location.href = '/pages/drama.html';
+    var prompt = document.getElementById('prompt-drama').value.trim();
+    var url = '/pages/drama.html';
+    if (prompt) {
+      url += '?prompt=' + encodeURIComponent(prompt);
+    }
+    window.location.href = url;
   });
 
-  // Drama upload button → also redirect
+  // Drama upload button → trigger file picker and read content
   document.querySelector('.drama-upload-btn').addEventListener('click', function() {
     var token = localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey');
     if (!token) {
       openAuthModal();
       return;
     }
-    window.location.href = '/pages/drama.html';
+    document.getElementById('drama-script-input').click();
+  });
+
+  // Handle script file selection
+  document.getElementById('drama-script-input').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var content = ev.target.result;
+      document.getElementById('prompt-drama').value = content;
+      // Update button text to show filename
+      var btn = document.querySelector('.drama-upload-btn');
+      btn.innerHTML = '<span>📄</span> ' + file.name;
+    };
+    reader.readAsText(file);
   });
 });
 
