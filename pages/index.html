@@ -384,19 +384,17 @@
 
     <!-- Drama Studio Mode -->
     <div class="mode-content" id="mode-drama">
-      <!-- 子视图切换 -->
       <div id="dramaProjectList">
-        <!-- 左侧参考面板 -->
         <div style="display:flex; gap:14px; margin-bottom:12px;">
           <div class="gen-left-panel" style="min-width:160px; flex:0 0 160px;">
-            <div class="ref-panel-header"><span>参考素材</span></div>
+            <div class="ref-panel-header"><span data-i18n="gen.reference">参考素材</span></div>
             <div class="ref-upload-zone" id="upload-zone-drama">
               <div class="ref-icon" style="font-size:20px;">📤</div>
-              <div class="ref-label" style="font-size:12px;">上传文件</div>
+              <div class="ref-label" data-i18n="gen.upload_label" style="font-size:12px;">上传文件</div>
             </div>
             <div class="ref-library-btn" id="library-btn-drama">
               <div class="ref-icon" style="font-size:20px;">📚</div>
-              <div class="ref-label" style="font-size:12px;">素材库</div>
+              <div class="ref-label" data-i18n="gen.reference" style="font-size:12px;">素材库</div>
             </div>
             <div class="ref-files-list" id="ref-files-drama"></div>
           </div>
@@ -404,24 +402,31 @@
             <input type="file" id="drama-script-input" accept=".txt,.md" style="display:none;">
             <textarea class="drama-textarea" id="prompt-drama" placeholder="输入故事想法或上传剧本，AI 将为你规划完整短剧..." style="width:100%;min-height:72px;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--t1);font-size:13px;resize:vertical;" data-i18n="[placeholder]gen.prompt_placeholder_drama"></textarea>
             <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
-              <button class="drama-upload-btn" style="padding:6px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--t1);cursor:pointer;font-size:13px;">
+              <button class="drama-upload-btn" style="padding:6px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--t1);cursor:pointer;font-size:13px;" data-i18n="gen.upload_script">
                 <span>📄</span> 上传剧本
               </button>
               <div class="drama-type-btns" style="display:flex; gap:4px;">
-                <button class="type-btn" style="padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--t2);cursor:pointer;font-size:12px;">单集</button>
-                <button class="type-btn active" style="padding:6px 12px;border-radius:6px;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-size:12px;">连续剧</button>
+                <button class="type-btn" style="padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--t2);cursor:pointer;font-size:12px;" data-i18n="gen.single_episode">单集</button>
+                <button class="type-btn active" style="padding:6px 12px;border-radius:6px;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-size:12px;" data-i18n="gen.series">连续剧</button>
               </div>
               <select id="dramaEpisodeCount" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--t1);font-size:12px;">
-                <option value="5">5 集</option><option value="10" selected>10 集</option>
-                <option value="15">15 集</option><option value="20">20 集</option>
+                <option value="5" data-i18n="drama.episode_count" data-i18n-opt='{"n":5}'>5 集</option>
+                <option value="10" selected data-i18n="drama.episode_count" data-i18n-opt='{"n":10}'>10 集</option>
+                <option value="15" data-i18n="drama.episode_count" data-i18n-opt='{"n":15}'>15 集</option>
+                <option value="20" data-i18n="drama.episode_count" data-i18n-opt='{"n":20}'>20 集</option>
               </select>
               <select id="dramaGenre" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--t1);font-size:12px;">
-                <option value="逆袭">逆袭</option><option value="重生">重生</option><option value="霸总">霸总</option>
-                <option value="甜宠">甜宠</option><option value="穿越">穿越</option><option value="古装">古装</option>
-                <option value="悬疑">悬疑</option><option value="都市">都市</option>
+                <option value="逆袭" data-i18n="drama.genre_revenge">逆袭</option>
+                <option value="重生" data-i18n="drama.genre_reborn">重生</option>
+                <option value="霸总" data-i18n="drama.genre_ceo">霸总</option>
+                <option value="甜宠" data-i18n="drama.genre_sweet">甜宠</option>
+                <option value="穿越" data-i18n="drama.genre_time_travel">穿越</option>
+                <option value="古装" data-i18n="drama.genre_costume">古装</option>
+                <option value="悬疑" data-i18n="drama.genre_mystery">悬疑</option>
+                <option value="都市" data-i18n="drama.genre_urban">都市</option>
               </select>
             </div>
-            <!-- 控制栏：模型/比例/分辨率/时长/参考模式/字幕擦除/真人素材 -->
+            <!-- 控制栏 -->
             <div class="gen-bottom-controls" style="margin-top:8px; padding:8px 0; border-top:1px solid var(--border);">
               <div class="ctrl-left" style="gap:6px;flex-wrap:wrap;">
                 <div class="ctrl-item">
@@ -453,7 +458,8 @@
                   <button class="ctrl-dropdown duration-dropdown" id="durDropdown-drama"><span class="dropdown-icon">◎</span> 60s</button>
                   <div class="dropdown-menu duration-menu" id="durMenu-drama">
                     <div class="duration-auto-btn">
-                      <button class="auto-btn active">自动</button><button class="custom-btn">自定义</button>
+                      <button class="auto-btn active" data-i18n="gen.auto">自动</button>
+                      <button class="custom-btn" data-i18n="gen.custom">自定义</button>
                     </div>
                     <div class="duration-slider">
                       <input type="range" min="5" max="60" value="60" id="durSlider-drama">
@@ -469,25 +475,25 @@
                   </div>
                 </div>
                 <div class="ctrl-item">
-                  <button class="ctrl-dropdown" id="refModeDropdown-drama"><span class="dropdown-icon">📷</span> <span>文生视频</span></button>
+                  <button class="ctrl-dropdown" id="refModeDropdown-drama"><span class="dropdown-icon">📷</span> <span data-i18n="gen.text2vid">文生视频</span></button>
                   <div class="dropdown-menu" id="refModeMenu-drama">
-                    <div class="dropdown-item" data-value="text2vid">文生视频</div>
-                    <div class="dropdown-item" data-value="first_last_frame">首尾帧参考</div>
-                    <div class="dropdown-item" data-value="multi_ref">图片+视频+音频参考</div>
+                    <div class="dropdown-item" data-value="text2vid" data-i18n="gen.text2vid">文生视频</div>
+                    <div class="dropdown-item" data-value="first_last_frame" data-i18n="gen.first_last_frame">首尾帧参考</div>
+                    <div class="dropdown-item" data-value="multi_ref" data-i18n="gen.multi_ref">图片+视频+音频参考</div>
                   </div>
                 </div>
                 <div class="ctrl-item subtitle-removal-item">
                   <label class="subtitle-removal-label">
                     <input type="checkbox" id="subtitle-removal-drama">
                     <span class="checkbox-icon">✓</span>
-                    <span>字幕擦除</span>
+                    <span data-i18n="gen.subtitle_removal">字幕擦除</span>
                   </label>
                 </div>
                 <div class="ctrl-item real-people-item">
                   <label class="real-people-label">
                     <input type="checkbox" id="use-real-people-drama">
                     <span class="checkbox-icon">✓</span>
-                    <span>真人素材</span>
+                    <span data-i18n="gen.real_people">真人素材</span>
                   </label>
                 </div>
               </div>
@@ -496,28 +502,28 @@
                   <span class="cost-icon">⚡</span>
                   <span class="cost-value">7.5</span>
                 </div>
-                <button class="gen-btn-lg" id="gen-btn-drama" style="background:linear-gradient(135deg,#FF4757,#FF6B81);">开始创作</button>
+                <button class="gen-btn-lg" id="gen-btn-drama" style="background:linear-gradient(135deg,#FF4757,#FF6B81);" data-i18n="drama.start_create">开始创作</button>
               </div>
             </div>
           </div>
         </div>
 
-        <h3 style="margin:16px 0 8px; font-size:15px; color:var(--t1);">我的短剧项目</h3>
+        <h3 style="margin:16px 0 8px; font-size:15px; color:var(--t1);" data-i18n="drama.my_projects">我的短剧项目</h3>
         <div id="dramaProjectGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;"></div>
       </div>
 
       <!-- 项目详情视图 -->
       <div id="dramaDetailView" style="display:none;">
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-          <button id="dramaBackBtn" style="padding:6px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--t1);cursor:pointer;font-size:13px;">← 返回</button>
+          <button id="dramaBackBtn" style="padding:6px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--t1);cursor:pointer;font-size:13px;" data-i18n="drama.back">← 返回</button>
           <h3 id="dramaDetailTitle" style="margin:0; font-size:16px;"></h3>
           <span id="dramaDetailStatus" style="font-size:12px;padding:2px 8px;border-radius:8px;"></span>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;" id="dramaDetailActions">
-          <button class="drama-action-btn" data-action="script" style="padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;background:#FF4757;color:#fff;">📝 生成剧本</button>
-          <button class="drama-action-btn" data-action="breakdown" style="padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;background:rgba(255,255,255,0.1);color:var(--t1);">🎯 拆解分镜</button>
-          <button class="drama-action-btn" data-action="render" style="padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;background:#22c55e;color:#fff;">🎬 批量渲染</button>
-          <button class="drama-action-btn" data-action="sync" style="padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;background:rgba(255,255,255,0.1);color:var(--t1);">🔄 同步状态</button>
+          <button class="drama-action-btn" data-action="script" style="padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;background:#FF4757;color:#fff;" data-i18n="drama.generate_script">📝 生成剧本</button>
+          <button class="drama-action-btn" data-action="breakdown" style="padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;background:rgba(255,255,255,0.1);color:var(--t1);" data-i18n="drama.do_breakdown">🎯 拆解分镜</button>
+          <button class="drama-action-btn" data-action="render" style="padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;background:#22c55e;color:#fff;" data-i18n="drama.batch_render">🎬 批量渲染</button>
+          <button class="drama-action-btn" data-action="sync" style="padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;background:rgba(255,255,255,0.1);color:var(--t1);" data-i18n="drama.sync_status">🔄 同步状态</button>
         </div>
         <div id="dramaEpisodeList" style="display:flex;flex-direction:column;gap:8px;"></div>
         <div id="dramaScenePanel" style="display:none; margin-top:12px; background:var(--bg3); border-radius:10px; padding:16px;"></div>
