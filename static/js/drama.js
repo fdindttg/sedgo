@@ -380,4 +380,35 @@ document.addEventListener('DOMContentLoaded', () => {
       showCreateModal();
     }, 500);
   }
+
+  // Drama upload button → trigger file picker
+  var uploadBtn = document.getElementById('drama-upload-btn');
+  if (uploadBtn) {
+    uploadBtn.addEventListener('click', function() {
+      document.getElementById('drama-script-input').click();
+    });
+  }
+
+  // Handle script file selection
+  var scriptInput = document.getElementById('drama-script-input');
+  if (scriptInput) {
+    scriptInput.addEventListener('change', function(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(ev) {
+        var content = ev.target.result;
+        document.getElementById('newLogline').value = content.substring(0, 500);
+        // Auto-generate title from first line or filename
+        var firstLine = content.split('\n')[0].trim().substring(0, 30);
+        var titleInput = document.getElementById('newTitle');
+        if (!titleInput.value) {
+          titleInput.value = firstLine || file.name.replace(/\.[^.]+$/, '');
+        }
+      };
+      reader.readAsText(file);
+      // Reset input so same file can be selected again
+      e.target.value = '';
+    });
+  }
 });

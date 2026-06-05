@@ -375,6 +375,7 @@
     <div id="createModal" class="modal-overlay">
       <div class="modal-content">
         <h3>创建新项目</h3>
+        <input type="file" id="drama-script-input" accept=".txt,.md" style="display:none;">
         <input id="newTitle" placeholder="项目名称" />
         <select id="newGenre">
           <option value="逆袭">逆袭</option>
@@ -386,7 +387,10 @@
           <option value="悬疑">悬疑</option>
           <option value="都市">都市</option>
         </select>
-        <textarea id="newLogline" placeholder="一句话梗概（可选）"></textarea>
+        <div style="display:flex; gap:8px; margin-bottom:12px;">
+          <textarea id="newLogline" placeholder="一句话梗概（可选）" style="flex:1;"></textarea>
+          <button type="button" id="drama-upload-btn" class="action-btn btn-secondary" style="height:fit-content;padding:10px 14px;white-space:nowrap;flex-shrink:0;" title="上传剧本/小说">📄 上传</button>
+        </div>
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
           <label style="font-size:14px;">集数：</label>
           <input id="newEpisodes" type="number" value="10" min="3" max="50" style="width:80px;" />
