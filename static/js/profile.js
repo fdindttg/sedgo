@@ -920,6 +920,7 @@ async function loadDramaWorks() {
     if (!res.ok) throw new Error('加载失败');
     const data = await res.json();
     const projects = data.projects || [];
+    _dramaProjectsCache = projects;
     if (projects.length === 0) {
       grid.innerHTML =
         '<div class="empty-state">' +
@@ -932,21 +933,196 @@ async function loadDramaWorks() {
     const statusLabels = { draft: '草稿', generating: '生成中', completed: '已完成', failed: '失败' };
     grid.innerHTML = projects.map(function(p) {
       const statusClass = 'status-' + p.status;
-      return '<div class="work-card" onclick="window.location.href=\'/?drama=' + p.id + '\'" style="cursor:pointer;">' +
+      var logline = p.logline || '暂无梗概';
+      if (logline.length > 50) logline = logline.substring(0, 50) + '...';
+      return '<div class="work-card" style="cursor:pointer;">' +
         '<div class="work-card-header">' +
         '<span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;background:#FF4757;color:#fff;">' + (p.genre || '短剧') + '</span>' +
-        '</div>' +
-        '<div style="padding:12px;">' +
-        '<h3 style="margin:0 0 6px;font-size:15px;">' + p.title + '</h3>' +
-        '<p style="margin:0 0 8px;font-size:13px;color:var(--t3);line-height:1.4;">' + (p.logline || '暂无梗概') + '</p>' +
-        '<div style="display:flex;justify-content:space-between;align-items:center;">' +
-        '<span style="font-size:12px;color:var(--t3);">' + (p.episode_count || 0) + ' / ' + p.total_episodes + ' 集</span>' +
         '<span class="status-badge ' + statusClass + '">' + (statusLabels[p.status] || p.status) + '</span>' +
         '</div>' +
+        '<div style="padding:0 12px 12px;" onclick="openDramaDetailModal(' + p.id + ')">' +
+        '<h3 style="margin:0 0 4px;font-size:15px;">' + p.title + '</h3>' +
+        '<p style="margin:0 0 8px;font-size:12px;color:var(--t3);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">' + logline + '</p>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--t3);">' +
+        '<span>' + (p.episode_count || 0) + ' / ' + p.total_episodes + ' 集</span>' +
+        '</div>' +
+        '</div>' +
+        '<div style="display:flex;border-top:1px solid var(--border);">' +
+        '<button class="drama-action-btn" style="flex:1;padding:8px;border:none;background:none;color:var(--t3);font-size:12px;cursor:pointer;border-right:1px solid var(--border);" onclick="event.stopPropagation();openDramaDetailModal(' + p.id + ')">📋 详情</button>' +
+        (p.status === 'draft' || p.status === 'failed' ? '<button class="drama-action-btn" style="flex:1;padding:8px;border:none;background:none;color:#22c55e;font-size:12px;cursor:pointer;border-right:1px solid var(--border);" onclick="event.stopPropagation();continueDramaProject(' + p.id + ')">▶ 继续</button>' : '') +
+        '<button class="drama-action-btn" style="flex:1;padding:8px;border:none;background:none;color:var(--t3);font-size:12px;cursor:pointer;border-right:1px solid var(--border);" onclick="event.stopPropagation();editDramaProject(' + p.id + ')">✏️ 编辑</button>' +
+        '<button class="drama-action-btn" style="flex:1;padding:8px;border:none;background:none;color:#FF4757;font-size:12px;cursor:pointer;" onclick="event.stopPropagation();deleteDramaProject(' + p.id + ')">🗑️ 删除</button>' +
         '</div></div>';
     }).join('');
   } catch (e) {
     grid.innerHTML = '<div class="empty-state"><p style="color:var(--t3);">加载失败</p></div>';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// 短剧详情弹窗
+// ═══════════════════════════════════════════════════════════════════
+var _dramaProjectsCache = [];
+
+function _findProject(id) {
+  return _dramaProjectsCache.find(function(p) { return p.id === id; });
+}
+
+async function openDramaDetailModal(projectId) {
+  var modal = document.getElementById('dramaDetailModal');
+  var content = document.getElementById('dramaDetailContent');
+  modal.style.display = 'block';
+  content.innerHTML = '<div style="text-align:center;padding:30px;color:var(--t3);">加载中...</div>';
+
+  // Try cache first, then fetch
+  var project = _findProject(projectId);
+  if (!project) {
+    try {
+      var token = localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey');
+      var headers = {};
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+      var res = await fetch('/api/drama/projects/' + projectId, { headers });
+      if (res.ok) project = await res.json();
+    } catch (e) {}
+  }
+  if (!project) {
+    content.innerHTML = '<div style="text-align:center;padding:30px;color:#FF4757;">项目不存在</div>';
+    return;
+  }
+
+  var statusLabels = { draft: '草稿', generating: '生成中', completed: '已完成', failed: '失败' };
+  var statusClass = 'status-' + project.status;
+  var episodes = project.episodes || [];
+
+  var html = '' +
+    '<div style="margin-bottom:20px;">' +
+    '<h2 style="margin:0 0 6px;font-size:20px;">' + (project.title || '') + '</h2>' +
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">' +
+    '<span style="padding:2px 10px;border-radius:12px;font-size:12px;background:#FF4757;color:#fff;">' + (project.genre || '短剧') + '</span>' +
+    '<span class="status-badge ' + statusClass + '">' + (statusLabels[project.status] || project.status) + '</span>' +
+    '<span style="font-size:12px;color:var(--t3);padding:2px 0;">' + (project.episode_count || 0) + '/' + project.total_episodes + ' 集</span>' +
+    '</div>' +
+    '<p style="font-size:13px;color:var(--t2);line-height:1.5;margin:0;">' + (project.logline || '暂无梗概') + '</p>' +
+    '</div>';
+
+  // Episodes list
+  if (episodes.length > 0) {
+    html += '<div style="margin-bottom:16px;">' +
+      '<div style="font-size:13px;font-weight:500;margin-bottom:8px;color:var(--t2);">📜 剧集列表</div>';
+    episodes.forEach(function(ep) {
+      html += '<div style="background:var(--bg3);border-radius:8px;padding:10px;margin-bottom:6px;font-size:12px;">' +
+        '<div style="display:flex;justify-content:space-between;">' +
+        '<span><strong>' + (ep.title || '第' + ep.episode_number + '集') + '</strong></span>' +
+        '<span style="color:var(--t3);">' + (ep.scenes ? ep.scenes.length : 0) + ' 个分镜</span>' +
+        '</div>' +
+        (ep.hook ? '<div style="color:var(--t3);margin-top:4px;">🎣 ' + ep.hook + '</div>' : '') +
+        '</div>';
+    });
+    html += '</div>';
+  }
+
+  // Action buttons
+  var continueDisabled = project.status === 'completed';
+  html += '<div style="display:flex;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">' +
+    '<button onclick="continueDramaProject(' + project.id + ')" style="flex:1;padding:10px;border:none;border-radius:8px;' + (continueDisabled ? 'background:var(--bg3);color:var(--t3);cursor:not-allowed;' : 'background:#22c55e;color:#fff;cursor:pointer;') + 'font-size:13px;"' + (continueDisabled ? ' disabled' : '') + '>▶ 继续生成</button>' +
+    '<button onclick="editDramaProject(' + project.id + ')" style="flex:1;padding:10px;border:none;border-radius:8px;background:var(--bg3);color:var(--t1);font-size:13px;cursor:pointer;">✏️ 编辑</button>' +
+    '<button onclick="deleteDramaProject(' + project.id + ')" style="flex:1;padding:10px;border:none;border-radius:8px;background:rgba(255,71,87,0.15);color:#FF4757;font-size:13px;cursor:pointer;">🗑️ 删除</button>' +
+    '</div>';
+
+  content.innerHTML = html;
+}
+
+function closeDramaDetailModal() {
+  document.getElementById('dramaDetailModal').style.display = 'none';
+}
+
+// Click outside modal to close
+document.addEventListener('click', function(e) {
+  var modal = document.getElementById('dramaDetailModal');
+  if (modal && modal.style.display === 'block' && e.target === modal) {
+    closeDramaDetailModal();
+  }
+});
+
+async function deleteDramaProject(id) {
+  if (!confirm('确定要删除这个短剧项目吗？此操作不可恢复。')) return;
+  try {
+    var token = localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey');
+    var res = await fetch('/api/drama/projects/' + id, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    var data = await res.json();
+    if (res.ok) {
+      alert('✅ ' + (data.message || '已删除'));
+      closeDramaDetailModal();
+      loadDramaWorks();
+    } else {
+      alert('删除失败：' + (data.detail || ''));
+    }
+  } catch (e) {
+    alert('删除失败：' + e.message);
+  }
+}
+
+function editDramaProject(id) {
+  var project = _findProject(id);
+  if (!project) return;
+  closeDramaDetailModal();
+  // Simple inline prompt-based edit
+  var newTitle = prompt('修改标题：', project.title || '');
+  if (newTitle === null) return;
+  var newGenre = prompt('修改类型（逆袭/重生/霸总/甜宠/穿越/古装/悬疑/都市）：', project.genre || '逆袭');
+  if (newGenre === null) return;
+  var newLogline = prompt('修改梗概：', project.logline || '');
+  if (newLogline === null) return;
+  doUpdateDramaProject(id, newTitle.trim(), newGenre.trim(), newLogline.trim());
+}
+
+async function doUpdateDramaProject(id, title, genre, logline) {
+  try {
+    var token = localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey');
+    var res = await fetch('/api/drama/projects/' + id, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ title: title, genre: genre, logline: logline })
+    });
+    var data = await res.json();
+    if (res.ok) {
+      alert('✅ 已更新');
+      loadDramaWorks();
+    } else {
+      alert('更新失败：' + (data.detail || ''));
+    }
+  } catch (e) {
+    alert('更新失败：' + e.message);
+  }
+}
+
+async function continueDramaProject(id) {
+  var project = _findProject(id);
+  if (!project) return;
+  if (project.status === 'completed') {
+    alert('该项目已完成生成');
+    return;
+  }
+  closeDramaDetailModal();
+  try {
+    var token = localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey');
+    var res = await fetch('/api/drama/projects/' + id + '/generate-script', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: '{}'
+    });
+    var data = await res.json();
+    if (res.ok) {
+      alert('✅ ' + (data.message || '已重新开始生成'));
+      loadDramaWorks();
+    } else {
+      alert('生成失败：' + (data.detail || ''));
+    }
+  } catch (e) {
+    alert('生成失败：' + e.message);
   }
 }
 

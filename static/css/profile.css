@@ -660,3 +660,9 @@
 .status-generating { background: rgba(34,197,94,0.15); color: #22c55e; }
 .status-completed { background: rgba(255,71,87,0.15); color: #FF4757; }
 .status-failed { background: rgba(239,68,68,0.15); color: #ef4444; }
+.drama-action-btn {
+  transition: background 0.2s;
+}
+.drama-action-btn:hover {
+  background: rgba(255,255,255,0.05);
+}
