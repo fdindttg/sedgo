@@ -700,7 +700,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Setup type buttons (drama mode)
+  // ── Drama mode type buttons ──
+  var _dramaIsSingleEpisode = false;
+
   document.querySelectorAll('#mode-drama .type-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
       e.stopPropagation();
@@ -709,6 +711,15 @@ document.addEventListener('DOMContentLoaded', function() {
         b.classList.remove('active');
       });
       btn.classList.add('active');
+
+      var epCount = document.getElementById('dramaEpisodeCount');
+       if (epCount) {
+         var isSingle = btn.getAttribute('data-i18n') === 'gen.single_episode';
+         _dramaIsSingleEpisode = isSingle;
+         epCount.style.display = isSingle ? 'none' : 'inline-block';
+         // Update episode count to 1 when single mode
+         if (isSingle) epCount.value = '1';
+       }
     });
   });
 
@@ -944,7 +955,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var prompt = document.getElementById('prompt-drama').value.trim();
     if (!prompt) { alert(t('drama.prompt_required')); return; }
     var genre = document.getElementById('dramaGenre').value;
-    var episodes = parseInt(document.getElementById('dramaEpisodeCount').value) || 10;
+    var episodes = _dramaIsSingleEpisode ? 1 : (parseInt(document.getElementById('dramaEpisodeCount').value) || 10);
     var title = prompt.substring(0, 20) + (prompt.length > 20 ? '...' : '');
 
     var btn = document.getElementById('gen-btn-drama');
