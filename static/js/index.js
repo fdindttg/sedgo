@@ -945,7 +945,8 @@ document.addEventListener('DOMContentLoaded', function() {
       btn.disabled = false;
       btn.textContent = '开始创作';
       document.getElementById('prompt-drama').value = '';
-      document.getElementById('drama-upload-btn').innerHTML = '<span>📄</span> 上传剧本';
+      var uploadBtn = document.querySelector('#mode-drama .drama-upload-btn');
+      if (uploadBtn) uploadBtn.innerHTML = '<span>📄</span> 上传剧本';
       openDramaDetail(project.id);
     }).catch(function(e) {
       btn.disabled = false;
@@ -955,19 +956,26 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // ── Upload script ──
-  document.querySelector('#mode-drama .drama-upload-btn').addEventListener('click', function() {
-    document.getElementById('drama-script-input').click();
-  });
-  document.getElementById('drama-script-input').addEventListener('change', function(e) {
-    var file = e.target.files[0];
-    if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function(ev) {
-      document.getElementById('prompt-drama').value = ev.target.result;
-      document.querySelector('#mode-drama .drama-upload-btn').innerHTML = '<span>📄</span> ' + file.name;
-    };
-    reader.readAsText(file);
-  });
+  var dramaUploadBtn = document.querySelector('#mode-drama .drama-upload-btn');
+  var dramaScriptInput = document.getElementById('drama-script-input');
+  if (dramaUploadBtn) {
+    dramaUploadBtn.addEventListener('click', function() {
+      document.getElementById('drama-script-input').click();
+    });
+  }
+  if (dramaScriptInput) {
+    dramaScriptInput.addEventListener('change', function(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(ev) {
+        document.getElementById('prompt-drama').value = ev.target.result;
+        var btn = document.querySelector('#mode-drama .drama-upload-btn');
+        if (btn) btn.innerHTML = '<span>📄</span> ' + file.name;
+      };
+      reader.readAsText(file);
+    });
+  }
 });
 
 // ── Ctrl buttons (radio within group) ─────────────────────────────
