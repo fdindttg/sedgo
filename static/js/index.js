@@ -695,6 +695,26 @@ document.addEventListener('DOMContentLoaded', function() {
       btn.classList.add('active');
     });
   });
+
+  // Drama mode "生成" button → redirect to full drama studio
+  document.getElementById('gen-btn-drama').addEventListener('click', function() {
+    var token = localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey');
+    if (!token) {
+      openAuthModal();
+      return;
+    }
+    window.location.href = '/pages/drama.html';
+  });
+
+  // Drama upload button → also redirect
+  document.querySelector('.drama-upload-btn').addEventListener('click', function() {
+    var token = localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey');
+    if (!token) {
+      openAuthModal();
+      return;
+    }
+    window.location.href = '/pages/drama.html';
+  });
 });
 
 // ── Ctrl buttons (radio within group) ─────────────────────────────

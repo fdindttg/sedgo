@@ -628,3 +628,35 @@
   background: var(--bg3);
   color: var(--t1);
 }
+
+
+/* ── Drama Works Cards ── */
+.work-card {
+  background: var(--bg3);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.25s;
+  border: 1px solid transparent;
+}
+.work-card:hover {
+  transform: translateY(-4px);
+  border-color: #FF4757;
+  box-shadow: 0 8px 24px rgba(255,71,87,0.15);
+}
+.work-card-header {
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.status-draft { background: rgba(255,255,255,0.08); color: var(--t2); }
+.status-generating { background: rgba(34,197,94,0.15); color: #22c55e; }
+.status-completed { background: rgba(255,71,87,0.15); color: #FF4757; }
+.status-failed { background: rgba(239,68,68,0.15); color: #ef4444; }

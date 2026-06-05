@@ -40,7 +40,7 @@
     </div>
     <ul class="sidebar-menu">
       <li><a href="#" class="active" data-page="works"><span>📹</span> <span data-i18n="profile.menu.works">我的创作</span></a></li>
-      <li><a href="/pages/drama.html"><span>🎬</span> <span>短剧工作室</span></a></li>
+      <li><a href="#" data-page="dramas"><span>🎬</span> <span>我的短剧</span></a></li>
       <li><a href="#" data-page="subscription"><span>💎</span> <span data-i18n="profile.menu.subscription">订阅</span></a></li>
       <li><a href="#" data-page="credits"><span>💰</span> <span data-i18n="profile.menu.credits">信用历史</span></a></li>
       <li><a href="#" data-page="orders"><span>📋</span> <span data-i18n="profile.menu.orders">订单记录</span></a></li>
@@ -103,6 +103,22 @@
             <div class="empty-state-icon">📭</div>
             <div class="empty-state-title" data-i18n="profile.empty.works.title">没有找到影片</div>
             <div class="empty-state-desc" data-i18n="profile.empty.works.desc">您尚未生成任何影片，开始创建您的第一部影片吧！</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dramas Page -->
+      <div id="page-dramas" class="page-content" style="display: none;">
+        <div class="section-header">
+          <div class="section-actions">
+            <button class="btn-primary" onclick="window.location.href='/pages/drama.html'" style="background:linear-gradient(135deg,#FF4757,#FF6B81);border:none;border-radius:8px;padding:8px 18px;color:#fff;cursor:pointer;font-size:13px;font-weight:600;">+ 新建短剧</button>
+          </div>
+        </div>
+        <div id="dramasGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;">
+          <div class="empty-state">
+            <div class="empty-state-icon">🎬</div>
+            <div class="empty-state-title">还没有短剧作品</div>
+            <div class="empty-state-desc">打开短剧工作室，AI 帮你完成从剧本到成片的全部流程</div>
           </div>
         </div>
       </div>

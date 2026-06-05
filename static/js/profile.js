@@ -27,6 +27,7 @@ function switchPage(page) {
     orders: { title: t('profile.page.orders.title') || '订单记录', desc: t('profile.page.orders.desc') || '查看所有付款订单的历史记录' },
     profile: { title: t('profile.page.profile.title') || '个人资料', desc: t('profile.page.profile.desc') || '管理您的账户信息和偏好设置' },
     contact: { title: t('profile.page.contact.title') || '提交工单', desc: t('profile.page.contact.desc') || '遇到问题或有建议？提交工单，我们将尽快处理。' },
+    dramas: { title: '我的短剧', desc: '浏览和管理您所有已生成的短剧作品' },
   };
 
   const info = pageTitles[page] || { title: page, desc: '' };
@@ -37,6 +38,7 @@ function switchPage(page) {
   if (page === 'credits') loadCredits(1);
   if (page === 'orders') loadOrders(1);
   if (page === 'subscription') loadSubscription();
+  if (page === 'dramas') loadDramaWorks();
   if (page === 'contact' && window._currentUser) {
     const el = document.getElementById('contactEmail');
     if (el && !el.value) el.value = window._currentUser.email || '';
@@ -906,6 +908,47 @@ async function userReplyTicket(ticketId) {
   } catch (e) { alert(t('js.request_fail') || '请求失败'); input.disabled = false; }
 }
 
+
+async function loadDramaWorks() {
+  const grid = document.getElementById('dramasGrid');
+  grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--t3)">加载中...</div>';
+  try {
+    const token = localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey');
+    const headers = {};
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    const res = await fetch('/api/drama/projects', { headers });
+    if (!res.ok) throw new Error('加载失败');
+    const data = await res.json();
+    const projects = data.projects || [];
+    if (projects.length === 0) {
+      grid.innerHTML =
+        '<div class="empty-state">' +
+        '<div class="empty-state-icon">🎬</div>' +
+        '<div class="empty-state-title">还没有短剧作品</div>' +
+        '<div class="empty-state-desc">打开短剧工作室，AI 帮你完成从剧本到成片的全部流程</div>' +
+        '</div>';
+      return;
+    }
+    const statusLabels = { draft: '草稿', generating: '生成中', completed: '已完成', failed: '失败' };
+    grid.innerHTML = projects.map(function(p) {
+      const statusClass = 'status-' + p.status;
+      return '<div class="work-card" onclick="window.location.href=\'/pages/drama.html?id=' + p.id + '\'" style="cursor:pointer;">' +
+        '<div class="work-card-header">' +
+        '<span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;background:#FF4757;color:#fff;">' + (p.genre || '短剧') + '</span>' +
+        '</div>' +
+        '<div style="padding:12px;">' +
+        '<h3 style="margin:0 0 6px;font-size:15px;">' + p.title + '</h3>' +
+        '<p style="margin:0 0 8px;font-size:13px;color:var(--t3);line-height:1.4;">' + (p.logline || '暂无梗概') + '</p>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+        '<span style="font-size:12px;color:var(--t3);">' + (p.episode_count || 0) + ' / ' + p.total_episodes + ' 集</span>' +
+        '<span class="status-badge ' + statusClass + '">' + (statusLabels[p.status] || p.status) + '</span>' +
+        '</div>' +
+        '</div></div>';
+    }).join('');
+  } catch (e) {
+    grid.innerHTML = '<div class="empty-state"><p style="color:var(--t3);">加载失败</p></div>';
+  }
+}
 
 async function loadTelegramConfig() {
   try {
