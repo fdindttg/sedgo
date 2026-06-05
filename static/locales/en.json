@@ -156,7 +156,9 @@
     "status_failed": "Failed",
     "prompt_required": "Please enter a story idea or upload a script",
     "creating": "Creating...",
-    "create_failed": "Create failed: "
+    "create_failed": "Create failed: ",
+    "preview": "Preview",
+    "download": "Download"
   },
   "features": {
     "label": "Why Sedgo",

@@ -156,7 +156,9 @@
     "status_failed": "실패",
     "prompt_required": "스토리 아이디어를 입력하거나 대본을 업로드하세요",
     "creating": "만드는 중...",
-    "create_failed": "만들기 실패: "
+    "create_failed": "만들기 실패: ",
+    "preview": "미리보기",
+    "download": "다운로드"
   },
   "features": {
     "label": "Sedgo을 선택하는 이유",

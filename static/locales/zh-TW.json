@@ -156,7 +156,9 @@
     "status_failed": "失敗",
     "prompt_required": "請輸入故事想法或上傳劇本",
     "creating": "創建中...",
-    "create_failed": "創建失敗："
+    "create_failed": "創建失敗：",
+    "preview": "預覽",
+    "download": "下載"
   },
   "features": {
     "label": "為什麼選擇 Sedgo",

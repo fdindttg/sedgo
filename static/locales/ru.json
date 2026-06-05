@@ -156,7 +156,9 @@
     "status_failed": "Ошибка",
     "prompt_required": "Введите идею истории или загрузите сценарий",
     "creating": "Создание...",
-    "create_failed": "Создание не удалось: "
+    "create_failed": "Создание не удалось: ",
+    "preview": "Просмотр",
+    "download": "Скачать"
   },
   "features": {
     "label": "Почему Sedgo",

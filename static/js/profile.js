@@ -1005,17 +1005,30 @@ async function openDramaDetailModal(projectId) {
     '<p style="font-size:13px;color:var(--t2);line-height:1.5;margin:0;">' + (project.logline || '暂无梗概') + '</p>' +
     '</div>';
 
-  // Episodes list
+  // Episodes list with preview & download
   if (episodes.length > 0) {
+    var hasVideo = episodes.some(function(ep) { return ep.status === 'completed' || ep.status === 'generating'; });
     html += '<div style="margin-bottom:16px;">' +
-      '<div style="font-size:13px;font-weight:500;margin-bottom:8px;color:var(--t2);">📜 剧集列表</div>';
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+      '<span style="font-size:13px;font-weight:500;color:var(--t2);">📜 剧集列表</span>' +
+      (hasVideo ? '<button onclick="batchDownloadDrama(' + project.id + ')" style="padding:6px 12px;border:none;border-radius:6px;background:#7c3aed;color:#fff;font-size:11px;cursor:pointer;">⬇ 批量下载</button>' : '') +
+      '</div>';
     episodes.forEach(function(ep) {
-      html += '<div style="background:var(--bg3);border-radius:8px;padding:10px;margin-bottom:6px;font-size:12px;">' +
-        '<div style="display:flex;justify-content:space-between;">' +
-        '<span><strong>' + (ep.title || '第' + ep.episode_number + '集') + '</strong></span>' +
-        '<span style="color:var(--t3);">' + (ep.scenes ? ep.scenes.length : 0) + ' 个分镜</span>' +
+      var epStatus = ep.status || 'draft';
+      html += '<div style="background:var(--bg3);border-radius:8px;padding:10px;margin-bottom:8px;font-size:12px;">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+        '<div><strong>' + (ep.title || '第' + ep.episode_number + '集') + '</strong>' +
+        '<span style="margin-left:6px;font-size:11px;color:var(--t3);">(' + (ep.scene_count || 0) + ' 个分镜)</span></div>' +
+        '<span style="font-size:11px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,0.08);color:var(--t2);">' + (statusLabels[epStatus] || epStatus) + '</span>' +
         '</div>' +
         (ep.hook ? '<div style="color:var(--t3);margin-top:4px;">🎣 ' + ep.hook + '</div>' : '') +
+        // Preview & download for completed episodes
+        (epStatus === 'completed' || epStatus === 'generating' ? (
+          '<div style="margin-top:8px;display:flex;gap:6px;">' +
+          '<button onclick="previewDramaEpisode(' + ep.id + ',' + project.id + ')" style="flex:1;padding:6px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">▶ 预览</button>' +
+          '<button onclick="downloadDramaEpisode(' + ep.id + ')" style="flex:1;padding:6px;border:none;border-radius:6px;background:rgba(255,255,255,0.08);color:var(--t1);font-size:11px;cursor:pointer;">⬇ 下载</button>' +
+          '</div>'
+        ) : '') +
         '</div>';
     });
     html += '</div>';
@@ -1034,6 +1047,100 @@ async function openDramaDetailModal(projectId) {
 
 function closeDramaDetailModal() {
   document.getElementById('dramaDetailModal').style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// 短剧预览 & 下载
+// ═══════════════════════════════════════════════════════════════════
+
+async function previewDramaEpisode(episodeId, projectId) {
+  closeDramaDetailModal();
+  // Open homepage with episode preview
+  window.location.href = '/?drama=' + projectId + '&episode=' + episodeId;
+}
+
+async function downloadDramaEpisode(episodeId) {
+  try {
+    var token = localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey');
+    var res = await fetch('/api/drama/episodes/' + episodeId + '/export', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (!res.ok) { alert('导出失败'); return; }
+    var manifest = await res.json();
+    var clips = manifest.clips || [];
+    if (clips.length === 0) { alert('该剧集暂无可用视频'); return; }
+
+    // Find the first available video URL
+    var videoUrl = clips[0].video_url;
+    if (!videoUrl) { alert('暂无视频文件'); return; }
+
+    // Open download in new tab (server should serve the file)
+    var a = document.createElement('a');
+    a.href = videoUrl;
+    a.download = 'episode_' + manifest.episode_number + '_' + (manifest.title || '').replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_') + '.mp4';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (e) {
+    alert('下载失败：' + e.message);
+  }
+}
+
+async function batchDownloadDrama(projectId) {
+  try {
+    var token = localStorage.getItem('sdToken') || localStorage.getItem('sdApiKey');
+    var res = await fetch('/api/drama/projects/' + projectId + '/export', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (!res.ok) { alert('批量导出失败'); return; }
+    var data = await res.json();
+    var episodes = data.episodes || [];
+
+    // Collect all video URLs
+    var allClips = [];
+    episodes.forEach(function(ep) {
+      (ep.clips || []).forEach(function(c) {
+        if (c.video_url) {
+          allClips.push({ episode_number: ep.episode_number, title: ep.title, url: c.video_url });
+        }
+      });
+    });
+
+    if (allClips.length === 0) { alert('暂无可用视频'); return; }
+
+    // Generate a JSON manifest file with all URLs
+    var manifestContent = JSON.stringify({
+      project: data.title,
+      total_episodes: data.total_episodes,
+      clips: allClips
+    }, null, 2);
+
+    // Download the manifest as JSON
+    var blob = new Blob([manifestContent], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = (data.title || 'drama') + '_export.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // Also open all video URLs in new tabs (batch download trigger)
+    var uniqueUrls = {};
+    allClips.forEach(function(c) {
+      if (!uniqueUrls[c.url]) {
+        uniqueUrls[c.url] = true;
+        window.open(c.url, '_blank');
+      }
+    });
+
+    alert('已导出 ' + allClips.length + ' 个视频文件清单');
+  } catch (e) {
+    alert('批量下载失败：' + e.message);
+  }
 }
 
 // Click outside modal to close

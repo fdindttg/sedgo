@@ -156,7 +156,9 @@
     "status_failed": "Thất bại",
     "prompt_required": "Vui lòng nhập ý tưởng hoặc tải lên kịch bản",
     "creating": "Đang tạo...",
-    "create_failed": "Tạo thất bại: "
+    "create_failed": "Tạo thất bại: ",
+    "preview": "Xem trước",
+    "download": "Tải xuống"
   },
   "features": {
     "label": "Tại sao chọn Sedgo",

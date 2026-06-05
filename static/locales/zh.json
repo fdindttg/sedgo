@@ -156,7 +156,9 @@
     "status_failed": "失败",
     "prompt_required": "请输入故事想法或上传剧本",
     "creating": "创建中...",
-    "create_failed": "创建失败："
+    "create_failed": "创建失败：",
+    "preview": "预览",
+    "download": "下载"
   },
   "features": {
     "label": "为什么选择 SedGo AI",

@@ -296,6 +296,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Handle ?drama=ID → navigate to drama tab and open project
   var dramaParam = new URLSearchParams(window.location.search).get('drama');
+  var episodeParam = new URLSearchParams(window.location.search).get('episode');
   if (dramaParam) {
     var dramaTab = document.querySelector('.mode-tab[data-mode="drama"]');
     if (dramaTab) {
@@ -306,6 +307,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (grid && grid.querySelector('.drama-project-card')) {
           clearInterval(checkLoaded);
           openDramaDetail(parseInt(dramaParam));
+          // If episode param specified, show scene detail after detail loads
+          if (episodeParam) {
+            setTimeout(function() { showDramaScene(parseInt(episodeParam)); }, 500);
+          }
         }
       }, 300);
       // Timeout fallback
@@ -831,15 +836,28 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       listEl.innerHTML = eps.map(function(ep) {
         var icon = ep.status === 'draft' ? '📝' : ep.status === 'generating' ? '⏳' : ep.status === 'completed' ? '✅' : '❌';
-        return '<div class="drama-episode-card" data-ep="' + ep.id + '" style="background:var(--bg2);border-radius:8px;padding:12px;cursor:pointer;border:1px solid transparent;transition:all 0.15s;">' +
+        var hasVideo = ep.status === 'completed' || ep.status === 'generating';
+        return '<div style="background:var(--bg2);border-radius:8px;padding:12px;margin-bottom:6px;border:1px solid transparent;">' +
+          '<div class="drama-episode-card" data-ep="' + ep.id + '" style="cursor:pointer;">' +
           '<div style="font-size:12px;color:#FF4757;font-weight:600;">' + icon + ' ' + t('drama.episode_title', { n: ep.episode_number }) + '</div>' +
           '<div style="font-size:14px;margin:4px 0;">' + (ep.title || '') + '</div>' +
           (ep.hook ? '<div style="font-size:12px;color:var(--t3);font-style:italic;">' + t('drama.hook_label') + ep.hook.substring(0, 50) + (ep.hook.length > 50 ? '...' : '') + '</div>' : '') +
           '<div style="font-size:11px;color:var(--t3);margin-top:4px;">' + t('drama.scene_count', { n: ep.scene_count || 0 }) + '</div>' +
+          '</div>' +
+          (hasVideo ? '<div style="display:flex;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">' +
+            '<button class="drama-preview-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">▶ ' + t('drama.preview') + '</button>' +
+            '<button class="drama-dl-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(255,255,255,0.08);color:var(--t1);font-size:11px;cursor:pointer;">⬇ ' + t('drama.download') + '</button>' +
+            '</div>' : '') +
           '</div>';
       }).join('');
       listEl.querySelectorAll('.drama-episode-card').forEach(function(card) {
         card.addEventListener('click', function() { showDramaScene(parseInt(card.dataset.ep)); });
+      });
+      listEl.querySelectorAll('.drama-preview-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) { e.stopPropagation(); var epId = parseInt(btn.dataset.ep); loadDramaExport(epId); });
+      });
+      listEl.querySelectorAll('.drama-dl-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) { e.stopPropagation(); downloadDramaEpisodeFromHome(parseInt(btn.dataset.ep)); });
       });
     }).catch(function(e) {
       listEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--t3);font-size:13px;">' + t('js.load_failed') + '</div>';
@@ -947,7 +965,10 @@ document.addEventListener('DOMContentLoaded', function() {
       var panel = document.getElementById('dramaExportPanel');
       panel.style.display = 'block';
       var clips = manifest.clips || [];
-      var html = '<div style="font-size:14px;font-weight:500;margin-bottom:8px;">' + t('drama.export_title', { title: manifest.title || '', duration: manifest.total_duration || 0, count: clips.length }) + '</div>';
+      var html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+        '<div style="font-size:14px;font-weight:500;">' + t('drama.export_title', { title: manifest.title || '', duration: manifest.total_duration || 0, count: clips.length }) + '</div>' +
+        (clips.length > 0 ? '<button onclick="downloadAllClips(' + episodeId + ')" style="padding:5px 12px;border:none;border-radius:6px;background:#7c3aed;color:#fff;font-size:11px;cursor:pointer;">⬇ ' + t('drama.download') + '</button>' : '') +
+        '</div>';
       if (clips.length === 0) {
         html += '<div style="color:var(--t3);font-size:13px;">' + t('drama.no_clips') + '</div>';
       } else {
@@ -961,6 +982,34 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       panel.innerHTML = html;
     }).catch(function(e) { alert(t('drama.export_failed') + e.message); });
+  }
+
+  // ── Download helpers for homepage ──
+  function loadDramaExport(episodeId) { doExport(episodeId); }
+
+  async function downloadDramaEpisodeFromHome(episodeId) {
+    try {
+      var data = await dramaApi('/episodes/' + episodeId + '/export');
+      var clips = data.clips || [];
+      if (clips.length === 0) { alert(t('drama.no_clips')); return; }
+      var videoUrl = clips[0].video_url;
+      if (!videoUrl) { alert(t('drama.no_video')); return; }
+      var a = document.createElement('a');
+      a.href = videoUrl;
+      a.download = 'episode_' + (data.episode_number || episodeId) + '.mp4';
+      a.target = '_blank';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    } catch(e) { alert(t('drama.export_failed') + e.message); }
+  }
+
+  async function downloadAllClips(episodeId) {
+    try {
+      var data = await dramaApi('/episodes/' + episodeId + '/export');
+      var clips = data.clips || [];
+      if (clips.length === 0) { alert(t('drama.no_clips')); return; }
+      var urls = {};
+      clips.forEach(function(c) { if (c.video_url && !urls[c.video_url]) { urls[c.video_url] = true; window.open(c.video_url, '_blank'); } });
+    } catch(e) { alert(t('drama.export_failed') + e.message); }
   }
 
   // ── Detail action buttons ──

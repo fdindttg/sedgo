@@ -156,7 +156,9 @@
     "status_failed": "Falló",
     "prompt_required": "Por favor ingresa una idea o sube un guión",
     "creating": "Creando...",
-    "create_failed": "Creación falló: "
+    "create_failed": "Creación falló: ",
+    "preview": "Vista previa",
+    "download": "Descargar"
   },
   "features": {
     "label": "Por qué Sedgo",

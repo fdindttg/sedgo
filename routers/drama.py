@@ -592,6 +592,53 @@ def export_episode(
     return manifest
 
 
+@router.get("/projects/{project_id}/export")
+def export_project(
+    project_id: int,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    批量导出：返回项目所有剧集的剪辑清单（含视频下载地址）
+    """
+    project = db.query(DramaProject).filter(
+        DramaProject.id == project_id,
+        DramaProject.user_id == user.id
+    ).first()
+    if not project:
+        raise HTTPException(status_code=404, detail="项目不存在")
+    
+    episodes = db.query(DramaEpisode).filter(
+        DramaEpisode.project_id == project_id
+    ).order_by(DramaEpisode.episode_number).all()
+    
+    episodes_export = []
+    for ep in episodes:
+        scenes = db.query(DramaScene).filter(
+            DramaScene.episode_id == ep.id
+        ).order_by(DramaScene.scene_number).all()
+        
+        # 自动选择最佳候选
+        for scene in scenes:
+            if not scene.selected_url and scene.video_urls:
+                best = select_best_candidate(scene)
+                if best:
+                    scene.selected_url = best
+                    scene.status = DramaStatus.COMPLETED
+        db.commit()
+        
+        manifest = build_export_manifest(ep, scenes)
+        episodes_export.append(manifest)
+    
+    return {
+        "project_id": project.id,
+        "title": project.title,
+        "genre": project.genre,
+        "total_episodes": len(episodes_export),
+        "episodes": episodes_export,
+    }
+
+
 # ═══════════════════════════════════════════════════════════════════
 # 场景任务状态同步
 # ═══════════════════════════════════════════════════════════════════
