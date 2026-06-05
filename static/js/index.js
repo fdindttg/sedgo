@@ -285,6 +285,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     imageModelSelect.addEventListener('change', updateImageCostDisplay);
   }
 
+  // 预先加载短剧项目列表
+  setTimeout(function() { loadDramaProjects(); }, 100);
+
   // Handle ?drama=ID query param → navigate to drama tab and open project
   var dramaParam = new URLSearchParams(window.location.search).get('drama');
   if (dramaParam) {
