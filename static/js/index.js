@@ -398,13 +398,19 @@ function applyTranslations() {
   // update signed-in button if applicable
   updateSignInButtonText();
 
-  // refresh idle generate buttons (not mid-generation)
-  ['gen-btn-video', 'gen-btn-drama', 'gen-btn-aivideo'].forEach(id => {
-    const btn = document.getElementById(id);
-    if (btn && !btn.disabled) btn.textContent = t('js.generate');
+  // refresh idle generate buttons (not mid-generation) — with emoji prefix
+  var genBtnLabels = {
+    'gen-btn-video': { key: 'js.generate', emoji: '🎬' },
+    'gen-btn-aivideo': { key: 'js.generate', emoji: '🎬' },
+    'gen-btn-drama': { key: 'js.generate', emoji: '🎬' },
+  };
+  Object.keys(genBtnLabels).forEach(function(id) {
+    var btn = document.getElementById(id);
+    var cfg = genBtnLabels[id];
+    if (btn && !btn.disabled) btn.innerHTML = cfg.emoji + ' ' + t(cfg.key);
   });
   const imgBtn = document.getElementById('gen-btn-image');
-  if (imgBtn && !imgBtn.disabled) imgBtn.textContent = '🎨 ' + t('js.generate_image');
+  if (imgBtn && !imgBtn.disabled) imgBtn.innerHTML = '🎨 ' + t('js.generate_image');
 
   // re-render task cards with new language
   if (typeof renderTaskList === 'function') {
