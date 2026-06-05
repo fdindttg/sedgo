@@ -630,9 +630,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         btn.classList.add('active');
         
-        // Update video cost display if this is a video control
-        if (dropdownId && dropdownId.includes('-video')) {
-          updateVideoCostDisplay();
+        // Update cost display
+        if (dropdownId) {
+          if (dropdownId.includes('-video')) {
+            updateVideoCostDisplay();
+          } else if (dropdownId.includes('-drama')) {
+            updateDramaCostDisplay();
+          }
         }
       }
     });
@@ -855,7 +859,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function doRenderEpisode(episodeId) {
-    dramaApi('/render', { method: 'POST', body: JSON.stringify({ episode_ids: [episodeId] }) }).then(function(r) {
+    var params = getDramaRenderParams();
+    params.episode_ids = [episodeId];
+    dramaApi('/render', { method: 'POST', body: JSON.stringify(params) }).then(function(r) {
       alert('✅ ' + r.message);
     }).catch(function(e) { alert('渲染失败：' + e.message); });
   }
@@ -863,7 +869,8 @@ document.addEventListener('DOMContentLoaded', function() {
   function doRenderAll() {
     var pid = document.getElementById('dramaDetailView').dataset.projectId;
     if (!pid) return;
-    dramaApi('/render', { method: 'POST', body: JSON.stringify({}) }).then(function(r) {
+    var params = getDramaRenderParams();
+    dramaApi('/render', { method: 'POST', body: JSON.stringify(params) }).then(function(r) {
       alert('✅ ' + r.message);
     }).catch(function(e) { alert('渲染失败：' + e.message); });
   }
@@ -1809,6 +1816,15 @@ function updateVideoCostDisplay() {
   const costValue = costDisplay.querySelector('.cost-value');
   if (costValue) {
     costValue.textContent = cost;
+  }
+}
+
+function updateDramaCostDisplay() {
+  const costDisplay = document.getElementById('cost-display-drama');
+  if (!costDisplay) return;
+  const costValue = costDisplay.querySelector('.cost-value');
+  if (costValue) {
+    costValue.textContent = '7.5';
   }
 }
 
@@ -2889,16 +2905,39 @@ function initReferenceUploads() {
   initUploadZone('video');
   // Image mode upload
   initUploadZone('image');
+  // Drama mode upload
+  initUploadZone('drama');
   
   // Asset library buttons
   initAssetLibrary('video');
   initAssetLibrary('image');
+  initAssetLibrary('drama');
   
   // Model selection change handlers
   initModelChangeHandlers();
   
   // Reference mode change handlers
   initRefModeChangeHandlers();
+}
+
+function getDramaRenderParams() {
+  var model = document.getElementById('modelSelect-drama');
+  var ratio = document.getElementById('ratioDropdown-drama');
+  var res = document.getElementById('resDropdown-drama');
+  var dur = document.getElementById('durDropdown-drama');
+  var refMode = document.getElementById('refModeDropdown-drama');
+  var subtitleRemoval = document.getElementById('subtitle-removal-drama');
+  var useRealPeople = document.getElementById('use-real-people-drama');
+  
+  return {
+    model: model ? model.value : '',
+    ratio: ratio ? ratio.textContent.trim().replace(/[▢◎▭▯◻▮▰⬌⬍]/g, '').trim() : '9:16',
+    resolution: res ? res.textContent.trim().replace(/[▢◎▭▯◻▮▰⬌⬍]/g, '').trim() : '720p',
+    duration: dur ? dur.textContent.trim().replace(/[▢◎▭▯◻▮▰⬌⬍]/g, '').trim() : '60s',
+    ref_mode: refMode ? (refMode.querySelector('[data-value]') ? refMode.querySelector('[data-value]').getAttribute('data-value') : 'text2vid') : 'text2vid',
+    subtitle_removal: subtitleRemoval ? subtitleRemoval.checked : false,
+    use_real_people: useRealPeople ? useRealPeople.checked : false,
+  };
 }
 
 function initUploadZone(mode) {
@@ -3275,6 +3314,15 @@ function initModelChangeHandlers() {
     });
   }
   
+  // Drama mode model select
+  const dramaModelSelect = document.getElementById('modelSelect-drama');
+  if (dramaModelSelect) {
+    dramaModelSelect.addEventListener('change', (e) => {
+      const selectedModel = e.target.value;
+      showReferenceModeSelector('drama', selectedModel);
+    });
+  }
+  
   // Image mode model select
   const imageModelSelect = document.getElementById('modelSelect-image');
   if (imageModelSelect) {
@@ -3299,19 +3347,19 @@ function showReferenceModeSelector(mode, model) {
 }
 
 function initRefModeChangeHandlers() {
-  const refModeMenu = document.getElementById('refModeMenu-video');
-  
-  if (refModeMenu) {
-    const menuItems = refModeMenu.querySelectorAll('.dropdown-item');
-    menuItems.forEach(item => {
-      item.addEventListener('click', () => {
-        const value = item.getAttribute('data-value');
-        
-        updateRefModeHint('video', value);
-        updateRefMaterialOptions(value);
+  ['video', 'drama'].forEach(function(mode) {
+    var refModeMenu = document.getElementById('refModeMenu-' + mode);
+    if (refModeMenu) {
+      var menuItems = refModeMenu.querySelectorAll('.dropdown-item');
+      menuItems.forEach(function(item) {
+        item.addEventListener('click', function() {
+          var value = item.getAttribute('data-value');
+          updateRefModeHint(mode, value);
+          updateRefMaterialOptions(value);
+        });
       });
-    });
-  }
+    }
+  });
 }
 
 function updateRefModeHint(mode, refMode) {
@@ -3334,10 +3382,12 @@ function updateRefMaterialOptions(refMode) {
   const advancedPanel = document.getElementById('advanced-panel-video');
   if (advancedPanel) advancedPanel.style.display = refMode === 'text2vid' ? 'none' : 'block';
 
-  // hide/show the left reference upload panel
-  const uploadZoneEl = document.getElementById('upload-zone-video');
-  const leftPanel = uploadZoneEl ? uploadZoneEl.closest('.gen-left-panel') : null;
-  if (leftPanel) leftPanel.style.display = refMode === 'text2vid' ? 'none' : '';
+  // hide/show the left reference upload panel for both video and drama
+  ['video', 'drama'].forEach(function(mode) {
+    const uploadZoneEl = document.getElementById('upload-zone-' + mode);
+    const leftPanel = uploadZoneEl ? uploadZoneEl.closest('.gen-left-panel') : null;
+    if (leftPanel) leftPanel.style.display = refMode === 'text2vid' ? 'none' : '';
+  });
 }
 
 // Initialize on page load

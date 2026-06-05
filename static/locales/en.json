@@ -36,7 +36,7 @@
     "last_frame": "Return Last Frame",
     "advanced": "Advanced",
     "prompt_placeholder": "Describe your video... Use @image1, @video1 to reference uploaded files.",
-    "generate": "Generate ✦",
+    "generate": "Generate Video",
     "prompt_eg": "e.g.",
     "prompt_example": "A cinematic scene...",
     "hint1": "Plan videos of any length with AI assistant and reference materials.",

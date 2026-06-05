@@ -36,7 +36,7 @@
     "last_frame": "Trả về khung cuối",
     "advanced": "Cài đặt nâng cao",
     "prompt_placeholder": "Mô tả video của bạn... Sử dụng @image1, @video1 để tham chiếu đến các tệp đã tải lên.",
-    "generate": "Tạo ✦",
+    "generate": "Tạo Video",
     "prompt_eg": "ví dụ",
     "prompt_example": "Một cảnh phim...",
     "hint1": "Kế hoạch video bất kỳ độ dài nào với trợ lý AI và tài liệu tham chiếu.",

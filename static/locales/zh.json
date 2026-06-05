@@ -302,7 +302,7 @@
     "network_error_retry": "网络请求失败，请手动重试",
     "retry_failed": "重新生成失败",
     "create_failed": "创建任务失败：",
-    "generate": "生成",
+    "generate": "视频生成",
     "generating": "生成中...",
     "max_files": "最多上传 {n} 个文件",
     "processing": "处理中…",

@@ -322,7 +322,7 @@
             <span class="cost-icon">⚡</span>
             <span class="cost-value">7.5</span>
           </div>
-          <button class="gen-btn-lg" id="gen-btn-video" data-i18n="js.generate">生成</button>
+          <button class="gen-btn-lg" id="gen-btn-video" data-i18n="js.generate">🎬视频生成</button>
           <div id="gen-progress-wrap" style="display:none;margin-top:12px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
               <span style="font-size:13px;color:var(--t2);" id="gen-progress-label">生成中...</span>
@@ -386,11 +386,24 @@
     <div class="mode-content" id="mode-drama">
       <!-- 子视图切换 -->
       <div id="dramaProjectList">
-        <div class="drama-create-bar" style="display:flex; gap:12px; align-items:stretch; margin-bottom:16px;">
-          <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+        <!-- 左侧参考面板 -->
+        <div style="display:flex; gap:14px; margin-bottom:12px;">
+          <div class="gen-left-panel" style="min-width:160px; flex:0 0 160px;">
+            <div class="ref-panel-header"><span>参考素材</span></div>
+            <div class="ref-upload-zone" id="upload-zone-drama">
+              <div class="ref-icon" style="font-size:20px;">📤</div>
+              <div class="ref-label" style="font-size:12px;">上传文件</div>
+            </div>
+            <div class="ref-library-btn" id="library-btn-drama">
+              <div class="ref-icon" style="font-size:20px;">📚</div>
+              <div class="ref-label" style="font-size:12px;">素材库</div>
+            </div>
+            <div class="ref-files-list" id="ref-files-drama"></div>
+          </div>
+          <div style="flex:1;">
             <input type="file" id="drama-script-input" accept=".txt,.md" style="display:none;">
-            <textarea class="drama-textarea" id="prompt-drama" placeholder="输入故事想法或上传剧本，AI 将为你规划完整短剧..." style="flex:1; min-height:60px;" data-i18n="[placeholder]gen.prompt_placeholder_drama"></textarea>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <textarea class="drama-textarea" id="prompt-drama" placeholder="输入故事想法或上传剧本，AI 将为你规划完整短剧..." style="width:100%;min-height:72px;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--t1);font-size:13px;resize:vertical;" data-i18n="[placeholder]gen.prompt_placeholder_drama"></textarea>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
               <button class="drama-upload-btn" style="padding:6px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--t1);cursor:pointer;font-size:13px;">
                 <span>📄</span> 上传剧本
               </button>
@@ -399,22 +412,92 @@
                 <button class="type-btn active" style="padding:6px 12px;border-radius:6px;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-size:12px;">连续剧</button>
               </div>
               <select id="dramaEpisodeCount" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--t1);font-size:12px;">
-                <option value="5">5 集</option>
-                <option value="10" selected>10 集</option>
-                <option value="15">15 集</option>
-                <option value="20">20 集</option>
+                <option value="5">5 集</option><option value="10" selected>10 集</option>
+                <option value="15">15 集</option><option value="20">20 集</option>
               </select>
               <select id="dramaGenre" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--t1);font-size:12px;">
-                <option value="逆袭">逆袭</option>
-                <option value="重生">重生</option>
-                <option value="霸总">霸总</option>
-                <option value="甜宠">甜宠</option>
-                <option value="穿越">穿越</option>
-                <option value="古装">古装</option>
-                <option value="悬疑">悬疑</option>
-                <option value="都市">都市</option>
+                <option value="逆袭">逆袭</option><option value="重生">重生</option><option value="霸总">霸总</option>
+                <option value="甜宠">甜宠</option><option value="穿越">穿越</option><option value="古装">古装</option>
+                <option value="悬疑">悬疑</option><option value="都市">都市</option>
               </select>
-              <button class="gen-btn" id="gen-btn-drama" style="padding:6px 20px;background:linear-gradient(135deg,#FF4757,#FF6B81);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:13px;font-weight:600;">开始创作</button>
+            </div>
+            <!-- 控制栏：模型/比例/分辨率/时长/参考模式/字幕擦除/真人素材 -->
+            <div class="gen-bottom-controls" style="margin-top:8px; padding:8px 0; border-top:1px solid var(--border);">
+              <div class="ctrl-left" style="gap:6px;flex-wrap:wrap;">
+                <div class="ctrl-item">
+                  <select id="modelSelect-drama" class="ctrl-select-lg" style="font-size:12px;">
+                    <option value="">Seedance 2.0 <span class="premium-badge">PREMIUM</span></option>
+                    <option value="fast">Seedance 2.0 Fast</option>
+                    <option value="omni">Omni Reference</option>
+                  </select>
+                </div>
+                <div class="ctrl-item">
+                  <button class="ctrl-dropdown" id="ratioDropdown-drama"><span class="dropdown-icon ratio-box" data-ratio="9:16"></span> 9:16</button>
+                  <div class="dropdown-menu" id="ratioMenu-drama">
+                    <div class="dropdown-item" data-value="16:9"><span class="ratio-box" data-ratio="16:9"></span> 16:9</div>
+                    <div class="dropdown-item" data-value="4:3"><span class="ratio-box" data-ratio="4:3"></span> 4:3</div>
+                    <div class="dropdown-item" data-value="1:1"><span class="ratio-box" data-ratio="1:1"></span> 1:1</div>
+                    <div class="dropdown-item" data-value="3:4"><span class="ratio-box" data-ratio="3:4"></span> 3:4</div>
+                    <div class="dropdown-item" data-value="9:16"><span class="ratio-box" data-ratio="9:16"></span> 9:16</div>
+                  </div>
+                </div>
+                <div class="ctrl-item">
+                  <button class="ctrl-dropdown" id="resDropdown-drama"><span class="dropdown-icon">◎</span> 720p</button>
+                  <div class="dropdown-menu" id="resMenu-drama">
+                    <div class="dropdown-item" data-value="480p">◎ 480p</div>
+                    <div class="dropdown-item" data-value="720p">◎ 720p</div>
+                    <div class="dropdown-item" data-value="1080p">◎ 1080p</div>
+                  </div>
+                </div>
+                <div class="ctrl-item">
+                  <button class="ctrl-dropdown duration-dropdown" id="durDropdown-drama"><span class="dropdown-icon">◎</span> 60s</button>
+                  <div class="dropdown-menu duration-menu" id="durMenu-drama">
+                    <div class="duration-auto-btn">
+                      <button class="auto-btn active">自动</button><button class="custom-btn">自定义</button>
+                    </div>
+                    <div class="duration-slider">
+                      <input type="range" min="5" max="60" value="60" id="durSlider-drama">
+                      <span class="slider-value">60s</span>
+                    </div>
+                    <div class="duration-presets">
+                      <button class="preset-btn" data-value="5">5s</button>
+                      <button class="preset-btn" data-value="15">15s</button>
+                      <button class="preset-btn" data-value="30">30s</button>
+                      <button class="preset-btn" data-value="45">45s</button>
+                      <button class="preset-btn active" data-value="60">60s</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="ctrl-item">
+                  <button class="ctrl-dropdown" id="refModeDropdown-drama"><span class="dropdown-icon">📷</span> <span>文生视频</span></button>
+                  <div class="dropdown-menu" id="refModeMenu-drama">
+                    <div class="dropdown-item" data-value="text2vid">文生视频</div>
+                    <div class="dropdown-item" data-value="first_last_frame">首尾帧参考</div>
+                    <div class="dropdown-item" data-value="multi_ref">图片+视频+音频参考</div>
+                  </div>
+                </div>
+                <div class="ctrl-item subtitle-removal-item">
+                  <label class="subtitle-removal-label">
+                    <input type="checkbox" id="subtitle-removal-drama">
+                    <span class="checkbox-icon">✓</span>
+                    <span>字幕擦除</span>
+                  </label>
+                </div>
+                <div class="ctrl-item real-people-item">
+                  <label class="real-people-label">
+                    <input type="checkbox" id="use-real-people-drama">
+                    <span class="checkbox-icon">✓</span>
+                    <span>真人素材</span>
+                  </label>
+                </div>
+              </div>
+              <div class="ctrl-right">
+                <div class="cost-display" id="cost-display-drama">
+                  <span class="cost-icon">⚡</span>
+                  <span class="cost-value">7.5</span>
+                </div>
+                <button class="gen-btn-lg" id="gen-btn-drama" style="background:linear-gradient(135deg,#FF4757,#FF6B81);">开始创作</button>
+              </div>
             </div>
           </div>
         </div>
@@ -512,7 +595,7 @@
             <span class="cost-icon">⚡</span>
             <span class="cost-value">7.5</span>
           </div>
-          <button class="gen-btn-lg" id="gen-btn-aivideo" data-i18n="js.generate">生成</button>
+          <button class="gen-btn-lg" id="gen-btn-aivideo" data-i18n="js.generate">🎬视频生成</button>
         </div>
       </div>
     </div>
@@ -599,7 +682,7 @@
             <span class="cost-icon">⚡</span>
             <span class="cost-value">2</span>
           </div>
-          <button class="gen-btn-lg" id="gen-btn-image" data-i18n="js.generate">生成</button>
+          <button class="gen-btn-lg" id="gen-btn-image" data-i18n="js.generate">🖼️图片生成</button>
         </div>
       </div>
     </div>

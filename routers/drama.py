@@ -72,6 +72,10 @@ class SceneRenderRequest(BaseModel):
     model: str = ""
     resolution: str = "720p"
     ratio: str = "9:16"
+    duration: str = "60s"
+    ref_mode: str = "text2vid"
+    subtitle_removal: bool = False
+    use_real_people: bool = False
 
 
 class SceneSelectRequest(BaseModel):
@@ -463,6 +467,10 @@ def render_scenes(
         "model": data.model,
         "resolution": data.resolution,
         "ratio": data.ratio,
+        "duration": data.duration,
+        "ref_mode": data.ref_mode,
+        "subtitle_removal": data.subtitle_removal,
+        "use_real_people": data.use_real_people,
         "generate_audio": True,
         "watermark": False,
     }

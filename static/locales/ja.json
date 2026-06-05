@@ -36,7 +36,7 @@
     "last_frame": "最終フレームに戻る",
     "advanced": "高度な設定",
     "prompt_placeholder": "ビデオを記述... @image1、@video1 を使用してアップロードしたファイルを参照します。",
-    "generate": "生成 ✦",
+    "generate": "ビデオ生成",
     "prompt_eg": "例えば",
     "prompt_example": "映画のようなシーン...",
     "hint1": "AI アシスタントとリファレンス素材で任意の長さのビデオを計画します。",

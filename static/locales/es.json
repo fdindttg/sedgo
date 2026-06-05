@@ -36,7 +36,7 @@
     "last_frame": "Volver al último fotograma",
     "advanced": "Avanzado",
     "prompt_placeholder": "Describe tu video... Usa @image1, @video1 para hacer referencia a los archivos subidos.",
-    "generate": "Generar ✦",
+    "generate": "Generar Video",
     "prompt_eg": "ej.",
     "prompt_example": "Una escena cinematográfica...",
     "hint1": "Planifica videos de cualquier longitud con asistente AI y materiales de referencia.",

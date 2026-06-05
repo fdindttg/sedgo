@@ -301,7 +301,7 @@
     "network_error_retry": "網路請求失敗，請手動重試",
     "retry_failed": "重新生成失敗",
     "create_failed": "建立任務失敗：",
-    "generate": "生成",
+    "generate": "视频生成",
     "generating": "生成中...",
     "max_files": "最多上傳 {n} 個檔案",
     "processing": "處理中…",
