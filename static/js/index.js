@@ -288,7 +288,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 预先加载短剧项目列表
   setTimeout(function() { loadDramaProjects(); }, 100);
 
-  // Handle ?drama=ID query param → navigate to drama tab and open project
+  // Handle ?tab=drama → switch to drama tab
+  if (new URLSearchParams(window.location.search).get('tab') === 'drama') {
+    var dramaTab = document.querySelector('.mode-tab[data-mode="drama"]');
+    if (dramaTab) dramaTab.click();
+  }
+
+  // Handle ?drama=ID → navigate to drama tab and open project
   var dramaParam = new URLSearchParams(window.location.search).get('drama');
   if (dramaParam) {
     var dramaTab = document.querySelector('.mode-tab[data-mode="drama"]');
