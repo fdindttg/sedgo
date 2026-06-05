@@ -13,7 +13,7 @@ import os
 import uvicorn
 
 from database import engine, Base, get_db, SessionLocal
-from routers import auth, subscriptions, points, tasks, channels, admin, images, optimize, asset_library, payments, contact
+from routers import auth, subscriptions, points, tasks, channels, admin, images, optimize, asset_library, payments, contact, drama
 from config import DEFAULT_FILE_URL, DEFAULT_TASK_URL, DEFAULT_LIST_URL
 
 # 直接使用 config.py 中的配置（已从 .env 文件加载）
@@ -27,10 +27,13 @@ async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
     _seed_defaults()
     # 启动高并发任务轮询服务
-    from services.poll_service import ensure_poll_service_started
+    from services.poll_service import ensure_poll_service_started, stop_poll_service
     ensure_poll_service_started()
     print(f"[Seed] High-concurrency poll service started")
     yield
+    # 停止轮询服务
+    stop_poll_service()
+    print(f"[Seed] High-concurrency poll service stopped")
     engine.dispose()
 
 
@@ -260,6 +263,7 @@ api_routers = [
     asset_library.router,
     payments.router,
     contact.router,
+    drama.router,
 ]
 
 for router in api_routers:

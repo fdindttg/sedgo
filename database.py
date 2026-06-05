@@ -465,3 +465,97 @@ class UploadedFile(Base):
     created_at = Column(DateTime, default=beijing_now)
 
     user = relationship("User")
+
+
+# ── 短剧工作室 Models ─────────────────────────────────────────────────
+
+
+class DramaStatus(str, enum.Enum):
+    DRAFT = "draft"
+    GENERATING = "generating"
+    COMPLETED = "completed"
+    FAILED = "failed"
+
+
+class DramaProject(Base):
+    """短剧项目"""
+    __tablename__ = "drama_projects"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    title = Column(String(200), nullable=False)
+    genre = Column(String(50), nullable=True)  # 类型：逆袭/重生/霸总/甜宠/穿越/古装
+    logline = Column(Text, nullable=True)  # 一句话梗概
+    total_episodes = Column(Integer, default=10)
+    cover_url = Column(Text, nullable=True)
+    status = Column(SAEnum(DramaStatus), default=DramaStatus.DRAFT, nullable=False)
+    created_at = Column(DateTime, default=beijing_now)
+    updated_at = Column(DateTime, default=beijing_now, onupdate=beijing_now)
+
+    user = relationship("User")
+    episodes = relationship("DramaEpisode", back_populates="project", cascade="all, delete-orphan", order_by="DramaEpisode.episode_number")
+
+
+class DramaEpisode(Base):
+    """短剧剧集"""
+    __tablename__ = "drama_episodes"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    project_id = Column(Integer, ForeignKey("drama_projects.id"), nullable=False, index=True)
+    episode_number = Column(Integer, nullable=False)
+    title = Column(String(200), nullable=True)
+    # 剧本内容 — 结构化 JSON，包含四幕结构
+    script_content = Column(JSON, nullable=True)
+    # 情绪走势标注
+    emotion_arc = Column(JSON, nullable=True)  # [{"order":1,"emotion":"屈辱","description":"遭受白眼"}, ...]
+    # 勾人卡点（每集结尾悬念）
+    cliffhanger = Column(Text, nullable=True)
+    # 黄金3秒钩子
+    hook = Column(Text, nullable=True)
+    status = Column(SAEnum(DramaStatus), default=DramaStatus.DRAFT, nullable=False)
+    created_at = Column(DateTime, default=beijing_now)
+    updated_at = Column(DateTime, default=beijing_now, onupdate=beijing_now)
+
+    project = relationship("DramaProject", back_populates="episodes")
+    scenes = relationship("DramaScene", back_populates="episode", cascade="all, delete-orphan", order_by="DramaScene.scene_number")
+
+
+class DramaScene(Base):
+    """分镜场景"""
+    __tablename__ = "drama_scenes"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    episode_id = Column(Integer, ForeignKey("drama_episodes.id"), nullable=False, index=True)
+    scene_number = Column(Integer, nullable=False)
+    # 分镜结构化字段
+    location = Column(String(200), nullable=True)       # 场景地点
+    time_period = Column(String(50), nullable=True)     # 时段：白天/夜晚/黄昏
+    characters = Column(JSON, nullable=True)            # [{"name":"林凡","age":25,"outfit":"黑色风衣","expression":"眼神坚毅"}, ...]
+    camera_instruction = Column(Text, nullable=True)    # 运镜指示：面部特写/跟拍拉远
+    prompt_text = Column(Text, nullable=True)           # 生成用的完整提示词
+    # 保一致性：角色特征 ID / Seed
+    character_seeds = Column(JSON, nullable=True)       # {"character_name": 12345}
+    duration = Column(Integer, default=5)               # 片段时长（秒）
+    # 生成结果
+    status = Column(SAEnum(DramaStatus), default=DramaStatus.DRAFT, nullable=False)
+    video_urls = Column(JSON, nullable=True)            # 候选视频列表（抽卡多选）
+    selected_url = Column(Text, nullable=True)          # 选中的最佳视频
+    task_record_ids = Column(JSON, nullable=True)       # 关联的任务记录ID列表
+    # 质量标注
+    quality_score = Column(Integer, nullable=True)      # 1-10 质量评分
+    has_defect = Column(Boolean, default=False)          # 是否有缺陷（需重跑）
+    retry_count = Column(Integer, default=0)
+    error_msg = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=beijing_now)
+    updated_at = Column(DateTime, default=beijing_now, onupdate=beijing_now)
+
+    episode = relationship("DramaEpisode", back_populates="scenes")
+
+
+# 分镜 ↔ 任务记录关联表
+class DramaSceneTask(Base):
+    __tablename__ = "drama_scene_tasks"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    drama_scene_id = Column(Integer, ForeignKey("drama_scenes.id"), nullable=False, index=True)
+    task_record_id = Column(Integer, ForeignKey("task_records.id"), nullable=False, index=True)
+    created_at = Column(DateTime, default=beijing_now)
