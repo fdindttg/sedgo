@@ -158,7 +158,10 @@
     "creating": "作成中...",
     "create_failed": "作成失敗：",
     "preview": "プレビュー",
-    "download": "ダウンロード"
+    "download": "ダウンロード",
+    "retry": "リトライ",
+    "continue": "続行",
+    "confirm_retry": "このエピソードを再生成してもよろしいですか？"
   },
   "features": {
     "label": "Sedgo を選ぶ理由",

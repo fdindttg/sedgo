@@ -158,7 +158,10 @@
     "creating": "만드는 중...",
     "create_failed": "만들기 실패: ",
     "preview": "미리보기",
-    "download": "다운로드"
+    "download": "다운로드",
+    "retry": "재시도",
+    "continue": "계속",
+    "confirm_retry": "이 에피소드를 다시 생성하시겠습니까?"
   },
   "features": {
     "label": "Sedgo을 선택하는 이유",

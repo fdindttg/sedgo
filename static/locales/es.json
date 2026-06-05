@@ -158,7 +158,10 @@
     "creating": "Creando...",
     "create_failed": "Creación falló: ",
     "preview": "Vista previa",
-    "download": "Descargar"
+    "download": "Descargar",
+    "retry": "Reintentar",
+    "continue": "Continuar",
+    "confirm_retry": "¿Estás seguro de que deseas regenerar este episodio?"
   },
   "features": {
     "label": "Por qué Sedgo",

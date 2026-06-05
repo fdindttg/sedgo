@@ -158,7 +158,10 @@
     "creating": "創建中...",
     "create_failed": "創建失敗：",
     "preview": "預覽",
-    "download": "下載"
+    "download": "下載",
+    "retry": "重試",
+    "continue": "繼續",
+    "confirm_retry": "確定要重新生成該集嗎？"
   },
   "features": {
     "label": "為什麼選擇 Sedgo",

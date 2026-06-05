@@ -837,16 +837,28 @@ document.addEventListener('DOMContentLoaded', function() {
       listEl.innerHTML = eps.map(function(ep) {
         var icon = ep.status === 'draft' ? '📝' : ep.status === 'generating' ? '⏳' : ep.status === 'completed' ? '✅' : '❌';
         var hasVideo = ep.status === 'completed' || ep.status === 'generating';
+        var isFailed = ep.status === 'failed';
+        var isDraft = ep.status === 'draft';
+        var statusLabel = _dramaStatusText[ep.status] || ep.status;
         return '<div style="background:var(--bg2);border-radius:8px;padding:12px;margin-bottom:6px;border:1px solid transparent;">' +
-          '<div class="drama-episode-card" data-ep="' + ep.id + '" style="cursor:pointer;">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">' +
+          '<div class="drama-episode-card" data-ep="' + ep.id + '" style="cursor:pointer;flex:1;">' +
           '<div style="font-size:12px;color:#FF4757;font-weight:600;">' + icon + ' ' + t('drama.episode_title', { n: ep.episode_number }) + '</div>' +
           '<div style="font-size:14px;margin:4px 0;">' + (ep.title || '') + '</div>' +
           (ep.hook ? '<div style="font-size:12px;color:var(--t3);font-style:italic;">' + t('drama.hook_label') + ep.hook.substring(0, 50) + (ep.hook.length > 50 ? '...' : '') + '</div>' : '') +
           '<div style="font-size:11px;color:var(--t3);margin-top:4px;">' + t('drama.scene_count', { n: ep.scene_count || 0 }) + '</div>' +
           '</div>' +
-          (hasVideo ? '<div style="display:flex;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">' +
+          '<span style="font-size:10px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,0.08);color:var(--t2);white-space:nowrap;">' + statusLabel + '</span>' +
+          '</div>' +
+          (hasVideo ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
             '<button class="drama-preview-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">▶ ' + t('drama.preview') + '</button>' +
             '<button class="drama-dl-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(255,255,255,0.08);color:var(--t1);font-size:11px;cursor:pointer;">⬇ ' + t('drama.download') + '</button>' +
+            '</div>' : '') +
+          (isFailed ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
+            '<button class="drama-retry-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(255,71,87,0.15);color:#FF4757;font-size:11px;cursor:pointer;">🔄 ' + t('drama.retry') + '</button>' +
+            '</div>' : '') +
+          (isDraft ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
+            '<button class="drama-retry-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:#22c55e;color:#fff;font-size:11px;cursor:pointer;">▶ ' + t('drama.continue') + '</button>' +
             '</div>' : '') +
           '</div>';
       }).join('');
@@ -858,6 +870,16 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       listEl.querySelectorAll('.drama-dl-btn').forEach(function(btn) {
         btn.addEventListener('click', function(e) { e.stopPropagation(); downloadDramaEpisodeFromHome(parseInt(btn.dataset.ep)); });
+      });
+      listEl.querySelectorAll('.drama-retry-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var epId = parseInt(btn.dataset.ep);
+          var pid = document.getElementById('dramaDetailView').dataset.projectId;
+          if (confirm(t('drama.confirm_retry') || '确定要重新生成该集吗？')) {
+            doGenerateScriptForEpisode(parseInt(pid), epId);
+          }
+        });
       });
     }).catch(function(e) {
       listEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--t3);font-size:13px;">' + t('js.load_failed') + '</div>';
@@ -925,6 +947,20 @@ document.addEventListener('DOMContentLoaded', function() {
       alert('✅ ' + r.message);
       loadDramaDetail(parseInt(pid));
     }).catch(function(e) { alert(t('drama.gen_failed') + e.message); loadDramaDetail(parseInt(pid)); });
+  }
+
+  function doGenerateScriptForEpisode(projectId, episodeId) {
+    // Find episode number from the current loaded project
+    dramaApi('/projects/' + projectId).then(function(project) {
+      var eps = project.episodes || [];
+      var ep = eps.find(function(e) { return e.id === episodeId; });
+      var epNum = ep ? ep.episode_number : null;
+      var body = epNum ? JSON.stringify({ episode_numbers: [epNum] }) : '{}';
+      return dramaApi('/projects/' + projectId + '/generate-script', { method: 'POST', body: body });
+    }).then(function(r) {
+      alert('✅ ' + r.message);
+      loadDramaDetail(projectId);
+    }).catch(function(e) { alert(t('drama.gen_failed') + e.message); });
   }
 
   function doBreakdown(episodeId) {

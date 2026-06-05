@@ -158,7 +158,10 @@
     "creating": "Đang tạo...",
     "create_failed": "Tạo thất bại: ",
     "preview": "Xem trước",
-    "download": "Tải xuống"
+    "download": "Tải xuống",
+    "retry": "Thử lại",
+    "continue": "Tiếp tục",
+    "confirm_retry": "Bạn có chắc chắn muốn tạo lại tập này?"
   },
   "features": {
     "label": "Tại sao chọn Sedgo",
