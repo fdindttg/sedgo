@@ -858,8 +858,12 @@ document.addEventListener('DOMContentLoaded', function() {
             '<button class="drama-render-ep-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">🎬 ' + t('drama.render_ep') + '</button>' +
             '</div>' : '') +
           (hasVideo ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
-            '<button class="drama-preview-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">▶ ' + t('drama.preview') + '</button>' +
-            '<button class="drama-dl-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(255,255,255,0.08);color:var(--t1);font-size:11px;cursor:pointer;">⬇ ' + t('drama.download') + '</button>' +
+            '<button class="drama-preview-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">▶ 预览</button>' +
+            '<button class="drama-dl-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(255,255,255,0.08);color:var(--t1);font-size:11px;cursor:pointer;">⬇ 下载</button>' +
+            '<button class="drama-merge-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(124,58,237,0.15);color:#7c3aed;font-size:11px;cursor:pointer;">🔗 合并</button>' +
+            '</div>' : '') +
+          (ep.merged_video_url ? '<div style="margin-top:4px;">' +
+            '<a href="' + ep.merged_video_url + '" target="_blank" style="display:inline-block;padding:5px 10px;background:#7c3aed;color:#fff;border-radius:6px;font-size:11px;text-decoration:none;">⬇ 下载完整剧集</a>' +
             '</div>' : '') +
           (isFailed ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
             '<button class="drama-retry-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(255,71,87,0.15);color:#FF4757;font-size:11px;cursor:pointer;">🔄 ' + t('drama.retry') + '</button>' +
@@ -880,6 +884,9 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       listEl.querySelectorAll('.drama-render-ep-btn').forEach(function(btn) {
         btn.addEventListener('click', function(e) { e.stopPropagation(); doRenderEpisode(parseInt(btn.dataset.ep)); });
+      });
+      listEl.querySelectorAll('.drama-merge-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) { e.stopPropagation(); mergeEpisode(parseInt(btn.dataset.ep)); });
       });
       listEl.querySelectorAll('.drama-retry-btn').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
@@ -1056,6 +1063,35 @@ document.addEventListener('DOMContentLoaded', function() {
       var urls = {};
       clips.forEach(function(c) { if (c.video_url && !urls[c.video_url]) { urls[c.video_url] = true; window.open(c.video_url, '_blank'); } });
     } catch(e) { alert(t('drama.export_failed') + e.message); }
+  }
+
+  async function mergeEpisode(episodeId) {
+    var btn = document.querySelector('.drama-merge-btn[data-ep="' + episodeId + '"]');
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ 合并中...'; }
+    try {
+      var res = await fetch('/api/drama/episodes/' + episodeId + '/merge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('sdToken') }
+      });
+      var data = await res.json();
+      if (data.success) {
+        alert('✅ 合并已开始，完成后页面会自动刷新');
+        // Poll for merged URL
+        var pollCount = 0;
+        var checkMerged = setInterval(function() {
+          pollCount++;
+          dramaApi('/projects/' + document.getElementById('dramaDetailView').dataset.projectId).then(function(project) {
+            var ep = (project.episodes || []).find(function(e) { return e.id === episodeId; });
+            if (ep && ep.merged_video_url) {
+              clearInterval(checkMerged);
+              loadDramaDetail(parseInt(document.getElementById('dramaDetailView').dataset.projectId));
+            }
+          }).catch(function() {});
+          if (pollCount > 60) { clearInterval(checkMerged); loadDramaDetail(parseInt(document.getElementById('dramaDetailView').dataset.projectId)); }
+        }, 2000);
+      }
+    } catch(e) { alert('合并失败: ' + e.message); }
+    if (btn) { btn.disabled = false; btn.textContent = '🔗 合并'; }
   }
 
   // ── Detail action buttons ──

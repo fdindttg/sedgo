@@ -513,6 +513,7 @@ class DramaEpisode(Base):
     # 黄金3秒钩子
     hook = Column(Text, nullable=True)
     status = Column(SAEnum(DramaStatus), default=DramaStatus.DRAFT, nullable=False)
+    merged_video_url = Column(String(500), nullable=True)  # 合并后完整剧集视频路径
     created_at = Column(DateTime, default=beijing_now)
     updated_at = Column(DateTime, default=beijing_now, onupdate=beijing_now)
 

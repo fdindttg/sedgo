@@ -606,6 +606,73 @@ def export_episode(
     return manifest
 
 
+@router.post("/episodes/{episode_id}/merge")
+def merge_episode(
+    episode_id: int,
+    background_tasks: BackgroundTasks,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    合并渲染：将所有已选中的分镜视频拼接成一个完整剧集
+    
+    返回合并状态，后台异步执行 ffmpeg concat
+    """
+    episode = db.query(DramaEpisode).filter(DramaEpisode.id == episode_id).first()
+    if not episode:
+        raise HTTPException(status_code=404, detail="剧集不存在")
+    
+    project = db.query(DramaProject).filter(DramaProject.id == episode.project_id).first()
+    if project.user_id != user.id:
+        raise HTTPException(status_code=403, detail="无权访问")
+    
+    scenes = db.query(DramaScene).filter(
+        DramaScene.episode_id == episode_id
+    ).order_by(DramaScene.scene_number).all()
+    
+    # 收集所有可用的视频URL
+    video_urls = []
+    for scene in scenes:
+        url = scene.selected_url or (scene.video_urls[0] if scene.video_urls else None)
+        if url:
+            video_urls.append(url)
+    
+    if len(video_urls) == 0:
+        raise HTTPException(status_code=400, detail="该剧集没有可用的视频片段")
+    
+    # 生成输出路径
+    import uuid, os
+    output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static", "merged")
+    os.makedirs(output_dir, exist_ok=True)
+    merged_filename = f"drama_ep_{episode_id}_{uuid.uuid4().hex[:8]}.mp4"
+    merged_path = os.path.join(output_dir, merged_filename)
+    
+    # 后台执行合并
+    from services.task_service import _concat_videos
+    
+    def _do_merge():
+        success = _concat_videos(video_urls, merged_path)
+        if success:
+            episode.merged_video_url = f"/static/merged/{merged_filename}"
+            db.commit()
+            logger.info(f"[drama] Merged episode {episode_id} → {merged_filename}")
+        else:
+            logger.error(f"[drama] Failed to merge episode {episode_id}")
+    
+    background_tasks.add_task(_do_merge)
+    
+    # 更新剧集状态
+    episode.merged_video_url = f"/static/merged/{merged_filename}"
+    db.commit()
+    
+    return {
+        "success": True,
+        "message": f"正在合并 {len(video_urls)} 个视频片段",
+        "merged_url": episode.merged_video_url,
+        "clip_count": len(video_urls),
+    }
+
+
 @router.get("/projects/{project_id}/export")
 def export_project(
     project_id: int,
