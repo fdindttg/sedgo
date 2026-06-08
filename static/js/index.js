@@ -2,6 +2,8 @@
 let _pointsPerSecCache = null;
 // 模型配置缓存（包含支持的分辨率等信息）
 let _modelsConfigCache = null;
+// 短剧模式：单集 or 连续剧
+let _dramaIsSingleEpisode = false;
 
 function showPricingTab(tab) {
   document.querySelectorAll('.pricing-tab').forEach(t => t.classList.remove('active'));
@@ -551,33 +553,35 @@ if (themeBtn) {
 }
 
 // ── Mode tabs ─────────────────────────────────────────────────────
-document.querySelectorAll('.mode-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    // Skip if tab is disabled
-    if (tab.classList.contains('disabled')) {
-      return;
-    }
-    
-    // Remove active class from all tabs
-    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    
-    // Hide all mode contents
-    document.querySelectorAll('.mode-content').forEach(content => {
-      content.classList.remove('active');
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.mode-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Skip if tab is disabled
+      if (tab.classList.contains('disabled')) {
+        return;
+      }
+      
+      // Remove active class from all tabs
+      document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      
+      // Hide all mode contents
+      document.querySelectorAll('.mode-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Show the selected mode content
+      const mode = tab.getAttribute('data-mode');
+      const activeContent = document.getElementById('mode-' + mode);
+      if (activeContent) {
+        activeContent.classList.add('active');
+      }
+      // Load drama projects when drama tab is activated
+      if (mode === 'drama') {
+        loadDramaProjects();
+        updateDramaCostDisplay();
+      }
     });
-    
-    // Show the selected mode content
-    const mode = tab.getAttribute('data-mode');
-    const activeContent = document.getElementById('mode-' + mode);
-    if (activeContent) {
-      activeContent.classList.add('active');
-    }
-    // Load drama projects when drama tab is activated
-    if (mode === 'drama') {
-      loadDramaProjects();
-      updateDramaCostDisplay();
-    }
   });
 });
 
@@ -752,7 +756,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // ── Drama mode type buttons ──
-  var _dramaIsSingleEpisode = false;
 
   document.querySelectorAll('#mode-drama .type-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
