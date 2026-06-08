@@ -462,9 +462,23 @@ def render_scenes(
         if not channel:
             raise HTTPException(status_code=400, detail="指定的渠道不可用")
     
+    # 如果 model 为空，自动获取第一个活跃的视频接入点
+    model_id = data.model
+    if not model_id:
+        from database import Endpoint, EndpointType
+        default_ep = db.query(Endpoint).filter(
+            Endpoint.is_active == True,
+            Endpoint.type == EndpointType.VIDEO
+        ).order_by(Endpoint.is_default.desc()).first()
+        if default_ep:
+            model_id = default_ep.endpoint_id
+            logger.info(f"[drama] Auto-selected default endpoint: {model_id}")
+        else:
+            raise HTTPException(status_code=400, detail="没有可用的视频接入点，请先在管理后台配置")
+    
     # 构建基础任务配置
     task_config_base = {
-        "model": data.model,
+        "model": model_id,
         "resolution": data.resolution,
         "ratio": data.ratio,
         "duration": data.duration,
