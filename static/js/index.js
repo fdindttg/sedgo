@@ -1095,31 +1095,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
   async function mergeEpisode(episodeId) {
     var btn = document.querySelector('.drama-merge-btn[data-ep="' + episodeId + '"]');
-    if (btn) { btn.disabled = true; btn.textContent = '⏳ 合并中...'; }
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ 合成中...'; }
     try {
       var res = await fetch('/api/drama/episodes/' + episodeId + '/merge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('sdToken') }
       });
       var data = await res.json();
-      if (data.success) {
-        alert('✅ 合并已开始，完成后页面会自动刷新');
-        // Poll for merged URL
-        var pollCount = 0;
-        var checkMerged = setInterval(function() {
-          pollCount++;
-          dramaApi('/projects/' + document.getElementById('dramaDetailView').dataset.projectId).then(function(project) {
-            var ep = (project.episodes || []).find(function(e) { return e.id === episodeId; });
-            if (ep && ep.merged_video_url) {
-              clearInterval(checkMerged);
-              loadDramaDetail(parseInt(document.getElementById('dramaDetailView').dataset.projectId));
-            }
-          }).catch(function() {});
-          if (pollCount > 60) { clearInterval(checkMerged); loadDramaDetail(parseInt(document.getElementById('dramaDetailView').dataset.projectId)); }
-        }, 2000);
+      if (!data.success) {
+        alert('合成失败: ' + (data.detail || data.message || ''));
+        if (btn) { btn.disabled = false; btn.textContent = '🔗 合成'; }
+        return;
       }
-    } catch(e) { alert('合并失败: ' + e.message); }
-    if (btn) { btn.disabled = false; btn.textContent = '🔗 合并'; }
+      var pid = document.getElementById('dramaDetailView').dataset.projectId;
+      var pollCount = 0;
+      if (btn) btn.textContent = '⏳ 合成中...' + data.clip_count + '片段';
+      var checkMerged = setInterval(function() {
+        pollCount++;
+        dramaApi('/projects/' + pid).then(function(project) {
+          var ep = (project.episodes || []).find(function(e) { return e.id === episodeId; });
+          if (ep && ep.merged_video_url) {
+            clearInterval(checkMerged);
+            loadDramaDetail(parseInt(pid));
+          } else if (pollCount > 120) {
+            clearInterval(checkMerged);
+            loadDramaDetail(parseInt(pid));
+            if (btn) { btn.disabled = false; btn.textContent = '🔗 合成'; }
+          }
+        }).catch(function() {});
+      }, 3000);
+    } catch(e) { alert('合成失败: ' + e.message); if (btn) { btn.disabled = false; btn.textContent = '🔗 合成'; } }
   }
 
   // ── Detail action buttons ──

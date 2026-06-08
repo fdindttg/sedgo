@@ -689,19 +689,22 @@ def merge_episode(
     from services.task_service import _concat_videos
     
     def _do_merge():
-        success = _concat_videos(video_urls, merged_path)
-        if success:
-            episode.merged_video_url = f"/static/merged/{merged_filename}"
-            db.commit()
-            logger.info(f"[drama] Merged episode {episode_id} → {merged_filename}")
-        else:
-            logger.error(f"[drama] Failed to merge episode {episode_id}")
+        from database import SessionLocal
+        db2 = SessionLocal()
+        try:
+            success = _concat_videos(video_urls, merged_path)
+            if success:
+                ep = db2.query(DramaEpisode).filter(DramaEpisode.id == episode_id).first()
+                if ep:
+                    ep.merged_video_url = f"/static/merged/{merged_filename}"
+                    db2.commit()
+                logger.info(f"[drama] Merged episode {episode_id} → {merged_filename}")
+            else:
+                logger.error(f"[drama] Failed to merge episode {episode_id}")
+        finally:
+            db2.close()
     
     background_tasks.add_task(_do_merge)
-    
-    # 更新剧集状态
-    episode.merged_video_url = f"/static/merged/{merged_filename}"
-    db.commit()
     
     return {
         "success": True,
