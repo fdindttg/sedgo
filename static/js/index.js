@@ -640,7 +640,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Update cost display based on control type
-        if (dropdownId && dropdownId.includes('-video')) {
+        if (dropdownId && dropdownId.includes('-drama')) {
+          updateDramaCostDisplay();
+        } else if (dropdownId && dropdownId.includes('-video')) {
           updateVideoCostDisplay();
         } else if (dropdownId && dropdownId.includes('-image')) {
           updateImageCostDisplay();
@@ -2012,7 +2014,29 @@ function updateDramaCostDisplay() {
   // Calculate using points config
   var config = _pointsPerSecCache || {};
   var table = config[model] || {};
+
+  // Fallback: if model not found in cache (e.g. "" placeholder), use first available model
+  if (!table || Object.keys(table).length === 0) {
+    for (var key of Object.keys(config)) {
+      if (typeof config[key] === 'object' && config[key] !== null && key !== 'label') {
+        table = config[key];
+        break;
+      }
+    }
+  }
+
   var perSec = table[resolution] || table['720p'] || 0;
+
+  // Second fallback: try any model's pricing
+  if (perSec === 0) {
+    for (var key of Object.keys(config)) {
+      var t = config[key];
+      if (typeof t === 'object' && t !== null) {
+        perSec = t[resolution] || t['720p'] || 0;
+        if (perSec > 0) break;
+      }
+    }
+  }
 
   if (perSec > 0) {
     var cost = Math.max(0.1, Math.round(perSec * totalSeconds * 10) / 10);
