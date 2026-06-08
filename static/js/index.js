@@ -974,7 +974,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function doRenderEpisode(episodeId) {
     var params = getDramaRenderParams();
-    if (!params.model) { alert('请先选择模型或等待模型列表加载完成'); return; }
     params.episode_ids = [episodeId];
     dramaApi('/render', { method: 'POST', body: JSON.stringify(params) }).then(function(r) {
       alert('✅ ' + r.message);
@@ -985,7 +984,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var pid = document.getElementById('dramaDetailView').dataset.projectId;
     if (!pid) return;
     var params = getDramaRenderParams();
-    if (!params.model) { alert('请先选择模型或等待模型列表加载完成'); return; }
     dramaApi('/render', { method: 'POST', body: JSON.stringify(params) }).then(function(r) {
       alert('✅ ' + r.message);
     }).catch(function(e) { alert(t('drama.render_failed') + e.message); });
