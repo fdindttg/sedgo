@@ -27,15 +27,15 @@ async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
     _seed_defaults()
     # Migrations: add merged_video_url to drama_episodes if not exists
-     with engine.connect() as conn:
-         try:
-             conn.exec_driver_sql(
-                 "ALTER TABLE drama_episodes ADD COLUMN merged_video_url VARCHAR(500)"
-             )
-             conn.commit()
-             print("[Migrate] Added merged_video_url column to drama_episodes")
-         except Exception:
-             pass  # Column already exists
+    with engine.connect() as conn:
+        try:
+            conn.exec_driver_sql(
+                "ALTER TABLE drama_episodes ADD COLUMN merged_video_url VARCHAR(500)"
+            )
+            conn.commit()
+            print("[Migrate] Added merged_video_url column to drama_episodes")
+        except Exception:
+            pass  # Column already exists
     # 启动高并发任务轮询服务
     from services.poll_service import ensure_poll_service_started, stop_poll_service
     ensure_poll_service_started()
