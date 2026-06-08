@@ -515,16 +515,13 @@
 
       <!-- 项目详情视图 -->
       <div id="dramaDetailView" style="display:none;">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
           <button id="dramaBackBtn" style="padding:6px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--t1);cursor:pointer;font-size:13px;" data-i18n="drama.back">← 返回</button>
           <h3 id="dramaDetailTitle" style="margin:0; font-size:16px;"></h3>
           <span id="dramaDetailStatus" style="font-size:12px;padding:2px 8px;border-radius:8px;"></span>
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;" id="dramaDetailActions">
-          <button class="drama-action-btn" data-action="script" style="padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;background:#FF4757;color:#fff;" data-i18n="drama.generate_script">📝 生成剧本</button>
-          <button class="drama-action-btn" data-action="breakdown" style="padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;background:rgba(255,255,255,0.1);color:var(--t1);" data-i18n="drama.do_breakdown">🎯 拆解分镜</button>
-          <button class="drama-action-btn" data-action="render" style="padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;background:#22c55e;color:#fff;" data-i18n="drama.batch_render">🎬 批量渲染</button>
-          <button class="drama-action-btn" data-action="sync" style="padding:6px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;background:rgba(255,255,255,0.1);color:var(--t1);" data-i18n="drama.sync_status">🔄 同步状态</button>
+        <!-- Pipeline Steps -->
+        <div id="dramaPipeline" style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
         </div>
         <div id="dramaEpisodeList" style="display:flex;flex-direction:column;gap:8px;"></div>
         <div id="dramaScenePanel" style="display:none; margin-top:12px; background:var(--bg3); border-radius:10px; padding:16px;"></div>

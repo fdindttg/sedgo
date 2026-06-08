@@ -791,13 +791,30 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
       grid.innerHTML = projects.map(function(p) {
+        var eps = p.episodes || [];
+        var totalEpisodes = p.total_episodes || 0;
+        var doneEps = eps.filter(function(e) { return e.status === 'completed' || e.merged_video_url; }).length;
+        var renderedEps = eps.filter(function(e) { return e.status === 'completed' || e.status === 'generating'; }).length;
+        var hasScript = eps.length > 0;
+        var hasScenes = eps.some(function(e) { return (e.scene_count || 0) > 0; });
+        var progressText = '';
+        if (hasScript && hasScenes && renderedEps > 0) {
+          progressText = '🎬 已渲染 ' + renderedEps + '/' + totalEpisodes + ' 集';
+        } else if (hasScript && hasScenes) {
+          progressText = '🎯 已拆解 ' + totalEpisodes + ' 集，待渲染';
+        } else if (hasScript) {
+          progressText = '📝 剧本已生成，待拆解';
+        } else {
+          progressText = '📋 创建项目，待生成剧本';
+        }
         return '<div class="drama-project-card" data-id="' + p.id + '" style="background:var(--bg3);border-radius:10px;padding:14px;cursor:pointer;border:1px solid transparent;transition:all 0.2s;">' +
           '<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:6px;">' +
           '<span style="font-size:11px;padding:1px 8px;border-radius:8px;background:#FF4757;color:#fff;">' + (p.genre || t('drama.genre_urban')) + '</span>' +
           '<span style="font-size:11px;padding:1px 8px;border-radius:8px;background:rgba(255,255,255,0.08);color:var(--t2);">' + (_dramaStatusText[p.status] || p.status) + '</span>' +
           '</div>' +
           '<div style="font-size:14px;font-weight:500;margin-bottom:4px;">' + p.title + '</div>' +
-          '<div style="font-size:12px;color:var(--t3);">' + (p.episode_count || 0) + '/' + p.total_episodes + ' ' + t('drama.episode_count', { n: '' }).replace('{{n}}', '').trim() + '</div>' +
+          '<div style="font-size:12px;color:var(--t3);">' + doneEps + '/' + totalEpisodes + ' 集完成</div>' +
+          '<div style="font-size:11px;color:var(--t3);margin-top:4px;">' + progressText + '</div>' +
           '</div>';
       }).join('');
       // Click to open detail
@@ -831,6 +848,9 @@ document.addEventListener('DOMContentLoaded', function() {
       statusEl.style.background = project.status === 'draft' ? 'rgba(255,255,255,0.08)' : project.status === 'generating' ? 'rgba(34,197,94,0.15)' : project.status === 'completed' ? 'rgba(255,71,87,0.15)' : 'rgba(239,68,68,0.15)';
       statusEl.style.color = project.status === 'draft' ? 'var(--t2)' : project.status === 'generating' ? '#22c55e' : project.status === 'completed' ? '#FF4757' : '#ef4444';
 
+      // Render pipeline
+      renderDramaPipeline(project);
+
       var eps = project.episodes || [];
       if (eps.length === 0) {
         listEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--t3);font-size:13px;">' + t('drama.no_episodes') + '</div>';
@@ -853,7 +873,6 @@ document.addEventListener('DOMContentLoaded', function() {
           '</div>' +
           '<span style="font-size:10px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,0.08);color:var(--t2);white-space:nowrap;">' + statusLabel + '</span>' +
           '</div>' +
-          // 有分镜就可以渲染
           (hasScenes && !hasVideo ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
             '<button class="drama-render-ep-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">🎬 ' + t('drama.render_ep') + '</button>' +
             '</div>' : '') +
@@ -1101,15 +1120,128 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // ── Detail action buttons ──
-  document.getElementById('dramaDetailActions').addEventListener('click', function(e) {
-    var btn = e.target.closest('.drama-action-btn');
-    if (!btn) return;
-    var action = btn.dataset.action;
-    if (action === 'script') doGenerateScript();
-    else if (action === 'breakdown') { if (_currentEpisodeId) doBreakdown(_currentEpisodeId); else alert('请先选择一个剧集'); }
-    else if (action === 'render') doRenderAll();
-    else if (action === 'sync') doSync();
-  });
+  // Pipeline buttons (new step-by-step UI)
+  function renderDramaPipeline(project) {
+    var pid = project.id;
+    var eps = project.episodes || [];
+    var hasScript = eps.length > 0;
+    var hasScenes = eps.some(function(ep) { return (ep.scene_count || 0) > 0; });
+    var hasRendered = eps.some(function(ep) { return ep.status === 'completed' || ep.status === 'generating'; });
+    var allMerged = eps.length > 0 && eps.every(function(ep) { return !!ep.merged_video_url; });
+
+    var steps = [
+      { label: '① 生成剧本', key: 'script', done: hasScript, color: '#FF4757' },
+      { label: '② 拆解分镜', key: 'breakdown', done: hasScenes, color: '#f59e0b' },
+      { label: '③ 渲染视频', key: 'render', done: hasRendered, color: '#22c55e' },
+      { label: '④ 合成下载', key: 'merge', done: allMerged, color: '#7c3aed' },
+    ];
+
+    var activeIdx = steps.findIndex(function(s) { return !s.done; });
+    if (activeIdx < 0) activeIdx = steps.length;
+
+    var html = '';
+    steps.forEach(function(s, i) {
+      var state = i < activeIdx ? 'done' : i === activeIdx ? 'current' : 'future';
+      var bg = state === 'done' ? s.color : state === 'current' ? s.color : 'rgba(255,255,255,0.06)';
+      var textColor = state === 'future' ? 'var(--t3)' : '#fff';
+      var icon = state === 'done' ? '✅' : state === 'current' ? '▶' : '○';
+      html += '<button class="drama-step-btn" data-step="' + s.key + '" style="' +
+        'flex:1;min-width:100px;padding:10px 8px;border:none;border-radius:8px;' +
+        'background:' + bg + ';color:' + textColor + ';font-size:12px;font-weight:500;' +
+        'cursor:' + (i === activeIdx ? 'pointer' : 'default') + ';opacity:' + (state === 'future' ? '0.5' : '1') + ';' +
+        'transition:all 0.2s;text-align:center;' +
+        '">' + icon + ' ' + s.label + '</button>';
+    });
+    document.getElementById('dramaPipeline').innerHTML = html;
+
+    // Click handler for current step
+    document.querySelectorAll('.drama-step-btn[data-step]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var step = btn.dataset.step;
+        if (step === 'script') {
+          doGenerateScriptAuto(pid);
+        } else if (step === 'breakdown') {
+          doBreakdownAll(pid, eps);
+        } else if (step === 'render') {
+          doRenderAllAuto(pid, eps);
+        } else if (step === 'merge') {
+          doMergeAll(pid, eps);
+        }
+      });
+    });
+  }
+
+  function doGenerateScriptAuto(pid) {
+    var pipeline = document.getElementById('dramaPipeline');
+    pipeline.querySelector('[data-step="script"]').textContent = '⏳ 生成中...';
+    dramaApi('/projects/' + pid + '/generate-script', { method: 'POST', body: '{}' }).then(function(r) {
+      alert('✅ ' + r.message);
+      loadDramaDetail(parseInt(pid));
+    }).catch(function(e) { alert(t('drama.gen_failed') + e.message); loadDramaDetail(parseInt(pid)); });
+  }
+
+  function doBreakdownAll(pid, eps) {
+    var epIds = eps.map(function(ep) { return ep.id; });
+    var pipeline = document.getElementById('dramaPipeline');
+    pipeline.querySelector('[data-step="breakdown"]').textContent = '⏳ 拆解中...';
+    var promises = epIds.map(function(epId) {
+      return dramaApi('/episodes/' + epId + '/breakdown', { method: 'POST' }).catch(function() { return null; });
+    });
+    Promise.all(promises).then(function() {
+      loadDramaDetail(parseInt(pid));
+    });
+  }
+
+  function doRenderAllAuto(pid, eps) {
+    var epIds = eps.filter(function(ep) { return (ep.scene_count || 0) > 0; }).map(function(ep) { return ep.id; });
+    if (epIds.length === 0) { alert('请先拆解分镜'); return; }
+    var pipeline = document.getElementById('dramaPipeline');
+    pipeline.querySelector('[data-step="render"]').textContent = '⏳ 渲染中...';
+    var params = getDramaRenderParams();
+    params.episode_ids = epIds;
+    dramaApi('/render', { method: 'POST', body: JSON.stringify(params) }).then(function(r) {
+      alert('✅ ' + r.message + '\n渲染完成后将自动合成');
+      // Poll for completion then auto-merge
+      var checkCount = 0;
+      var pollInterval = setInterval(function() {
+        checkCount++;
+        dramaApi('/projects/' + pid).then(function(project) {
+          var allDone = (project.episodes || []).every(function(ep) {
+            return ep.status === 'completed';
+          });
+          if (allDone) {
+            clearInterval(pollInterval);
+            loadDramaDetail(parseInt(pid));
+            // Auto merge
+            doMergeAll(pid, project.episodes || []);
+          } else {
+            loadDramaDetail(parseInt(pid));
+          }
+        }).catch(function() {});
+        if (checkCount > 120) clearInterval(pollInterval);
+      }, 15000);
+    }).catch(function(e) { alert(t('drama.render_failed') + e.message); });
+  }
+
+  function doMergeAll(pid, eps) {
+    var todoEps = eps.filter(function(ep) {
+      return (ep.status === 'completed' || ep.status === 'generating') && !ep.merged_video_url;
+    });
+    if (todoEps.length === 0) { alert('没有需要合成的剧集'); return; }
+    var pipeline = document.getElementById('dramaPipeline');
+    pipeline.querySelector('[data-step="merge"]').textContent = '⏳ 合成中...';
+    function mergeNext(idx) {
+      if (idx >= todoEps.length) { loadDramaDetail(parseInt(pid)); return; }
+      var ep = todoEps[idx];
+      fetch('/api/drama/episodes/' + ep.id + '/merge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('sdToken') }
+      }).then(function(r) { return r.json(); }).then(function() {
+        setTimeout(function() { mergeNext(idx + 1); }, 8000);
+      }).catch(function() { mergeNext(idx + 1); });
+    }
+    mergeNext(0);
+  }
 
   // ── Back button ──
   document.getElementById('dramaBackBtn').addEventListener('click', function() {
