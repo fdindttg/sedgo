@@ -841,6 +841,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var hasVideo = ep.status === 'completed' || ep.status === 'generating';
         var isFailed = ep.status === 'failed';
         var isDraft = ep.status === 'draft';
+        var hasScenes = (ep.scene_count || 0) > 0;
         var statusLabel = _dramaStatusText[ep.status] || ep.status;
         return '<div style="background:var(--bg2);border-radius:8px;padding:12px;margin-bottom:6px;border:1px solid transparent;">' +
           '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">' +
@@ -852,6 +853,10 @@ document.addEventListener('DOMContentLoaded', function() {
           '</div>' +
           '<span style="font-size:10px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,0.08);color:var(--t2);white-space:nowrap;">' + statusLabel + '</span>' +
           '</div>' +
+          // 有分镜就可以渲染
+          (hasScenes && !hasVideo ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
+            '<button class="drama-render-ep-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">🎬 ' + t('drama.render_ep') + '</button>' +
+            '</div>' : '') +
           (hasVideo ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
             '<button class="drama-preview-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">▶ ' + t('drama.preview') + '</button>' +
             '<button class="drama-dl-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(255,255,255,0.08);color:var(--t1);font-size:11px;cursor:pointer;">⬇ ' + t('drama.download') + '</button>' +
@@ -859,7 +864,7 @@ document.addEventListener('DOMContentLoaded', function() {
           (isFailed ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
             '<button class="drama-retry-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(255,71,87,0.15);color:#FF4757;font-size:11px;cursor:pointer;">🔄 ' + t('drama.retry') + '</button>' +
             '</div>' : '') +
-          (isDraft ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
+          (isDraft && !hasScenes ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
             '<button class="drama-retry-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:#22c55e;color:#fff;font-size:11px;cursor:pointer;">▶ ' + t('drama.continue') + '</button>' +
             '</div>' : '') +
           '</div>';
@@ -872,6 +877,9 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       listEl.querySelectorAll('.drama-dl-btn').forEach(function(btn) {
         btn.addEventListener('click', function(e) { e.stopPropagation(); downloadDramaEpisodeFromHome(parseInt(btn.dataset.ep)); });
+      });
+      listEl.querySelectorAll('.drama-render-ep-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) { e.stopPropagation(); doRenderEpisode(parseInt(btn.dataset.ep)); });
       });
       listEl.querySelectorAll('.drama-retry-btn').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
