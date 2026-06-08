@@ -873,13 +873,15 @@ document.addEventListener('DOMContentLoaded', function() {
           '</div>' +
           '<span style="font-size:10px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,0.08);color:var(--t2);white-space:nowrap;">' + statusLabel + '</span>' +
           '</div>' +
+          // 有分镜就可以渲染和合成
           (hasScenes && !hasVideo ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
-            '<button class="drama-render-ep-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">🎬 ' + t('drama.render_ep') + '</button>' +
+            '<button class="drama-render-ep-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">🎬 渲染</button>' +
+            '<button class="drama-merge-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(124,58,237,0.15);color:#7c3aed;font-size:11px;cursor:pointer;">🔗 合成</button>' +
             '</div>' : '') +
           (hasVideo ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
             '<button class="drama-preview-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">▶ 预览</button>' +
             '<button class="drama-dl-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(255,255,255,0.08);color:var(--t1);font-size:11px;cursor:pointer;">⬇ 下载</button>' +
-            '<button class="drama-merge-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(124,58,237,0.15);color:#7c3aed;font-size:11px;cursor:pointer;">🔗 合并</button>' +
+            '<button class="drama-merge-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(124,58,237,0.15);color:#7c3aed;font-size:11px;cursor:pointer;">🔗 合成</button>' +
             '</div>' : '') +
           (ep.merged_video_url ? '<div style="margin-top:4px;">' +
             '<a href="' + ep.merged_video_url + '" target="_blank" style="display:inline-block;padding:5px 10px;background:#7c3aed;color:#fff;border-radius:6px;font-size:11px;text-decoration:none;">⬇ 下载完整剧集</a>' +
@@ -1206,8 +1208,9 @@ document.addEventListener('DOMContentLoaded', function() {
       var pollInterval = setInterval(function() {
         checkCount++;
         dramaApi('/projects/' + pid).then(function(project) {
-          var allDone = (project.episodes || []).every(function(ep) {
-            return ep.status === 'completed';
+          var eps = project.episodes || [];
+          var allDone = eps.length > 0 && eps.every(function(ep) {
+            return ep.status === 'completed' || ep.status === 'generating';
           });
           if (allDone) {
             clearInterval(pollInterval);
@@ -1225,7 +1228,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function doMergeAll(pid, eps) {
     var todoEps = eps.filter(function(ep) {
-      return (ep.status === 'completed' || ep.status === 'generating') && !ep.merged_video_url;
+      return (ep.scene_count || 0) > 0 && !ep.merged_video_url;
     });
     if (todoEps.length === 0) { alert('没有需要合成的剧集'); return; }
     var pipeline = document.getElementById('dramaPipeline');

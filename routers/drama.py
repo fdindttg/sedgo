@@ -632,10 +632,39 @@ def merge_episode(
     
     # 收集所有可用的视频URL
     video_urls = []
+    # First try scene's direct video URLs
     for scene in scenes:
         url = scene.selected_url or (scene.video_urls[0] if scene.video_urls else None)
         if url:
             video_urls.append(url)
+    
+    # Fallback: look up completed task records for this user that match scene prompts
+    if len(video_urls) == 0:
+        completed_tasks = db.query(TaskRecord).filter(
+            TaskRecord.user_id == user.id,
+            TaskRecord.status == TaskStatus.SUCCESS,
+            TaskRecord.video_url.isnot(None),
+            TaskRecord.video_url != ''
+        ).order_by(TaskRecord.id.desc()).limit(200).all()
+        # Match by prompt text (each scene has unique prompt)
+        for scene in scenes:
+            if not scene.prompt_text:
+                continue
+            # Find matching task by prompt prefix
+            prompt_key = scene.prompt_text[:40]  # First 40 chars for matching
+            for task in completed_tasks:
+                if task.prompt and prompt_key in task.prompt and task.video_url:
+                    video_urls.append(task.video_url)
+                    # Also save back to scene
+                    if not scene.video_urls:
+                        scene.video_urls = []
+                    if task.video_url not in scene.video_urls:
+                        scene.video_urls.append(task.video_url)
+                    if not scene.selected_url:
+                        scene.selected_url = task.video_url
+                        scene.status = DramaStatus.COMPLETED
+                    break
+    db.commit()
     
     if len(video_urls) == 0:
         raise HTTPException(status_code=400, detail="该剧集没有可用的视频片段")
