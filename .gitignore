@@ -31,5 +31,7 @@ Thumbs.db
 # 归档文件
 归档/
 
-# 上传文件（可选）
-# static/uploads/
+# 上传文件/合并视频（可选）
+static/uploads/
+static/merged/
+*.mp4
