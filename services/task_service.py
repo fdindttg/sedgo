@@ -763,18 +763,25 @@ def create_task(db: Session, user_id: int, task_config: dict, channel_id: int = 
     logger.info(f"[DEBUG create_task] task_config received: {task_config}")
     logger.info(f"[DEBUG create_task] use_real_people in task_config: {task_config.get('use_real_people')}")
     
-    # 0. 检查参考视频时长限制（BytePlus r2v 限制15秒）
+    # 0. 检查参考视频时长限制（BytePlus r2v 限制15秒），超长自动拆分
     reference_videos = task_config.get("reference_videos", [])
     if reference_videos:
-        max_ref_duration = 15  # BytePlus r2v 参考视频最大时长（秒）
+        max_ref_duration = 15
+        split_videos = []
         for vid_url in reference_videos:
-            # 只检查本地文件
             if vid_url.startswith("/"):
                 local_path = vid_url.lstrip("/")
                 if os.path.exists(local_path):
                     duration = _get_video_duration(local_path)
                     if duration > max_ref_duration:
-                        raise ValueError(f"参考视频时长({duration:.1f}秒)超过限制({max_ref_duration}秒)，请选择更短的视频")
+                        segments = _split_video_segments(local_path, max_ref_duration)
+                        for seg_path in segments:
+                            seg_url = "/" + seg_path.replace("\\", "/")
+                            split_videos.append(seg_url)
+                        logger.info(f"[task] Split reference video {vid_url} ({duration:.1f}s) into {len(segments)} segments")
+                        continue
+            split_videos.append(vid_url)
+        task_config["reference_videos"] = split_videos
     
     # 0. 检查是否有相同提示词的任务正在进行中（防重复）
     prompt = task_config.get('prompt', '')
@@ -1054,6 +1061,46 @@ def _get_video_duration(video_path: str) -> float:
     except Exception as e:
         logger.error(f"[video-duration] Failed to get duration for {video_path}: {e}")
     return 0.0
+
+
+def _split_video_segments(video_path: str, max_duration: int = 15) -> list[str]:
+    """将视频拆分为多个片段，每个不超过 max_duration 秒，返回片段文件路径列表"""
+    ffmpeg = _get_ffmpeg_exe()
+    duration = _get_video_duration(video_path)
+    if duration <= max_duration:
+        return [video_path]
+    
+    seg_count = int((duration + max_duration - 1) // max_duration)
+    seg_dirs = []  # store temp dirs so we can access the output files
+    
+    base_dir = os.path.dirname(video_path)
+    base_name = os.path.splitext(os.path.basename(video_path))[0]
+    seg_files = []
+    
+    logger.info(f"[split] Splitting {video_path} ({duration:.1f}s) into {seg_count} segments of ≤{max_duration}s")
+    
+    for i in range(seg_count):
+        start = i * max_duration
+        seg_path = os.path.join(base_dir, f"{base_name}_seg{i:02d}.mp4")
+        
+        cmd = [
+            ffmpeg, "-y",
+            "-ss", str(start),
+            "-t", str(max_duration),
+            "-i", video_path,
+            "-c:v", "libx264", "-preset", "fast",
+            "-c:a", "aac",
+            "-movflags", "+faststart",
+            seg_path,
+        ]
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        if result.returncode != 0:
+            logger.error(f"[split] Failed to split segment {i}: {result.stderr[-300:]}")
+            continue
+        seg_files.append(seg_path)
+        logger.info(f"[split] Created segment {i}: {seg_path}")
+    
+    return seg_files if seg_files else [video_path]
 
 
 def _concat_videos(segment_urls: list[str], output_path: str) -> bool:
