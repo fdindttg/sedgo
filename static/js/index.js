@@ -998,9 +998,15 @@ document.addEventListener('DOMContentLoaded', function() {
   function doRenderAll() {
     var pid = document.getElementById('dramaDetailView').dataset.projectId;
     if (!pid) return;
-    var params = getDramaRenderParams();
-    dramaApi('/render', { method: 'POST', body: JSON.stringify(params) }).then(function(r) {
-      alert('✅ ' + r.message);
+    // Fetch project to get all episode IDs with scenes
+    dramaApi('/projects/' + pid).then(function(project) {
+      var epIds = (project.episodes || []).filter(function(ep) { return (ep.scene_count || 0) > 0; }).map(function(ep) { return ep.id; });
+      if (epIds.length === 0) { alert('没有可渲染的剧集（请先拆解分镜）'); return; }
+      var params = getDramaRenderParams();
+      params.episode_ids = epIds;
+      return dramaApi('/render', { method: 'POST', body: JSON.stringify(params) });
+    }).then(function(r) {
+      if (r) alert('✅ ' + r.message);
     }).catch(function(e) { alert(t('drama.render_failed') + e.message); });
   }
 
