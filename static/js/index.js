@@ -226,6 +226,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 先初始化 i18next 和积分配置（并行）
   await Promise.all([initI18n(), _getPointsPerSec()]);
 
+  // After config loads, update all cost displays
+  updateVideoCostDisplay();
+  updateImageCostDisplay();
+  updateDramaCostDisplay();
+
   // 监听积分配置更新广播
   if (window.BroadcastChannel) {
     const channel = new BroadcastChannel('pointsConfig');
@@ -284,6 +289,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (imageModelSelect) {
     imageModelSelect.addEventListener('change', updateImageCostDisplay);
   }
+
+  // 初始化短剧积分消耗显示
+  updateDramaCostDisplay();
 
   // 预先加载短剧项目列表
   setTimeout(function() { loadDramaProjects(); }, 100);
@@ -565,6 +573,7 @@ document.querySelectorAll('.mode-tab').forEach(tab => {
     // Load drama projects when drama tab is activated
     if (mode === 'drama') {
       loadDramaProjects();
+      updateDramaCostDisplay();
     }
   });
 });
@@ -693,23 +702,23 @@ document.addEventListener('DOMContentLoaded', function() {
         if (sliderValue) {
           sliderValue.textContent = value + 's';
         }
-        
         // Update dropdown button
         var dropdownId = menu.id.replace('Menu', 'Dropdown');
         var dropdownBtn = document.getElementById(dropdownId);
         if (dropdownBtn) {
           dropdownBtn.innerHTML = '<span class="dropdown-icon">◎</span> ' + value + 's';
         }
+        // Update cost display
+        if (dropdownId && dropdownId.includes('-drama')) {
+          updateDramaCostDisplay();
+        } else if (dropdownId && dropdownId.includes('-video')) {
+          updateVideoCostDisplay();
+        }
         
         // Remove active state from presets
         menu.querySelectorAll('.preset-btn').forEach(function(b) {
           b.classList.remove('active');
         });
-        
-        // Update video cost display if this is a video control
-        if (dropdownId && dropdownId.includes('-video')) {
-          updateVideoCostDisplay();
-        }
       }
     });
   });
@@ -721,6 +730,8 @@ document.addEventListener('DOMContentLoaded', function() {
       btn.classList.add('active');
       var sibling = btn.parentElement.querySelector('.custom-btn');
       if (sibling) sibling.classList.remove('active');
+      // Update cost for drama
+      if (btn.closest('#durMenu-drama')) updateDramaCostDisplay();
     });
   });
 
@@ -730,6 +741,8 @@ document.addEventListener('DOMContentLoaded', function() {
       btn.classList.add('active');
       var sibling = btn.parentElement.querySelector('.auto-btn');
       if (sibling) sibling.classList.remove('active');
+      // Update cost for drama
+      if (btn.closest('#durMenu-drama')) updateDramaCostDisplay();
     });
   });
 
@@ -758,7 +771,13 @@ document.addEventListener('DOMContentLoaded', function() {
         epCount.style.display = isSingle ? 'none' : 'inline-block';
         if (isSingle) epCount.value = '1';
       }
+      updateDramaCostDisplay();
     });
+  });
+
+  // ── Episode count change → update cost ──
+  document.getElementById('dramaEpisodeCount').addEventListener('change', function() {
+    updateDramaCostDisplay();
   });
 
   // ── Drama API helper ──
