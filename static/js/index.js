@@ -293,8 +293,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 初始化短剧积分消耗显示
   updateDramaCostDisplay();
 
-  // 加载短剧模型选择（从后端获取真实 endpoint ID）后重新计算积分
-  loadDramaEndpoints().then(function() { updateDramaCostDisplay(); });
+  // 加载短剧模型选择（从后端获取真实 endpoint ID），完成后自动更新积分
+  loadDramaEndpoints();
 
   // 预先加载短剧项目列表
   setTimeout(function() { loadDramaProjects(); }, 100);
@@ -1864,7 +1864,10 @@ async function loadDramaEndpoints() {
     const res = await fetch('/api/tasks/endpoints?type=video');
     const data = await res.json();
     const select = document.getElementById('modelSelect-drama');
-    if (!select || !data.endpoints || data.endpoints.length === 0) return;
+    if (!select || !data.endpoints || data.endpoints.length === 0) {
+      updateDramaCostDisplay();
+      return;
+    }
     select.innerHTML = '';
     data.endpoints.forEach(ep => {
       const option = document.createElement('option');
@@ -1877,8 +1880,11 @@ async function loadDramaEndpoints() {
       if (ep.is_default) option.selected = true;
       select.appendChild(option);
     });
+    // Recalculate cost after populating
+    updateDramaCostDisplay();
   } catch (err) {
     console.error('Failed to load drama endpoints:', err);
+    updateDramaCostDisplay();
   }
 }
 
@@ -2062,6 +2068,12 @@ function updateDramaCostDisplay() {
         if (perSec > 0) break;
       }
     }
+  }
+
+  // Final hardcoded fallback: if all else fails, use default Seedance 2.0 pricing
+  if (perSec === 0) {
+    var defaultPricing = { '480p': 2, '720p': 4, '1080p': 9 };
+    perSec = defaultPricing[resolution] || defaultPricing['720p'] || 4;
   }
 
   if (perSec > 0) {
