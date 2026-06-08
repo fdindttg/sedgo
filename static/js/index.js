@@ -293,6 +293,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 初始化短剧积分消耗显示
   updateDramaCostDisplay();
 
+  // 加载短剧模型选择（从后端获取真实 endpoint ID）后重新计算积分
+  loadDramaEndpoints().then(function() { updateDramaCostDisplay(); });
+
   // 预先加载短剧项目列表
   setTimeout(function() { loadDramaProjects(); }, 100);
 
@@ -1856,6 +1859,29 @@ async function loadEndpoints(endpointType = null) {
 // 初始加载视频类型接入点
 loadEndpoints('video');
 
+async function loadDramaEndpoints() {
+  try {
+    const res = await fetch('/api/tasks/endpoints?type=video');
+    const data = await res.json();
+    const select = document.getElementById('modelSelect-drama');
+    if (!select || !data.endpoints || data.endpoints.length === 0) return;
+    select.innerHTML = '';
+    data.endpoints.forEach(ep => {
+      const option = document.createElement('option');
+      option.value = ep.endpoint_id;
+      // Clean endpoint name for display
+      const name = (ep.endpoint_name || ep.endpoint_id).replace(/_/g, ' ');
+      // Add badge for default model
+      const label = ep.is_default ? `${name} ⭐` : name;
+      option.textContent = label;
+      if (ep.is_default) option.selected = true;
+      select.appendChild(option);
+    });
+  } catch (err) {
+    console.error('Failed to load drama endpoints:', err);
+  }
+}
+
 // 用户中心相关函数
 function openProfile() {
   window.location.href = '/pages/profile.html';
@@ -2041,8 +2067,10 @@ function updateDramaCostDisplay() {
   if (perSec > 0) {
     var cost = Math.max(0.1, Math.round(perSec * totalSeconds * 10) / 10);
     costValue.textContent = cost;
+    costDisplay.title = perSec + ' 积分/秒 × ' + totalSeconds + 's = ' + cost + ' 积分';
   } else {
     costValue.textContent = '?';
+    costDisplay.title = '';
   }
 }
 
