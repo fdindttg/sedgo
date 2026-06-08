@@ -174,7 +174,9 @@ def get_drama_project(
             "hook": ep.hook,
             "cliffhanger": ep.cliffhanger,
             "scene_count": len(ep.scenes) if ep.scenes else 0,
+            "scenes_rendered": sum(1 for s in (ep.scenes or []) if s.video_urls and len(s.video_urls) > 0),
             "status": ep.status.value,
+            "merged_video_url": ep.merged_video_url,
             "created_at": ep.created_at.isoformat() if ep.created_at else None,
         } for ep in episodes],
         "created_at": project.created_at.isoformat() if project.created_at else None,
@@ -452,6 +454,13 @@ def render_scenes(
     if not scenes:
         raise HTTPException(status_code=404, detail="未找到需要渲染的场景")
     
+    # 过滤掉已经有视频的场景（避免重复渲染）
+    scenes_to_render = [s for s in scenes if not s.video_urls or len(s.video_urls) == 0]
+    if not scenes_to_render:
+        raise HTTPException(status_code=400, detail="所有场景已有生成视频，无需重复渲染")
+    if len(scenes_to_render) < len(scenes):
+        logger.info(f"[drama] Skipping {len(scenes) - len(scenes_to_render)} already-rendered scenes, rendering {len(scenes_to_render)} new ones")
+    
     # 确定使用的渠道
     channel = None
     if data.channel_id:
@@ -492,7 +501,7 @@ def render_scenes(
     # 提交任务（现有视频生成引擎）
     task_results = submit_scene_tasks(
         db=db,
-        scenes=scenes,
+        scenes=scenes_to_render,
         user_id=user.id,
         channel_id=channel.id if channel else 0,
         task_config_base=task_config_base,

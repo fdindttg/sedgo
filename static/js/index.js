@@ -858,10 +858,12 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       listEl.innerHTML = eps.map(function(ep) {
         var icon = ep.status === 'draft' ? '📝' : ep.status === 'generating' ? '⏳' : ep.status === 'completed' ? '✅' : '❌';
-        var hasVideo = ep.status === 'completed' || ep.status === 'generating';
+        var hasScenes = (ep.scene_count || 0) > 0;
+        var scenesRendered = ep.scenes_rendered || 0;
+        var allRendered = hasScenes && scenesRendered >= ep.scene_count;
+        var someRendered = scenesRendered > 0 && scenesRendered < ep.scene_count;
         var isFailed = ep.status === 'failed';
         var isDraft = ep.status === 'draft';
-        var hasScenes = (ep.scene_count || 0) > 0;
         var statusLabel = _dramaStatusText[ep.status] || ep.status;
         return '<div style="background:var(--bg2);border-radius:8px;padding:12px;margin-bottom:6px;border:1px solid transparent;">' +
           '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">' +
@@ -869,19 +871,18 @@ document.addEventListener('DOMContentLoaded', function() {
           '<div style="font-size:12px;color:#FF4757;font-weight:600;">' + icon + ' ' + t('drama.episode_title', { n: ep.episode_number }) + '</div>' +
           '<div style="font-size:14px;margin:4px 0;">' + (ep.title || '') + '</div>' +
           (ep.hook ? '<div style="font-size:12px;color:var(--t3);font-style:italic;">' + t('drama.hook_label') + ep.hook.substring(0, 50) + (ep.hook.length > 50 ? '...' : '') + '</div>' : '') +
-          '<div style="font-size:11px;color:var(--t3);margin-top:4px;">' + t('drama.scene_count', { n: ep.scene_count || 0 }) + '</div>' +
+          '<div style="font-size:11px;color:var(--t3);margin-top:4px;">' + (allRendered ? '✅ 全部渲染完成' : someRendered ? '🎬 渲染中 ' + scenesRendered + '/' + ep.scene_count : t('drama.scene_count', { n: ep.scene_count || 0 })) + '</div>' +
           '</div>' +
           '<span style="font-size:10px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,0.08);color:var(--t2);white-space:nowrap;">' + statusLabel + '</span>' +
           '</div>' +
-          // 有分镜就可以渲染和合成
-          (hasScenes && !hasVideo ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
-            '<button class="drama-render-ep-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">🎬 渲染</button>' +
-            '<button class="drama-merge-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(124,58,237,0.15);color:#7c3aed;font-size:11px;cursor:pointer;">🔗 合成</button>' +
+          // 有分镜且未全部渲染完 → 显示渲染按钮
+          (hasScenes && !allRendered ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
+            '<button class="drama-render-ep-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">🎬 ' + (someRendered ? '继续渲染(' + (ep.scene_count - scenesRendered) + ')' : '渲染') + '</button>' +
             '</div>' : '') +
-          (hasVideo ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
-            '<button class="drama-preview-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">▶ 预览</button>' +
-            '<button class="drama-dl-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(255,255,255,0.08);color:var(--t1);font-size:11px;cursor:pointer;">⬇ 下载</button>' +
+          // 有渲染完成的分镜 → 显示合成和预览
+          ((allRendered || someRendered) ? '<div style="display:flex;gap:6px;margin-top:6px;padding-top:8px;border-top:1px solid var(--border);">' +
             '<button class="drama-merge-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(124,58,237,0.15);color:#7c3aed;font-size:11px;cursor:pointer;">🔗 合成</button>' +
+            '<button class="drama-preview-btn" data-ep="' + ep.id + '" style="flex:1;padding:5px;border:none;border-radius:6px;background:rgba(34,197,94,0.15);color:#22c55e;font-size:11px;cursor:pointer;">▶ 预览</button>' +
             '</div>' : '') +
           (ep.merged_video_url ? '<div style="margin-top:4px;">' +
             '<a href="' + ep.merged_video_url + '" target="_blank" style="display:inline-block;padding:5px 10px;background:#7c3aed;color:#fff;border-radius:6px;font-size:11px;text-decoration:none;">⬇ 下载完整剧集</a>' +
