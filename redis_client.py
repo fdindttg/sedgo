@@ -7,11 +7,13 @@ _redis_client = None
 
 def get_redis():
     global _redis_client
-    if _redis_client is not None:
-        return _redis_client
     if not REDIS_URL:
         return None
     try:
+        # Always test connection to handle stale client after Redis restarts
+        if _redis_client is not None:
+            _redis_client.ping()
+            return _redis_client
         _redis_client = redis.from_url(REDIS_URL, decode_responses=True)
         _redis_client.ping()
     except Exception:
