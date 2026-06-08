@@ -283,53 +283,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     videoModelSelect.addEventListener('change', updateVideoCostDisplay);
   }
   
-  // 初始化图片积分消耗显示
-  updateImageCostDisplay();
+  // 初始化图片积分消耗显示（移至下方 dropdown 节处理避免跨作用域）
   
-  // 添加图片模型选择器的事件监听器
-  const imageModelSelect = document.getElementById('modelSelect-image');
-  if (imageModelSelect) {
-    imageModelSelect.addEventListener('change', updateImageCostDisplay);
-  }
 
-  // 初始化短剧积分消耗显示
-  updateDramaCostDisplay();
-
-  // 加载短剧模型选择（从后端获取真实 endpoint ID），完成后自动更新积分
-  loadDramaEndpoints();
-
-  // 预先加载短剧项目列表
-  setTimeout(function() { loadDramaProjects(); }, 100);
-
-  // Handle ?tab=drama → switch to drama tab
-  if (new URLSearchParams(window.location.search).get('tab') === 'drama') {
-    var dramaTab = document.querySelector('.mode-tab[data-mode="drama"]');
-    if (dramaTab) dramaTab.click();
-  }
-
-  // Handle ?drama=ID → navigate to drama tab and open project
-  var dramaParam = new URLSearchParams(window.location.search).get('drama');
-  var episodeParam = new URLSearchParams(window.location.search).get('episode');
-  if (dramaParam) {
-    var dramaTab = document.querySelector('.mode-tab[data-mode="drama"]');
-    if (dramaTab) {
-      dramaTab.click();
-      // Wait for projects to load, then open detail
-      var checkLoaded = setInterval(function() {
-        var grid = document.getElementById('dramaProjectGrid');
-        if (grid && grid.querySelector('.drama-project-card')) {
-          clearInterval(checkLoaded);
-          openDramaDetail(parseInt(dramaParam));
-          // If episode param specified, show scene detail after detail loads
-          if (episodeParam) {
-            setTimeout(function() { showDramaScene(parseInt(episodeParam)); }, 500);
-          }
-        }
-      }, 300);
-      // Timeout fallback
-      setTimeout(function() { clearInterval(checkLoaded); }, 10000);
-    }
-  }
+  // 预先加载短剧项目列表 - URL参数处理移至下方dropdown节避免跨作用域
 });
 
 // i18next 初始化
@@ -552,41 +509,59 @@ if (themeBtn) {
   });
 }
 
-// ── Mode tabs ─────────────────────────────────────────────────────
+
+
+// ── Dropdown Menus ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
+  // Init mode tabs (inside same DOMContentLoaded as loadDramaProjects)
   document.querySelectorAll('.mode-tab').forEach(tab => {
     tab.addEventListener('click', () => {
-      // Skip if tab is disabled
-      if (tab.classList.contains('disabled')) {
-        return;
-      }
-      
-      // Remove active class from all tabs
+      if (tab.classList.contains('disabled')) return;
       document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
-      
-      // Hide all mode contents
       document.querySelectorAll('.mode-content').forEach(content => {
         content.classList.remove('active');
       });
-      
-      // Show the selected mode content
       const mode = tab.getAttribute('data-mode');
       const activeContent = document.getElementById('mode-' + mode);
-      if (activeContent) {
-        activeContent.classList.add('active');
-      }
-      // Load drama projects when drama tab is activated
+      if (activeContent) activeContent.classList.add('active');
       if (mode === 'drama') {
         loadDramaProjects();
         updateDramaCostDisplay();
       }
     });
   });
-});
 
-// ── Dropdown Menus ─────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function() {
+  // Load drama projects and handle URL params on first render
+  setTimeout(function() { loadDramaProjects(); updateDramaCostDisplay(); }, 100);
+
+  // Handle ?tab=drama → switch to drama tab
+  if (new URLSearchParams(window.location.search).get('tab') === 'drama') {
+    var dramaTab = document.querySelector('.mode-tab[data-mode="drama"]');
+    if (dramaTab) dramaTab.click();
+  }
+
+  // Handle ?drama=ID → navigate to drama tab and open project
+  var dramaParam = new URLSearchParams(window.location.search).get('drama');
+  var episodeParam = new URLSearchParams(window.location.search).get('episode');
+  if (dramaParam) {
+    var dramaTab = document.querySelector('.mode-tab[data-mode="drama"]');
+    if (dramaTab) {
+      dramaTab.click();
+      var checkLoaded2 = setInterval(function() {
+        var grid = document.getElementById('dramaProjectGrid');
+        if (grid && grid.querySelector('.drama-project-card')) {
+          clearInterval(checkLoaded2);
+          openDramaDetail(parseInt(dramaParam));
+          if (episodeParam) {
+            setTimeout(function() { showDramaScene(parseInt(episodeParam)); }, 500);
+          }
+        }
+      }, 300);
+      setTimeout(function() { clearInterval(checkLoaded2); }, 10000);
+    }
+  }
+
   // Close dropdowns when clicking outside
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.ctrl-item')) {
