@@ -127,7 +127,7 @@ async def api_generate_image(
 
     # 积分检查和扣除
     from services.point_service import calculate_points_cost, calculate_tokens_cost, consume_points
-    tokens = calculate_tokens_cost(db, {"mode": "image", "size": request.size})
+    tokens = calculate_tokens_cost(db, {"mode": "image", "size": request.resolution})
     points_cost = calculate_points_cost(db, tokens)
     if not consume_points(db, current_user.id, points_cost, f"图片生成: {request.prompt[:50]}"):
         from services.point_service import get_user_points

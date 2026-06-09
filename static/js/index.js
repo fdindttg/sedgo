@@ -1,5 +1,7 @@
 // 积分/秒配置缓存（从后台动态加载）
 let _pointsPerSecCache = null;
+// 图片生成成本缓存（从后台拉取）
+let _imageCostsCache = null;
 // 模型配置缓存（包含支持的分辨率等信息）
 let _modelsConfigCache = null;
 // 短剧模式：单集 or 连续剧
@@ -226,7 +228,7 @@ async function subscribeToPlan(planId, isAnnual = false) {
 
 document.addEventListener('DOMContentLoaded', async () => {
   // 先初始化 i18next 和积分配置（并行）
-  await Promise.all([initI18n(), _getPointsPerSec()]);
+  await Promise.all([initI18n(), _getPointsPerSec(), _getImageCosts()]);
 
   // After config loads, update all cost displays
   updateVideoCostDisplay();
@@ -2137,7 +2139,19 @@ async function _getPointsPerSec() {
 
 // 刷新积分配置缓存（用于管理员修改配置后）
 async function refreshPointsConfig() {
-  return await _getPointsPerSec();
+  const results = await Promise.allSettled([_getPointsPerSec(), _getImageCosts()]);
+  return results;
+}
+
+async function _getImageCosts() {
+  try {
+    const res = await fetch('/api/public/image-costs');
+    _imageCostsCache = await res.json();
+    return _imageCostsCache;
+  } catch (e) {
+    console.error('Failed to load image costs:', e);
+    return {};
+  }
 }
 
 // 计算视频生成的积分消耗（使用后台配置）
@@ -2279,11 +2293,13 @@ function calculateImagePointsCost() {
   const params = getImageParams();
   const { resolution } = params;
 
-  const IMAGE_TOKEN_MAP = { '1080p': 5, '720p': 2, '480p': 1 };
-  const POINTS_PER_TOKEN = 10;
-  const tokens = IMAGE_TOKEN_MAP[resolution] || 2;
-  const cost = tokens * POINTS_PER_TOKEN;
-  // 支持小数点1位
+  // 优先使用后台配置
+  const config = _imageCostsCache || {};
+  var cost = config[resolution];
+  if (cost === undefined || cost === null) {
+    // 回退：使用后台默认定价
+    cost = config['720p'] || 5;
+  }
   return Math.max(0.1, Math.round(cost * 10) / 10);
 }
 

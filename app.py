@@ -320,6 +320,17 @@ async def public_points_per_sec():
         return result
     finally:
         db.close()
+
+@fapp.get("/api/public/image-costs")
+async def public_image_costs():
+    from database import SessionLocal
+    from services.price_utils import get_image_cost_by_size
+    db = SessionLocal()
+    try:
+        return get_image_cost_by_size(db)
+    finally:
+        db.close()
+
 @fapp.get("/api/public/models")
 async def public_models():
     from database import SessionLocal, SystemConfig

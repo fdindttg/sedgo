@@ -73,6 +73,10 @@ IMAGE_SIZES = {
     "sm": CONFIG_IMAGE_COST_SM,
     "md": CONFIG_IMAGE_COST_MD,
     "lg": CONFIG_IMAGE_COST_LG,
+    # 分辨率 → 尺寸映射（前端分辨率格式）
+    "480p": CONFIG_IMAGE_COST_SM,
+    "720p": CONFIG_IMAGE_COST_MD,
+    "1080p": CONFIG_IMAGE_COST_LG,
 }
 
 # 默认视频和图片成本（兼容旧代码）
@@ -241,6 +245,10 @@ def get_image_cost_by_size(db: Session) -> dict:
         "small": get_image_cost_points(db, "small"),
         "medium": get_image_cost_points(db, "medium"),
         "large": get_image_cost_points(db, "large"),
+        "480p": get_image_cost_points(db, "480p"),
+        "720p": get_image_cost_points(db, "720p"),
+        "1080p": get_image_cost_points(db, "1080p"),
+
     }
 
 
