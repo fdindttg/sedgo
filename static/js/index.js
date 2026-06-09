@@ -3192,7 +3192,10 @@ async function generateImage() {
       body: JSON.stringify({
         prompt,
         original_prompt: originalPrompt,
-        endpoint_id: params.model
+        endpoint_id: params.model,
+        ratio: params.ratio,
+        resolution: params.resolution,
+        reference_images: (referenceFiles['image'] || []).filter(f => f.type === 'image').map(f => f.url),
       })
     });
     

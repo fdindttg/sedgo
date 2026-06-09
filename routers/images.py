@@ -54,7 +54,10 @@ async def api_list_images(
 class ImageGenerateRequest(BaseModel):
     prompt: str
     endpoint_id: str = ""
-    size: str = "2048x2048"
+    size: str = ""
+    ratio: str = "16:9"
+    resolution: str = "720p"
+    reference_images: list[str] = []
 
 
 @router.post("/generate")
@@ -131,10 +134,23 @@ async def api_generate_image(
     payload = {
         "model": endpoint.endpoint_id,
         "prompt": request.prompt,
-        "size": request.size,
+        "size": request.size or "2048x2048",
         "n": 1,
         "response_format": "url"
     }
+    
+    # 如果有参考图片，构建 content 数组
+    if request.reference_images:
+        content = [{"type": "text", "text": request.prompt}]
+        for img_url in request.reference_images:
+            resolved = img_url
+            if img_url.startswith("/"):
+                from config import PUBLIC_BASE_URL
+                resolved = f"{PUBLIC_BASE_URL.rstrip('/')}/{img_url.lstrip('/')}"
+            content.append({"type": "image_url", "image_url": {"url": resolved}})
+        payload["content"] = content
+        del payload["prompt"]  # content 模式下不需要顶层 prompt
+        logger.info(f"[image] Reference images: {len(request.reference_images)} images")
 
     logger.info(f"发送图片生成请求: {payload}")
 
