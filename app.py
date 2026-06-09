@@ -323,11 +323,55 @@ async def public_points_per_sec():
 
 @fapp.get("/api/public/image-costs")
 async def public_image_costs():
-    from database import SessionLocal
-    from services.price_utils import get_image_cost_by_size
+    from database import SessionLocal, SystemConfig
     db = SessionLocal()
     try:
-        return get_image_cost_by_size(db)
+        # Default costs as base
+        result = {"default": {}}
+        from services.price_utils import (
+            CONFIG_IMAGE_COST_SM, CONFIG_IMAGE_COST_MD, CONFIG_IMAGE_COST_LG,
+            DEFAULT_IMAGE_COST_SM, DEFAULT_IMAGE_COST_MD, DEFAULT_IMAGE_COST_LG,
+        )
+        default_key_map = {
+            CONFIG_IMAGE_COST_SM: "480p",
+            CONFIG_IMAGE_COST_MD: "720p",
+            CONFIG_IMAGE_COST_LG: "1080p",
+        }
+        default_fallbacks = {
+            "480p": DEFAULT_IMAGE_COST_SM,
+            "720p": DEFAULT_IMAGE_COST_MD,
+            "1080p": DEFAULT_IMAGE_COST_LG,
+        }
+        
+        # Read default configs
+        for cfg_key, res_key in default_key_map.items():
+            cfg = db.query(SystemConfig).filter(SystemConfig.config_key == cfg_key).first()
+            if cfg and cfg.config_value is not None:
+                result["default"][res_key] = float(cfg.config_value)
+            else:
+                result["default"][res_key] = float(default_fallbacks[res_key])
+        
+        # Read model-specific image cost configs (image_cost_{model_id}_{sm/md/lg})
+        default_cfg_keys = {CONFIG_IMAGE_COST_SM, CONFIG_IMAGE_COST_MD, CONFIG_IMAGE_COST_LG}
+        image_cfgs = db.query(SystemConfig).filter(
+            SystemConfig.config_key.like("image_cost_%")
+        ).all()
+        for cfg in image_cfgs:
+            # Skip default config keys (image_cost_points_sm/md/lg)
+            if cfg.config_key in default_cfg_keys:
+                continue
+            # Parse: image_cost_{model_id}_{sm/md/lg}
+            key_without_prefix = cfg.config_key[len("image_cost_"):]
+            parts = key_without_prefix.rsplit("_", 1)
+            if len(parts) == 2:
+                model_id = parts[0]
+                size_key = parts[1]
+                res_key = {"sm": "480p", "md": "720p", "lg": "1080p"}.get(size_key, size_key)
+                if model_id not in result:
+                    result[model_id] = {}
+                result[model_id][res_key] = float(cfg.config_value) if cfg.config_value is not None else float(default_fallbacks.get(res_key, 5))
+        
+        return result
     finally:
         db.close()
 

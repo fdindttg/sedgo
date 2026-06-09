@@ -2300,19 +2300,30 @@ function getImageParams() {
 // 计算图片生成的积分消耗（支持小数点1位）
 function calculateImagePointsCost() {
   const params = getImageParams();
-  const { resolution } = params;
+  const { resolution, model } = params;
 
-  // 优先使用后台配置
+  // 优先使用后台配置（按模型查找）
   const config = _imageCostsCache || {};
-  var cost = config[resolution];
-  console.log('[image-cost] resolution=' + resolution + ' cache=' + JSON.stringify(_imageCostsCache) + ' cost=' + cost);
+  var cost;
+  
+  // 1. 模型特定定价
+  if (model && config[model] && config[model][resolution] !== undefined) {
+    cost = config[model][resolution];
+  }
+  // 2. 默认定价
+  else if (config["default"] && config["default"][resolution] !== undefined) {
+    cost = config["default"][resolution];
+  }
+  // 3. 旧格式兼容（flat 对象）
+  else if (config[resolution] !== undefined) {
+    cost = config[resolution];
+  }
+  
+  console.log('[image-cost] model=' + model + ' resolution=' + resolution + ' cache=' + JSON.stringify(_imageCostsCache) + ' cost=' + cost);
+  
   if (cost === undefined || cost === null) {
-    console.warn('[image-cost] Missing key in cache, falling back to 720p');
-    cost = config['720p'];
-    if (cost === undefined || cost === null) {
-      console.warn('[image-cost] No cached data at all, using default 5');
-      cost = 5;
-    }
+    console.warn('[image-cost] Missing key in cache, using default 5');
+    cost = 5;
   }
   return Math.max(0.1, Math.round(cost * 10) / 10);
 }
