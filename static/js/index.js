@@ -527,6 +527,11 @@ document.addEventListener('DOMContentLoaded', function() {
       const mode = tab.getAttribute('data-mode');
       const activeContent = document.getElementById('mode-' + mode);
       if (activeContent) activeContent.classList.add('active');
+      // Show/hide task results area
+      var resultsArea = document.getElementById('task-results');
+      if (resultsArea) {
+        resultsArea.style.display = (mode === 'drama') ? 'none' : '';
+      }
       if (mode === 'drama') {
         loadDramaProjects();
         updateDramaCostDisplay();
