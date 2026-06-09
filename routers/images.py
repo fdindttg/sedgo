@@ -188,10 +188,9 @@ async def _do_generate_image(
         "response_format": "url"
     }
     
-    # 如果有参考图片，构建 content 数组
-    # 注意：BytePlus images/generations 接口仍需要顶层 prompt 参数
+    # 如果有参考图片，使用 image 参数（字符串/数组，非 content）
     if request.reference_images:
-        content = [{"type": "text", "text": request.prompt}]
+        ref_urls = []
         for img_url in request.reference_images:
             resolved = img_url
             if img_url.startswith("/"):
@@ -201,9 +200,10 @@ async def _do_generate_image(
                     resolved = img_url
                 else:
                     resolved = f"{base.rstrip('/')}/{img_url.lstrip('/')}"
-            content.append({"type": "image_url", "image_url": {"url": resolved}})
-        payload["content"] = content
-        logger.info(f"[image] Reference images: {len(request.reference_images)} images")
+            ref_urls.append(resolved)
+        # 单张：字符串；多张：数组
+        payload["image"] = ref_urls if len(ref_urls) > 1 else ref_urls[0]
+        logger.info(f"[image] Reference images: {len(ref_urls)} images, param='image'")
 
     logger.info(f"发送图片生成请求: {payload}")
 
