@@ -93,6 +93,21 @@ async def api_generate_image(
     if not request.prompt:
         raise HTTPException(status_code=400, detail="Prompt is required")
 
+    try:
+        return await _do_generate_image(request, current_user, db)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception(f"[image] Unhandled error generating image: {e}")
+        raise HTTPException(status_code=500, detail=f"图片生成失败: {str(e)[:200]}")
+
+
+async def _do_generate_image(
+    request: ImageGenerateRequest,
+    current_user: User,
+    db: Session,
+):
+
     # 查找合适的图片生成接入点
     endpoint = None
     channel = None
@@ -172,8 +187,12 @@ async def api_generate_image(
         for img_url in request.reference_images:
             resolved = img_url
             if img_url.startswith("/"):
-                from config import PUBLIC_BASE_URL
-                resolved = f"{PUBLIC_BASE_URL.rstrip('/')}/{img_url.lstrip('/')}"
+                base = channel.public_base_url or ""
+                if not base:
+                    logger.warning(f"[image] No public_base_url configured for channel {channel.name}, using relative URL")
+                    resolved = img_url
+                else:
+                    resolved = f"{base.rstrip('/')}/{img_url.lstrip('/')}"
             content.append({"type": "image_url", "image_url": {"url": resolved}})
         payload["content"] = content
         del payload["prompt"]  # content 模式下不需要顶层 prompt
