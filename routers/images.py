@@ -7,6 +7,9 @@ import uuid
 import os
 import time
 import requests
+import base64
+import mimetypes
+import pathlib
 from datetime import datetime
 import logging
 
@@ -188,22 +191,27 @@ async def _do_generate_image(
         "response_format": "url"
     }
     
-    # 如果有参考图片，使用 image 参数（字符串/数组，非 content）
+    # 如果有参考图片，使用 image 参数（字符串/数组）
+    # 本地图片转 base64，避免 BytePlus 服务器下载超时
     if request.reference_images:
         ref_urls = []
         for img_url in request.reference_images:
-            resolved = img_url
             if img_url.startswith("/"):
-                base = channel.public_base_url or ""
-                if not base:
-                    logger.warning(f"[image] No public_base_url configured for channel {channel.name}, using relative URL")
-                    resolved = img_url
+                local_path = pathlib.Path(img_url.lstrip("/"))
+                if local_path.exists():
+                    mime = mimetypes.guess_type(str(local_path))[0] or "image/png"
+                    data = base64.b64encode(local_path.read_bytes()).decode()
+                    resolved = f"data:{mime};base64,{data}"
+                    logger.info(f"[image] Encoded local image to base64 ({len(data)} chars): {img_url}")
                 else:
-                    resolved = f"{base.rstrip('/')}/{img_url.lstrip('/')}"
+                    logger.warning(f"[image] Local image not found: {img_url}, using URL")
+                    resolved = img_url
+            else:
+                resolved = img_url
             ref_urls.append(resolved)
         # 单张：字符串；多张：数组
         payload["image"] = ref_urls if len(ref_urls) > 1 else ref_urls[0]
-        logger.info(f"[image] Reference images: {len(ref_urls)} images, param='image'")
+        logger.info(f"[image] Reference images: {len(ref_urls)} images")
 
     logger.info(f"发送图片生成请求: {payload}")
 
