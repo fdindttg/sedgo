@@ -608,11 +608,19 @@ document.addEventListener('DOMContentLoaded', function() {
         var dropdownId = menu.id.replace('Menu', 'Dropdown');
         var dropdownBtn = document.getElementById(dropdownId);
         if (dropdownBtn) {
-          var itemIcon = item.querySelector('.dropdown-icon, .ratio-icon');
+          var itemIcon = item.querySelector('.dropdown-icon, .ratio-icon, .ratio-box');
           if (itemIcon) {
-            var iconClass = itemIcon.classList.contains('ratio-icon') ? 'dropdown-icon ratio-icon' : 'dropdown-icon';
-            var ratioAttr = itemIcon.getAttribute('data-ratio') ? ' data-ratio="' + itemIcon.getAttribute('data-ratio') + '"' : '';
-            dropdownBtn.innerHTML = '<span class="' + iconClass + '"' + ratioAttr + '>' + itemIcon.textContent + '</span> ' + item.textContent.trim().replace(itemIcon.textContent, '').trim();
+            var iconAttr = '';
+            if (itemIcon.classList.contains('ratio-icon')) {
+              iconAttr = 'dropdown-icon ratio-icon';
+            } else if (itemIcon.classList.contains('ratio-box')) {
+              iconAttr = 'dropdown-icon ratio-box';
+              var ratioVal = itemIcon.getAttribute('data-ratio');
+              if (ratioVal) iconAttr += '" data-ratio="' + ratioVal;
+            } else {
+              iconAttr = 'dropdown-icon';
+            }
+            dropdownBtn.innerHTML = '<span class="' + iconAttr + '">' + itemIcon.textContent + '</span> ' + item.textContent.trim().replace(itemIcon.textContent, '').trim();
           } else {
             var icon = dropdownBtn.querySelector('.dropdown-icon');
             if (icon) {
