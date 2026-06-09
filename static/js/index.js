@@ -2261,7 +2261,7 @@ function getImageParams() {
   const ratioBtn = document.getElementById('ratioDropdown-image');
   const ratio = ratioBtn ? ratioBtn.textContent.trim().replace(/[▢◎▭▯◻▮▰]/g, '').trim() : '16:9';
   const resBtn = document.getElementById('resDropdown-image');
-  const resolution = resBtn ? resBtn.textContent.trim().replace(/[▢◎▭▯◻▮▰]/g, '').trim() : '2K';
+  const resolution = resBtn ? resBtn.textContent.trim().replace(/[▢◎▭▯◻▮▰]/g, '').trim() : '720p';
   
   return { model, ratio, resolution };
 }
@@ -2271,7 +2271,7 @@ function calculateImagePointsCost() {
   const params = getImageParams();
   const { resolution } = params;
 
-  const IMAGE_TOKEN_MAP = { '4K': 5, '2K': 2, '1K': 1 };
+  const IMAGE_TOKEN_MAP = { '1080p': 5, '720p': 2, '480p': 1 };
   const POINTS_PER_TOKEN = 10;
   const tokens = IMAGE_TOKEN_MAP[resolution] || 2;
   const cost = tokens * POINTS_PER_TOKEN;
