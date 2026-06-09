@@ -531,6 +531,12 @@ document.addEventListener('DOMContentLoaded', function() {
         loadDramaProjects();
         updateDramaCostDisplay();
       }
+      if (mode === 'video') {
+        updateVideoCostDisplay();
+      }
+      if (mode === 'image') {
+        updateImageCostDisplay();
+      }
     });
   });
 
@@ -2146,10 +2152,13 @@ async function refreshPointsConfig() {
 async function _getImageCosts() {
   try {
     const res = await fetch('/api/public/image-costs');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     _imageCostsCache = await res.json();
+    console.log('[image-costs] Loaded from API:', JSON.stringify(_imageCostsCache));
     return _imageCostsCache;
   } catch (e) {
     console.error('Failed to load image costs:', e);
+    _imageCostsCache = {};  // clear on error so fallback is consistent
     return {};
   }
 }
@@ -2296,9 +2305,14 @@ function calculateImagePointsCost() {
   // 优先使用后台配置
   const config = _imageCostsCache || {};
   var cost = config[resolution];
+  console.log('[image-cost] resolution=' + resolution + ' cache=' + JSON.stringify(_imageCostsCache) + ' cost=' + cost);
   if (cost === undefined || cost === null) {
-    // 回退：使用后台默认定价
-    cost = config['720p'] || 5;
+    console.warn('[image-cost] Missing key in cache, falling back to 720p');
+    cost = config['720p'];
+    if (cost === undefined || cost === null) {
+      console.warn('[image-cost] No cached data at all, using default 5');
+      cost = 5;
+    }
   }
   return Math.max(0.1, Math.round(cost * 10) / 10);
 }
