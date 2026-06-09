@@ -17,8 +17,8 @@ router = APIRouter(prefix="/api/images", tags=["images"])
 
 def _compute_image_size(ratio: str, resolution: str) -> str:
     """根据比例和分辨率计算图片像素尺寸，返回 "WxH" 格式"""
-    # 短边像素
-    short_side = {"480p": 480, "720p": 720, "1080p": 1080}.get(resolution, 720)
+    # 短边像素（图片 API 要求 ≥ 3,686,400 像素，所以用更高基值）
+    short_side = {"480p": 1440, "720p": 1920, "1080p": 2880}.get(resolution, 1920)
     
     ratio_map = {
         "16:9": (16/9, True),   # width > height
@@ -35,6 +35,13 @@ def _compute_image_size(ratio: str, resolution: str) -> str:
     else:
         w = short_side
         h = round(short_side / r)
+    
+    # 确保 ≥ 3,686,400 像素（BytePlus 图片 API 最低要求）
+    min_pixels = 3686400
+    if w * h < min_pixels:
+        scale = (min_pixels / (w * h)) ** 0.5
+        w = round(w * scale)
+        h = round(h * scale)
     
     return f"{w}x{h}"
 
@@ -182,6 +189,7 @@ async def _do_generate_image(
     }
     
     # 如果有参考图片，构建 content 数组
+    # 注意：BytePlus images/generations 接口仍需要顶层 prompt 参数
     if request.reference_images:
         content = [{"type": "text", "text": request.prompt}]
         for img_url in request.reference_images:
@@ -195,7 +203,6 @@ async def _do_generate_image(
                     resolved = f"{base.rstrip('/')}/{img_url.lstrip('/')}"
             content.append({"type": "image_url", "image_url": {"url": resolved}})
         payload["content"] = content
-        del payload["prompt"]  # content 模式下不需要顶层 prompt
         logger.info(f"[image] Reference images: {len(request.reference_images)} images")
 
     logger.info(f"发送图片生成请求: {payload}")
