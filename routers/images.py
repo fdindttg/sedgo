@@ -15,6 +15,30 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/images", tags=["images"])
 
 
+def _compute_image_size(ratio: str, resolution: str) -> str:
+    """根据比例和分辨率计算图片像素尺寸，返回 "WxH" 格式"""
+    # 短边像素
+    short_side = {"480p": 480, "720p": 720, "1080p": 1080}.get(resolution, 720)
+    
+    ratio_map = {
+        "16:9": (16/9, True),   # width > height
+        "4:3":  (4/3, True),
+        "1:1":  (1.0, True),
+        "3:4":  (3/4, False),   # width < height, short side is width
+        "9:16": (9/16, False),
+    }
+    r, wide = ratio_map.get(ratio, (16/9, True))
+    
+    if wide:
+        w = round(short_side * r)
+        h = short_side
+    else:
+        w = short_side
+        h = round(short_side / r)
+    
+    return f"{w}x{h}"
+
+
 @router.get("")
 async def api_list_images(
     page: int = 1,
@@ -130,11 +154,14 @@ async def api_generate_image(
         "Authorization": f"Bearer {api_key}"
     }
 
+    # 根据比例和分辨率计算像素尺寸
+    size_map = _compute_image_size(request.ratio, request.resolution)
+    
     # 构建请求体
     payload = {
         "model": endpoint.endpoint_id,
         "prompt": request.prompt,
-        "size": request.size or "2048x2048",
+        "size": request.size or size_map,
         "n": 1,
         "response_format": "url"
     }
