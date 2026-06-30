@@ -238,7 +238,7 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
                 files_url,
                 headers={"Authorization": f"Bearer {api_key}"},
                 files={"file": (file_path.name, f, mime)},
-                data={"purpose": "assistants"},
+                data={"purpose": "user_data"},
                 timeout=300,
             )
         if resp.status_code == 200:
@@ -625,6 +625,12 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
             resolved_aud = f"{_public_base_url.rstrip('/')}/{aud_url.lstrip('/')}" if aud_url.startswith("/") and _public_base_url else _resolve_media_url(aud_url)
         else:
             resolved_aud = asset_uri
+        if aud_url.startswith("/static/uploads/"):
+            local_audio = pathlib.Path(aud_url.lstrip("/"))
+            if local_audio.exists():
+                dur = _get_video_duration(str(local_audio))
+                if dur > 15.2:
+                    raise ValueError(f"音频 {local_audio.name} 时长 {dur:.1f}s，超过 API 限制 15.2s，请使用 15s 的音频")
         content.append({"type": "audio_url", "audio_url": {"url": resolved_aud.replace('`','').strip()}, "role": "reference_audio"})
 
     # 参考视频（Seedance 2.0 要求视频必须走素材库，不能直传 URL）
