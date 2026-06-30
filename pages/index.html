@@ -65,7 +65,7 @@
   </script>
   
   <title>SedGo AI - AI Video Generator | AI视频生成</title>
-  <link rel="stylesheet" href="/static/css/index.css?v=1">
+  <link rel="stylesheet" href="/static/css/index.css">
 </head>
 <body>
 
@@ -73,7 +73,7 @@
   <div class="auth-card">
     <button class="auth-close" onclick="closeAuthModal()">&times;</button>
     <div class="auth-title" data-i18n="auth.title">欢迎</div>
-    <div class="auth-subtitle" data-i18n="auth.subtitle">登录或注册以开始使�?/div>
+    <div class="auth-subtitle" data-i18n="auth.subtitle">登录或注册以开始使用</div>
     <div class="auth-tabs">
       <button class="auth-tab active" data-tab="login" onclick="switchAuthTab('login')" data-i18n="auth.login">登录</button>
       <button class="auth-tab" data-tab="register" onclick="switchAuthTab('register')" data-i18n="auth.register">注册</button>
@@ -82,7 +82,7 @@
       <label class="auth-label" data-i18n="auth.email">邮箱</label>
       <input type="email" class="auth-input" id="loginEmail" placeholder="your@email.com" autocomplete="email">
       <label class="auth-label" data-i18n="auth.password">密码</label>
-      <input type="password" class="auth-input" id="loginPassword" placeholder="•••••••�? autocomplete="current-password">
+      <input type="password" class="auth-input" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
       <button type="button" class="auth-btn" id="loginBtn" onclick="doEmailLogin()" data-i18n="auth.loginBtn">登录</button>
       <div class="auth-error" id="loginError"></div>
     </form>
@@ -92,22 +92,22 @@
       <label class="auth-label" data-i18n="auth.displayName">昵称</label>
       <input type="text" class="auth-input" id="regName" placeholder="您的昵称" autocomplete="name" data-i18n="[placeholder]auth.namePlaceholder">
       <label class="auth-label" data-i18n="auth.password">密码</label>
-      <input type="password" class="auth-input" id="regPassword" placeholder="•••••••�? autocomplete="new-password">
+      <input type="password" class="auth-input" id="regPassword" placeholder="••••••••" autocomplete="new-password">
       <label class="auth-label" data-i18n="auth.confirmPassword">确认密码</label>
-      <input type="password" class="auth-input" id="regConfirmPassword" placeholder="•••••••�? autocomplete="new-password">
+      <input type="password" class="auth-input" id="regConfirmPassword" placeholder="••••••••" autocomplete="new-password">
       
       <label class="auth-checkbox">
         <input type="checkbox" id="agreeTerms">
-        <span data-i18n="auth.agree">我已阅读并同�?/span>
+        <span data-i18n="auth.agree">我已阅读并同意</span>
         <a href="/pages/terms.html" target="_blank" data-i18n="auth.terms">服务条款</a>
-        <span data-i18n="auth.and">�?/span>
+        <span data-i18n="auth.and">和</span>
         <a href="/pages/privacy.html" target="_blank" data-i18n="auth.privacy">隐私政策</a>
       </label>
       
       <button type="button" class="auth-btn" id="registerBtn" onclick="doRegister()" data-i18n="auth.registerBtn">注册</button>
       <div class="auth-error" id="registerError"></div>
     </form>
-    <div class="auth-divider" data-i18n="auth.or">�?/div>
+    <div class="auth-divider" data-i18n="auth.or">或</div>
     <button class="google-btn" id="googleBtn" onclick="doGoogleLogin()">
       <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.99 7.73 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.73 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
       <span data-i18n="auth.google">使用 Google 登录</span>
@@ -126,8 +126,11 @@
   <div class="user-dropdown-item" onclick="showApiKeys()">
     <span>🔑</span> <span data-i18n="user.apiKeys">API 密钥</span>
   </div>
+  <div class="user-dropdown-item" onclick="showSubscription()">
+    <span>💎</span> <span data-i18n="user.subscription">订阅</span>
+  </div>
   <div class="user-dropdown-item danger" onclick="doLogout()">
-    <span>🚪</span> <span data-i18n="user.logout">退出登�?/span>
+    <span>🚪</span> <span data-i18n="user.logout">退出登录</span>
   </div>
 </div>
 
@@ -152,8 +155,8 @@
         <div class="lang-option" data-lang="zh">中文</div>
         <div class="lang-option" data-lang="zh-TW">繁體中文</div>
         <div class="lang-option" data-lang="en">English</div>
-        <div class="lang-option" data-lang="ja">日本�?/div>
-        <div class="lang-option" data-lang="ko">한국�?/div>
+        <div class="lang-option" data-lang="ja">日本語</div>
+        <div class="lang-option" data-lang="ko">한국어</div>
         <div class="lang-option" data-lang="ru">Русский</div>
         <div class="lang-option" data-lang="vi">Tiếng Việt</div>
         <div class="lang-option" data-lang="es">Español</div>
@@ -173,19 +176,19 @@
 <section class="hero">
   <div class="hero-badge">
     <span class="hero-badge-dot"></span>
-    <span data-i18n="hero.badge">现已推出 �?Seedance 2.0 带音�?/span>
+    <span data-i18n="hero.badge">现已推出 — Seedance 2.0 带音频</span>
   </div>
 
-  <p class="hero-sub" data-i18n="hero.sub">体验真正的多模�?AI 视频创作：图像、视频、音频和文本无缝协作�?/p>
+  <p class="hero-sub" data-i18n="hero.sub">体验真正的多模态 AI 视频创作：图像、视频、音频和文本无缝协作。</p>
 
 
 
   <div class="video-gen-container">
     <!-- Mode Tabs -->
     <div class="gen-mode-tabs">
-      <button class="mode-tab active" data-mode="video-agent" data-i18n="tabs.video_agent">视频智能�?<span class="tab-badge">V2</span></button>
+      <button class="mode-tab active" data-mode="video-agent" data-i18n="tabs.video_agent">视频智能体 <span class="tab-badge">V2</span></button>
       <button class="mode-tab" data-mode="ai-image" data-i18n="tabs.image">AI 图片</button>
-      <button class="mode-tab" data-mode="drama" data-i18n="tabs.drama">短剧工作�?/button>
+      <button class="mode-tab disabled" data-mode="drama" data-i18n="tabs.drama">短剧工作室 <span class="dev-badge" data-i18n="tabs.developing">开发中</span></button>
     </div>
 
     <!-- Video Agent Mode -->
@@ -193,7 +196,7 @@
       <div class="gen-main-content-wide">
         <div class="gen-left-panel">
           <div class="ref-panel-header">
-            <span data-i18n="gen.reference">参考素�?/span>
+            <span data-i18n="gen.reference">参考素材</span>
           </div>
           <div class="ref-upload-zone" id="upload-zone-video">
             <div class="ref-icon">📤</div>
@@ -201,35 +204,35 @@
           </div>
           <div class="ref-library-btn" id="library-btn-video">
             <div class="ref-icon">📚</div>
-            <div class="ref-label" data-i18n="gen.asset_library">素材�?/div>
+            <div class="ref-label" data-i18n="gen.asset_library">素材库</div>
           </div>
           <div class="ref-files-list" id="ref-files-video"></div>
         </div>
         <div class="gen-right-panel-wide">
           <div class="prompt-hint">
-            <p id="hint-video-1" data-i18n="gen.hint_video_1">�?AI 助手与参考素材规划任意长度视频�?/p>
-            <p id="hint-video-2" data-i18n="gen.hint_video_2">上传参考图或视频并使用 @ 引用以创建互动。例如：�?@image1 作首帧、@image2 作尾帧，让他们像 @video1 那样跳舞�?/p>
+            <p id="hint-video-1" data-i18n="gen.hint_video_1">用 AI 助手与参考素材规划任意长度视频。</p>
+            <p id="hint-video-2" data-i18n="gen.hint_video_2">上传参考图或视频并使用 @ 引用以创建互动。例如：用 @image1 作首帧、@image2 作尾帧，让他们像 @video1 那样跳舞。</p>
           </div>
           <div class="prompt-container-wide">
-            <!-- 原始描述�?-->
+            <!-- 原始描述框 -->
             <div class="prompt-box-inner">
-              <textarea class="prompt-textarea-inner" id="prompt-video" placeholder="描述你的视频... 使用 @image1、@video1 引用上传的文件�? data-i18n="[placeholder]gen.prompt_placeholder_video"></textarea>
+              <textarea class="prompt-textarea-inner" id="prompt-video" placeholder="描述你的视频... 使用 @image1、@video1 引用上传的文件。" data-i18n="[placeholder]gen.prompt_placeholder_video"></textarea>
               <div class="prompt-box-footer">
-                <button class="ai-enhance-btn-inner" id="ai-enhance-video" data-i18n="gen.ai_enhance">�?AI 优化</button>
+                <button class="ai-enhance-btn-inner" id="ai-enhance-video" data-i18n="gen.ai_enhance">✨ AI 优化</button>
               </div>
             </div>
             
             <!-- 优化提示词框 -->
             <div class="enhanced-prompt-wrapper" id="prompt-enhanced-video" style="display: none;">
               <div class="enhanced-header">
-                <span class="enhanced-label" data-i18n="gen.enhanced_prompt">AI优化提示�?/span>
+                <span class="enhanced-label" data-i18n="gen.enhanced_prompt">AI优化提示词</span>
                 <span class="enhanced-badge" data-i18n="gen.enhanced_badge">AI生成</span>
                 <div class="enhanced-actions">
-                  <button class="enhanced-toggle active" id="enhance-toggle-video" data-i18n="gen.use_enhanced">�?使用优化</button>
-                  <button class="enhanced-clear" id="enhance-clear-video" data-i18n="gen.clear_enhanced">�?/button>
+                  <button class="enhanced-toggle active" id="enhance-toggle-video" data-i18n="gen.use_enhanced">✓ 使用优化</button>
+                  <button class="enhanced-clear" id="enhance-clear-video" data-i18n="gen.clear_enhanced">✕</button>
                 </div>
               </div>
-              <textarea class="prompt-textarea-wide" id="prompt-enhanced-text-video" placeholder="AI优化后的提示�?.."></textarea>
+              <textarea class="prompt-textarea-wide" id="prompt-enhanced-text-video" placeholder="AI优化后的提示词..."></textarea>
             </div>
             
             <div class="ref-tags" id="ref-tags-video"></div>
@@ -259,22 +262,22 @@
           </div>
           <div class="ctrl-item">
             <button class="ctrl-dropdown" id="resDropdown-video">
-              <span class="dropdown-icon">�?/span> 480p
+              <span class="dropdown-icon">◎</span> 480p
             </button>
             <div class="dropdown-menu" id="resMenu-video">
-              <div class="dropdown-item" data-value="480p">�?480p</div>
-              <div class="dropdown-item" data-value="720p">�?720p</div>
-              <div class="dropdown-item" data-value="1080p">�?1080p</div>
+              <div class="dropdown-item" data-value="480p">◎ 480p</div>
+              <div class="dropdown-item" data-value="720p">◎ 720p</div>
+              <div class="dropdown-item" data-value="1080p">◎ 1080p</div>
             </div>
           </div>
           <div class="ctrl-item">
             <button class="ctrl-dropdown duration-dropdown" id="durDropdown-video">
-              <span class="dropdown-icon">�?/span> 30s
+              <span class="dropdown-icon">◎</span> 60s
             </button>
             <div class="dropdown-menu duration-menu" id="durMenu-video">
               <div class="duration-auto-btn">
                 <button class="auto-btn active" data-i18n="gen.auto">自动</button>
-                <button class="custom-btn" data-i18n="gen.custom">自定�?/button>
+                <button class="custom-btn" data-i18n="gen.custom">自定义</button>
               </div>
               <div class="duration-slider">
                 <input type="range" min="5" max="60" value="60" id="durSlider-video">
@@ -295,34 +298,34 @@
             </button>
             <div class="dropdown-menu" id="refModeMenu-video">
               <div class="dropdown-item" data-value="text2vid" data-i18n="gen.text2vid">文生视频</div>
-              <div class="dropdown-item" data-value="first_last_frame" data-i18n="gen.first_last_frame">首尾帧参�?/div>
-              <div class="dropdown-item" data-value="multi_ref" data-i18n="gen.multi_ref">图片+视频+音频参�?/div>
+              <div class="dropdown-item" data-value="first_last_frame" data-i18n="gen.first_last_frame">首尾帧参考</div>
+              <div class="dropdown-item" data-value="multi_ref" data-i18n="gen.multi_ref">图片+视频+音频参考</div>
             </div>
           </div>
           <div class="ctrl-item subtitle-removal-item">
             <label class="subtitle-removal-label">
               <input type="checkbox" id="subtitle-removal-video">
-              <span class="checkbox-icon">�?/span>
+              <span class="checkbox-icon">✓</span>
               <span data-i18n="gen.subtitle_removal">字幕擦除</span>
             </label>
           </div>
           <div class="ctrl-item real-people-item">
             <label class="real-people-label">
               <input type="checkbox" id="use-real-people-video">
-              <span class="checkbox-icon">�?/span>
+              <span class="checkbox-icon">✓</span>
               <span data-i18n="gen.use_real_people">真人素材</span>
             </label>
           </div>
         </div>
         <div class="ctrl-right">
           <div class="cost-display" id="cost-display-video">
-            <span class="cost-icon">�?/span>
+            <span class="cost-icon">⚡</span>
             <span class="cost-value">7.5</span>
           </div>
-          <button class="gen-btn-lg" id="gen-btn-video" data-i18n="js.generate">🎬视频生成</button>
+          <button class="gen-btn-lg" id="gen-btn-video" data-i18n="js.generate">生成</button>
           <div id="gen-progress-wrap" style="display:none;margin-top:12px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-              <span style="font-size:13px;color:var(--t2);" id="gen-progress-label">生成�?..</span>
+              <span style="font-size:13px;color:var(--t2);" id="gen-progress-label">生成中...</span>
               <span style="font-size:13px;color:var(--primary);font-weight:600;" id="gen-progress-pct">0%</span>
             </div>
             <div class="progress-bar" style="height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;">
@@ -335,10 +338,10 @@
       <!-- Advanced Settings Panel -->
       <div class="advanced-panel" id="advanced-panel-video">
         <div class="advanced-section">
-          <!-- 参考模式提示信�?-->
+          <!-- 参考模式提示信息 -->
           <div class="ref-mode-hint" id="ref-mode-hint-video">
             <span class="hint-icon">💡</span>
-            <span class="hint-text" data-i18n="gen.ref_hint_text2vid">当前模式为文生视频，不需要参考图�?/span>
+            <span class="hint-text" data-i18n="gen.ref_hint_text2vid">当前模式为文生视频，不需要参考图。</span>
           </div>
         </div>
       
@@ -346,13 +349,13 @@
       <div class="modal-overlay" id="asset-library-modal" style="display: none;">
         <div class="modal-content asset-library-modal">
           <div class="modal-header">
-            <h3 id="asset-library-title" data-i18n="gen.asset_library">素材�?/h3>
+            <h3 id="asset-library-title" data-i18n="gen.asset_library">素材库</h3>
             <button class="modal-close" id="asset-library-close">&times;</button>
           </div>
           <div class="modal-body">
             <div class="asset-library-tabs">
               <button class="asset-tab active" data-tab="portrait" data-i18n="gen.real_human_portrait_id">真人肖像</button>
-              <button class="asset-tab" data-tab="avatar" data-i18n="gen.avatar_id">虚拟�?/button>
+              <button class="asset-tab" data-tab="avatar" data-i18n="gen.avatar_id">虚拟人</button>
             </div>
             <div class="asset-library-content">
               <div class="asset-grid" id="asset-grid"></div>
@@ -381,48 +384,35 @@
 
     <!-- Drama Studio Mode -->
     <div class="mode-content" id="mode-drama">
-      <div id="dramaProjectList">
-        <!-- 创建项目卡片 -->
-        <div style="background:var(--bg3); border-radius:12px; margin-bottom:20px; border:1px solid var(--border); overflow:hidden;">
-          <div style="display:flex; align-items:center; gap:8px; padding:14px 20px 0;">
-            <div style="width:3px; height:18px; border-radius:2px; background:linear-gradient(180deg,#FF4757,#FF6B81); flex-shrink:0;"></div>
-            <span style="font-size:14px; font-weight:600; color:var(--t1);" data-i18n="drama.create_project_title">创建新短�?/span>
-            <span style="font-size:10px; padding:1px 8px; border-radius:10px; background:rgba(255,71,87,0.1); color:#FF4757; font-weight:500;" data-i18n="drama.quick_create">快速创�?/span>
-          </div>
-          <div style="display:flex; gap:12px; align-items:flex-end; padding:12px 20px 16px;">
-            <div style="flex:1;">
-              <input id="drama-title-input" placeholder="输入短剧名称" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--t1);font-size:13px;box-sizing:border-box;" data-i18n="[placeholder]drama.project_title_placeholder">
-            </div>
-            <div style="flex:2;">
-              <textarea class="drama-textarea" id="prompt-drama" placeholder="输入故事梗概或核心创意，AI 将自动生成分集剧本与场景..." style="width:100%;min-height:56px;max-height:56px;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--t1);font-size:13px;resize:none;box-sizing:border-box;" data-i18n="[placeholder]gen.prompt_placeholder_drama"></textarea>
-            </div>
-            <button class="gen-btn-lg" id="gen-btn-drama" style="flex-shrink:0; background:linear-gradient(135deg,#FF4757,#FF6B81); padding:8px 28px; font-size:13px; min-width:120px; white-space:nowrap; border-radius:8px; border:none; color:#fff; cursor:pointer; font-weight:500;" data-i18n="drama.start_create">开始创�?/button>
-          </div>
-        </div>
-
-        <div style="display:flex; align-items:center; justify-content:space-between; margin:20px 0 12px;">
-          <h3 id="dramaSectionTitle" style="margin:0; font-size:15px; font-weight:600; color:var(--t1);" data-i18n="drama.my_projects">我的短剧项目</h3>
-          <div style="display:flex; gap:6px;">
-            <button class="drama-filter-btn active" data-filter="all" style="padding:4px 12px; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,0.06); color:var(--t1); cursor:pointer; font-size:11px;" data-i18n="drama.filter_all">全部</button>
-          </div>
-        </div>
-        <div id="dramaProjectGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;"></div>
+      <div class="drama-content">
+        <textarea class="drama-textarea" id="prompt-drama" placeholder="上传剧本、小说或输入你的故事想法，智能体会为你规划剧本并生成视频。" data-i18n="[placeholder]gen.prompt_placeholder_drama"></textarea>
       </div>
-
-      <!-- 项目详情视图 -->
-      <div id="dramaDetailView" style="display:none;">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
-          <button id="dramaBackBtn" style="padding:6px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--t1);cursor:pointer;font-size:13px;" data-i18n="drama.back">�?返回</button>
-          <h3 id="dramaDetailTitle" style="margin:0; font-size:16px;"></h3>
-          <span id="dramaDetailStatus" style="font-size:12px;padding:2px 8px;border-radius:8px;"></span>
+      <div class="gen-bottom-controls">
+        <div class="ctrl-left">
+          <button class="drama-upload-btn" data-i18n="gen.upload_script">
+            <span>📄</span> 上传剧本/小说
+          </button>
+          <div class="drama-type-btns">
+            <button class="type-btn" data-i18n="gen.single_episode">单集</button>
+            <button class="type-btn active" data-i18n="gen.series">连续剧</button>
+            <button class="type-btn" data-i18n="gen.pro_writer">专业编剧</button>
+          </div>
+          <div class="ctrl-item">
+            <button class="ctrl-dropdown" id="episodeDropdown">
+              <span class="dropdown-icon">◎</span> 3x
+            </button>
+            <div class="dropdown-menu" id="episodeMenu">
+              <div class="dropdown-item">◎ 1x</div>
+              <div class="dropdown-item">◎ 2x</div>
+              <div class="dropdown-item">◎ 3x</div>
+              <div class="dropdown-item">◎ 5x</div>
+              <div class="dropdown-item">◎ 10x</div>
+            </div>
+          </div>
         </div>
-        <!-- Pipeline Steps -->
-        <div id="dramaPipeline" style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+        <div class="ctrl-right">
+          <button class="gen-btn-lg" id="gen-btn-drama" data-i18n="js.generate">生成</button>
         </div>
-        <div id="dramaEpisodeList" style="display:flex;flex-direction:column;gap:8px;"></div>
-        <div id="dramaStepPanel" style="display:none; margin-bottom:16px; background:var(--bg3); border-radius:10px; padding:16px;"></div>
-        <div id="dramaScenePanel" style="display:none; margin-top:12px; background:var(--bg3); border-radius:10px; padding:16px;"></div>
-        <div id="dramaExportPanel" style="display:none; margin-top:12px; background:var(--bg3); border-radius:10px; padding:16px;"></div>
       </div>
     </div>
 
@@ -432,13 +422,13 @@
         <div class="gen-left-panel">
           <div class="ref-upload-zone" id="upload-zone-aivideo">
             <div class="ref-icon">+</div>
-            <div class="ref-label" data-i18n="gen.reference">参�?/div>
+            <div class="ref-label" data-i18n="gen.reference">参考</div>
           </div>
         </div>
         <div class="gen-right-panel">
           <div class="prompt-hint">
-            <p id="hint-aivideo-1" data-i18n="gen.hint_aivideo_1">通过直接控制提示词快速生成单段片段�?/p>
-            <p id="hint-aivideo-2" data-i18n="gen.hint_aivideo_2">上传 1-9 张参考图或视频并使用 @ 引用以创建互动。例如：�?@Image 1 作首帧、@Image 2 作尾帧，让他们像 @Video 1 那样跳舞�?/p>
+            <p id="hint-aivideo-1" data-i18n="gen.hint_aivideo_1">通过直接控制提示词快速生成单段片段。</p>
+            <p id="hint-aivideo-2" data-i18n="gen.hint_aivideo_2">上传 1-9 张参考图或视频并使用 @ 引用以创建互动。例如：用 @Image 1 作首帧、@Image 2 作尾帧，让他们像 @Video 1 那样跳舞。</p>
           </div>
           <textarea class="prompt-textarea" id="prompt-aivideo" placeholder="描述你的视频..." data-i18n="[placeholder]gen.prompt_placeholder_aivideo"></textarea>
         </div>
@@ -458,45 +448,45 @@
           </div>
           <div class="ctrl-item">
             <button class="ctrl-dropdown" id="ratioDropdown-aivideo">
-              <span class="dropdown-icon">�?/span> 16:9
+              <span class="dropdown-icon">▢</span> 16:9
             </button>
             <div class="dropdown-menu" id="ratioMenu-aivideo">
-              <div class="dropdown-item" data-value="16:9">�?16:9</div>
-              <div class="dropdown-item" data-value="4:3">�?4:3</div>
-              <div class="dropdown-item" data-value="1:1">�?1:1</div>
-              <div class="dropdown-item" data-value="3:4">�?3:4</div>
-              <div class="dropdown-item" data-value="9:16">�?9:16</div>
+              <div class="dropdown-item" data-value="16:9">▢ 16:9</div>
+              <div class="dropdown-item" data-value="4:3">▢ 4:3</div>
+              <div class="dropdown-item" data-value="1:1">▢ 1:1</div>
+              <div class="dropdown-item" data-value="3:4">▢ 3:4</div>
+              <div class="dropdown-item" data-value="9:16">▢ 9:16</div>
             </div>
           </div>
           <div class="ctrl-item">
             <button class="ctrl-dropdown" id="resDropdown-aivideo">
-              <span class="dropdown-icon">�?/span> 480p
+              <span class="dropdown-icon">◎</span> 480p
             </button>
             <div class="dropdown-menu" id="resMenu-aivideo">
-              <div class="dropdown-item" data-value="480p">�?480p</div>
-              <div class="dropdown-item" data-value="720p">�?720p</div>
-              <div class="dropdown-item" data-value="1080p">�?1080p</div>
+              <div class="dropdown-item" data-value="480p">◎ 480p</div>
+              <div class="dropdown-item" data-value="720p">◎ 720p</div>
+              <div class="dropdown-item" data-value="1080p">◎ 1080p</div>
             </div>
           </div>
           <div class="ctrl-item">
             <button class="ctrl-dropdown" id="durDropdown-aivideo">
-              <span class="dropdown-icon">�?/span> 15s
+              <span class="dropdown-icon">◎</span> 15s
             </button>
             <div class="dropdown-menu" id="durMenu-aivideo">
-              <div class="dropdown-item" data-value="5s">5s</div>
-              <div class="dropdown-item" data-value="10s">10s</div>
-              <div class="dropdown-item" data-value="15s">15s</div>
-              <div class="dropdown-item" data-value="20s">20s</div>
-              <div class="dropdown-item" data-value="30s">30s</div>
+              <div class="dropdown-item" data-value="5s">◎ 5s</div>
+              <div class="dropdown-item" data-value="10s">◎ 10s</div>
+              <div class="dropdown-item" data-value="15s">◎ 15s</div>
+              <div class="dropdown-item" data-value="20s">◎ 20s</div>
+              <div class="dropdown-item" data-value="30s">◎ 30s</div>
             </div>
           </div>
         </div>
         <div class="ctrl-right">
           <div class="cost-display">
-            <span class="cost-icon">�?/span>
+            <span class="cost-icon">⚡</span>
             <span class="cost-value">7.5</span>
           </div>
-          <button class="gen-btn-lg" id="gen-btn-aivideo" data-i18n="js.generate">🎬视频生成</button>
+          <button class="gen-btn-lg" id="gen-btn-aivideo" data-i18n="js.generate">生成</button>
         </div>
       </div>
     </div>
@@ -506,7 +496,7 @@
       <div class="gen-main-content-wide">
         <div class="gen-left-panel">
           <div class="ref-panel-header">
-            <span data-i18n="gen.reference">参考素�?/span>
+            <span data-i18n="gen.reference">参考素材</span>
           </div>
           <div class="ref-upload-zone" id="upload-zone-image">
             <div class="ref-icon">📤</div>
@@ -514,34 +504,34 @@
           </div>
           <div class="ref-library-btn" id="library-btn-image">
             <div class="ref-icon">📚</div>
-            <div class="ref-label" data-i18n="gen.asset_library">素材�?/div>
+            <div class="ref-label" data-i18n="gen.asset_library">素材库</div>
           </div>
           <div class="ref-files-list" id="ref-files-image"></div>
         </div>
         <div class="gen-right-panel-wide">
           <div class="prompt-hint">
-            <p data-i18n="gen.hint_image_1">从文字与参考图生成 AI 图片�?/p>
-            <p data-i18n="gen.hint_image_2">上传最�?14 张参考图，然后详细描述目标图片�?/p>
+            <p data-i18n="gen.hint_image_1">从文字与参考图生成 AI 图片。</p>
+            <p data-i18n="gen.hint_image_2">上传最多 14 张参考图，然后详细描述目标图片。</p>
           </div>
           <div class="prompt-container-wide">
             <div class="prompt-box-inner">
               <textarea class="prompt-textarea-inner" id="prompt-image" placeholder="描述你的图片..." data-i18n="[placeholder]gen.prompt_placeholder_image"></textarea>
               <div class="prompt-box-footer">
-                <button class="ai-enhance-btn-inner" id="ai-enhance-image" data-i18n="gen.ai_enhance">�?AI 优化</button>
+                <button class="ai-enhance-btn-inner" id="ai-enhance-image" data-i18n="gen.ai_enhance">✨ AI 优化</button>
               </div>
             </div>
 
             <!-- 优化提示词框 -->
             <div class="enhanced-prompt-wrapper" id="prompt-enhanced-image" style="display: none;">
               <div class="enhanced-header">
-                <span class="enhanced-label" data-i18n="gen.enhanced_prompt">AI优化提示�?/span>
+                <span class="enhanced-label" data-i18n="gen.enhanced_prompt">AI优化提示词</span>
                 <span class="enhanced-badge" data-i18n="gen.enhanced_badge">AI生成</span>
                 <div class="enhanced-actions">
-                  <button class="enhanced-toggle active" id="enhance-toggle-image" data-i18n="gen.use_enhanced">�?使用优化</button>
-                  <button class="enhanced-clear" id="enhance-clear-image" data-i18n="gen.clear_enhanced">�?/button>
+                  <button class="enhanced-toggle active" id="enhance-toggle-image" data-i18n="gen.use_enhanced">✓ 使用优化</button>
+                  <button class="enhanced-clear" id="enhance-clear-image" data-i18n="gen.clear_enhanced">✕</button>
                 </div>
               </div>
-              <textarea class="prompt-textarea-wide" id="prompt-enhanced-text-image" placeholder="AI优化后的提示�?.."></textarea>
+              <textarea class="prompt-textarea-wide" id="prompt-enhanced-text-image" placeholder="AI优化后的提示词..."></textarea>
             </div>
 
             <div class="ref-tags" id="ref-tags-image"></div>
@@ -557,33 +547,33 @@
           </div>
           <div class="ctrl-item">
             <button class="ctrl-dropdown" id="ratioDropdown-image">
-              <span class="dropdown-icon ratio-box" data-ratio="16:9"></span> 16:9
+              <span class="dropdown-icon">▢</span> 16:9
             </button>
             <div class="dropdown-menu" id="ratioMenu-image">
-              <div class="dropdown-item" data-value="16:9"><span class="ratio-box" data-ratio="16:9"></span> 16:9</div>
-              <div class="dropdown-item" data-value="4:3"><span class="ratio-box" data-ratio="4:3"></span> 4:3</div>
-              <div class="dropdown-item" data-value="1:1"><span class="ratio-box" data-ratio="1:1"></span> 1:1</div>
-              <div class="dropdown-item" data-value="3:4"><span class="ratio-box" data-ratio="3:4"></span> 3:4</div>
-              <div class="dropdown-item" data-value="9:16"><span class="ratio-box" data-ratio="9:16"></span> 9:16</div>
+              <div class="dropdown-item" data-value="16:9">▢ 16:9</div>
+              <div class="dropdown-item" data-value="4:3">▢ 4:3</div>
+              <div class="dropdown-item" data-value="1:1">▢ 1:1</div>
+              <div class="dropdown-item" data-value="3:4">▢ 3:4</div>
+              <div class="dropdown-item" data-value="9:16">▢ 9:16</div>
             </div>
           </div>
           <div class="ctrl-item">
             <button class="ctrl-dropdown" id="resDropdown-image">
-              <span class="dropdown-icon">�?/span> 720p
+              <span class="dropdown-icon">◎</span> 2K
             </button>
             <div class="dropdown-menu" id="resMenu-image">
-              <div class="dropdown-item" data-value="480p">480p</div>
-              <div class="dropdown-item" data-value="720p">720p</div>
-              <div class="dropdown-item" data-value="1080p">1080p</div>
+              <div class="dropdown-item" data-value="1K">◎ 1K</div>
+              <div class="dropdown-item" data-value="2K">◎ 2K</div>
+              <div class="dropdown-item" data-value="4K">◎ 4K</div>
             </div>
           </div>
         </div>
         <div class="ctrl-right">
           <div class="cost-display" id="cost-display-image">
-            <span class="cost-icon">�?/span>
+            <span class="cost-icon">⚡</span>
             <span class="cost-value">2</span>
           </div>
-          <button class="gen-btn-lg" id="gen-btn-image" data-i18n="js.generate">🖼️图片生�?/button>
+          <button class="gen-btn-lg" id="gen-btn-image" data-i18n="js.generate">生成</button>
         </div>
       </div>
     </div>
@@ -599,7 +589,7 @@
         <h3 data-i18n="results.title">生成结果</h3>
         <div class="results-header-actions">
           <button class="refresh-btn" onclick="refreshTasks()" data-i18n="results.refresh">刷新</button>
-          <a href="/profile?page=works" class="more-btn" id="more-btn" style="display:none" data-i18n="results.more">更多 �?/a>
+          <a href="/profile?page=works" class="more-btn" id="more-btn" style="display:none" data-i18n="results.more">更多 →</a>
         </div>
       </div>
       <div class="results-grid" id="results-grid">
@@ -608,7 +598,7 @@
       <div class="empty-state" id="empty-state">
         <div class="empty-icon">📹</div>
         <p data-i18n="results.empty">暂无生成结果</p>
-        <p class="empty-hint" data-i18n="results.empty_hint">点击上方按钮开始生�?/p>
+        <p class="empty-hint" data-i18n="results.empty_hint">点击上方按钮开始生成</p>
       </div>
     </div>
 
@@ -627,113 +617,57 @@
   </div>
 </section>
 
-<!-- ── Seedance 2.5 全新发布 ── -->
-<section class="sd25-section">
-  <div class="sd25-glow"></div>
-  <div class="sd25-inner">
-    <div class="sd25-badge" data-i18n="sd25.badge">最新消�?/div>
-    <h2 class="sd25-headline">
-      <span class="sd25-brand">Seedance 2.5</span>
-      <span class="sd25-headline-sub" data-i18n="sd25.headline">全新发布</span>
-    </h2>
-    <p class="sd25-tagline" data-i18n="sd25.tagline">更强�?| 更清�?| 更长�?| 更多参�?/p>
-
-    <div class="sd25-stats">
-      <div class="sd25-stat">
-        <span class="sd25-stat-num">30</span>
-        <span class="sd25-stat-unit">s</span>
-        <span class="sd25-stat-label" data-i18n-html="sd25.stat_longer">最�?0秒视�?br>更长演绎，创意无�?/span>
-      </div>
-      <div class="sd25-stat">
-        <span class="sd25-stat-num">4K</span>
-        <span class="sd25-stat-unit">ULTRA HD</span>
-        <span class="sd25-stat-label" data-i18n-html="sd25.stat_4k">4K画质超清体验<br>细节尽现</span>
-      </div>
-      <div class="sd25-stat">
-        <span class="sd25-stat-num">50</span>
-        <span class="sd25-stat-unit">REFERENCE</span>
-        <span class="sd25-stat-label" data-i18n-html="sd25.stat_refs">支持50个参考内�?br>更多参考，更多可能</span>
-      </div>
-    </div>
-
-    <div class="sd25-features">
-      <div class="sd25-feat">
-        <div class="sd25-feat-icon">�?/div>
-        <h3 data-i18n="sd25.feat_powerful">更强�?/h3>
-        <p data-i18n-html="sd25.feat_powerful_desc">AI引擎升级<br>强大模型升级，更智能更高�?/p>
-      </div>
-      <div class="sd25-feat">
-        <div class="sd25-feat-icon">🔍</div>
-        <h3 data-i18n="sd25.feat_clear">更清�?/h3>
-        <p data-i18n-html="sd25.feat_clear_desc">细节更真�?br>支持4K画质输出</p>
-      </div>
-      <div class="sd25-feat">
-        <div class="sd25-feat-icon">⏱️</div>
-        <h3 data-i18n="sd25.feat_long">更长�?/h3>
-        <p data-i18n-html="sd25.feat_long_desc">支持长时长生�?br>最�?0秒连贯视�?/p>
-      </div>
-      <div class="sd25-feat">
-        <div class="sd25-feat-icon">🎯</div>
-        <h3 data-i18n="sd25.feat_refs">更多参�?/h3>
-        <p data-i18n-html="sd25.feat_refs_desc">丰富创作灵感<br>支持50个参考素�?/p>
-      </div>
-    </div>
-
-    <p class="sd25-bottom" data-i18n="sd25.bottom">释放创意潜能，打造专业级视频内容。Seedance 2.5，让想象成真�?/p>
-  </div>
-</section>
-
 <section class="features" id="features">
   <div class="section-label" data-i18n="features.label">为什么选择 Seedance 2.0</div>
-  <h2 class="section-title" data-i18n="features.title">创作所需的一�?/h2>
-  <p class="section-desc" data-i18n="features.desc">六大能力，统一在一个模型中�?/p>
+  <h2 class="section-title" data-i18n="features.title">创作所需的一切</h2>
+  <p class="section-desc" data-i18n="features.desc">六大能力，统一在一个模型中。</p>
   <div class="features-grid">
     <div class="feat-card">
       <div class="feat-icon">🎭</div>
-      <div class="feat-title" data-i18n="features.f1_title">多模态输�?/div>
-      <div class="feat-desc" data-i18n="features.f1_desc">在一次生成请求中组合图像、视频、音频和文本提示，获得前所未有的创作控制力�?/div>
+      <div class="feat-title" data-i18n="features.f1_title">多模态输入</div>
+      <div class="feat-desc" data-i18n="features.f1_desc">在一次生成请求中组合图像、视频、音频和文本提示，获得前所未有的创作控制力。</div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">🎯</div>
-      <div class="feat-title" data-i18n="features.f2_title">参考一�?/div>
-      <div class="feat-desc" data-i18n="features.f2_desc">标记最�?9 张图片和 3 段视频作为参考，模型可高保真地提取风格、主体和动作�?/div>
+      <div class="feat-title" data-i18n="features.f2_title">参考一切</div>
+      <div class="feat-desc" data-i18n="features.f2_desc">标记最多 9 张图片和 3 段视频作为参考，模型可高保真地提取风格、主体和动作。</div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">🔁</div>
-      <div class="feat-title" data-i18n="features.f3_title">卓越的一致�?/div>
-      <div class="feat-desc" data-i18n="features.f3_desc">角色、环境和风格在跨帧和多次生成中保持一致�?/div>
+      <div class="feat-title" data-i18n="features.f3_title">卓越的一致性</div>
+      <div class="feat-desc" data-i18n="features.f3_desc">角色、环境和风格在跨帧和多次生成中保持一致。</div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">🎬</div>
       <div class="feat-title" data-i18n="features.f4_title">精准运镜</div>
-      <div class="feat-desc" data-i18n="features.f4_desc">从参考视频中精确复制运动模式和镜头移动，帧级精准�?/div>
+      <div class="feat-desc" data-i18n="features.f4_desc">从参考视频中精确复制运动模式和镜头移动，帧级精准。</div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">✂️</div>
-      <div class="feat-title" data-i18n="features.f5_title">视频扩展与编�?/div>
-      <div class="feat-desc" data-i18n="features.f5_desc">扩展现有视频、修改场景，无需从头开始迭代�?/div>
+      <div class="feat-title" data-i18n="features.f5_title">视频扩展与编辑</div>
+      <div class="feat-desc" data-i18n="features.f5_desc">扩展现有视频、修改场景，无需从头开始迭代。</div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">🔊</div>
       <div class="feat-title" data-i18n="features.f6_title">内置音频生成</div>
-      <div class="feat-desc" data-i18n="features.f6_desc">与视频输出同步生成本地音频——音乐、音效或语音�?/div>
+      <div class="feat-desc" data-i18n="features.f6_desc">与视频输出同步生成本地音频——音乐、音效或语音。</div>
     </div>
   </div>
 </section>
 
 <section id="usecases">
   <div class="section-label" data-i18n="usecases.label">应用场景</div>
-  <h2 class="section-title" data-i18n="usecases.title">为每一位创作者打�?/h2>
-  <p class="section-desc" data-i18n="usecases.desc">从独立创作者到企业工作室，Seedance 2.0 全面赋能�?/p>
+  <h2 class="section-title" data-i18n="usecases.title">为每一位创作者打造</h2>
+  <p class="section-desc" data-i18n="usecases.desc">从独立创作者到企业工作室，Seedance 2.0 全面赋能。</p>
   <div class="use-cases-grid">
     <div class="use-case-card"><div class="uc-icon">📢</div><div class="uc-title" data-i18n="usecases.ad">广告</div><div class="uc-desc" data-i18n="usecases.ad_desc">高影响力品牌视频</div></div>
-    <div class="use-case-card"><div class="uc-icon">🎓</div><div class="uc-title" data-i18n="usecases.edu">教育</div><div class="uc-desc" data-i18n="usecases.edu_desc">引人入胜的讲解内�?/div></div>
+    <div class="use-case-card"><div class="uc-icon">🎓</div><div class="uc-title" data-i18n="usecases.edu">教育</div><div class="uc-desc" data-i18n="usecases.edu_desc">引人入胜的讲解内容</div></div>
     <div class="use-case-card"><div class="uc-icon">📖</div><div class="uc-title" data-i18n="usecases.story">叙事</div><div class="uc-desc" data-i18n="usecases.story_desc">叙事驱动场景</div></div>
-    <div class="use-case-card"><div class="uc-icon">📱</div><div class="uc-title" data-i18n="usecases.social">社交媒体</div><div class="uc-desc" data-i18n="usecases.social_desc">短视频爆款内�?/div></div>
-    <div class="use-case-card"><div class="uc-icon">💃</div><div class="uc-title" data-i18n="usecases.dance">动作/舞蹈</div><div class="uc-desc" data-i18n="usecases.dance_desc">编舞与动作捕�?/div></div>
-    <div class="use-case-card"><div class="uc-icon">🎞�?/div><div class="uc-title" data-i18n="usecases.edit">视频编辑</div><div class="uc-desc" data-i18n="usecases.edit_desc">AI 辅助后期制作</div></div>
+    <div class="use-case-card"><div class="uc-icon">📱</div><div class="uc-title" data-i18n="usecases.social">社交媒体</div><div class="uc-desc" data-i18n="usecases.social_desc">短视频爆款内容</div></div>
+    <div class="use-case-card"><div class="uc-icon">💃</div><div class="uc-title" data-i18n="usecases.dance">动作/舞蹈</div><div class="uc-desc" data-i18n="usecases.dance_desc">编舞与动作捕捉</div></div>
+    <div class="use-case-card"><div class="uc-icon">🎞️</div><div class="uc-title" data-i18n="usecases.edit">视频编辑</div><div class="uc-desc" data-i18n="usecases.edit_desc">AI 辅助后期制作</div></div>
     <div class="use-case-card"><div class="uc-icon">🎥</div><div class="uc-title" data-i18n="usecases.film">电影预演</div><div class="uc-desc" data-i18n="usecases.film_desc">分镜脚本跃然屏上</div></div>
-    <div class="use-case-card"><div class="uc-icon">🏠</div><div class="uc-title" data-i18n="usecases.realestate">房地�?/div><div class="uc-desc" data-i18n="usecases.realestate_desc">沉浸式房屋展�?/div></div>
+    <div class="use-case-card"><div class="uc-icon">🏠</div><div class="uc-title" data-i18n="usecases.realestate">房地产</div><div class="uc-desc" data-i18n="usecases.realestate_desc">沉浸式房屋展示</div></div>
     <div class="use-case-card"><div class="uc-icon">🎵</div><div class="uc-title" data-i18n="usecases.music">音乐同步</div><div class="uc-desc" data-i18n="usecases.music_desc">音频响应视频</div></div>
   </div>
 </section>
@@ -741,33 +675,55 @@
 <section class="how" id="how">
   <div class="section-label" data-i18n="how.label">如何使用</div>
   <h2 class="section-title" data-i18n="how.title">三步生成视频</h2>
-  <p class="section-desc" data-i18n="how.desc">从创意到成品，只需几分钟�?/p>
+  <p class="section-desc" data-i18n="how.desc">从创意到成品，只需几分钟。</p>
   <div class="steps">
     <div class="step">
       <div class="step-num">1</div>
       <div class="step-title" data-i18n="how.s1_title">上传素材</div>
-      <div class="step-desc" data-i18n="how.s1_desc">添加图像、视频和音频作为参考——最�?12 个文件�?/div>
+      <div class="step-desc" data-i18n="how.s1_desc">添加图像、视频和音频作为参考——最多 12 个文件。</div>
     </div>
     <div class="step">
       <div class="step-num">2</div>
       <div class="step-title" data-i18n="how.s2_title">描述你的创意</div>
-      <div class="step-desc" data-i18n-html="how.s2_desc">编写提示词，使用 <code style="color:#a5b4fc">@image1</code>�?code style="color:#a5b4fc">@video1</code> 标签引用上传文件�?/div>
+      <div class="step-desc" data-i18n-html="how.s2_desc">编写提示词，使用 <code style="color:#a5b4fc">@image1</code>、<code style="color:#a5b4fc">@video1</code> 标签引用上传文件。</div>
     </div>
     <div class="step">
       <div class="step-num">3</div>
-      <div class="step-title" data-i18n="how.s3_title">生成与迭�?/div>
-      <div class="step-desc" data-i18n="how.s3_desc">秒级生成视频，通过编辑、扩展或风格变化进行迭代�?/div>
+      <div class="step-title" data-i18n="how.s3_title">生成与迭代</div>
+      <div class="step-desc" data-i18n="how.s3_desc">秒级生成视频，通过编辑、扩展或风格变化进行迭代。</div>
     </div>
   </div>
 </section>
 
 <section id="pricing">
   <div class="section-label" data-i18n="pricing.label">定价</div>
-  <h2 class="section-title" data-i18n="pricing.title_credits">积分充�?/h2>
-  <p class="section-desc" data-i18n="pricing.desc_credits">选择适合您的积分包，按需付费�?/p>
+  <h2 class="section-title" data-i18n="pricing.title">选择最适合您的方案</h2>
+  <p class="section-desc" data-i18n="pricing.desc">所有方案均包含核心功能和技术支持。</p>
 
-  <!-- 积分�?-->
-  <div id="pricing-credits" class="pricing-content">
+  <!-- 方案切换标签 -->
+  <div class="pricing-tabs">
+    <button class="pricing-tab active" id="tab-team" data-i18n="pricing.tab.team">套餐</button>
+    <button class="pricing-tab" id="tab-credits" data-i18n="pricing.tab.credits">积分包</button>
+  </div>
+
+  <!-- 套餐 -->
+  <div id="pricing-team" class="pricing-content">
+    <div class="pricing-toggle">
+      <span data-i18n="pricing.monthly">按月</span>
+      <div class="toggle-item on" id="billing-toggle" style="margin:0">
+        <div class="toggle-switch"></div>
+      </div>
+      <span data-i18n="pricing.annual">按年</span>
+      <span class="promo-badge" data-i18n="pricing.save">省 17%</span>
+    </div>
+
+    <div class="pricing-cards" id="pricing-cards-container">
+      <!-- 动态加载套餐卡片 -->
+    </div>
+  </div>
+
+  <!-- 积分包 -->
+  <div id="pricing-credits" class="pricing-content" style="display:none">
     <div class="credits-cards" id="credits-cards-container">
       <!-- 动态加载积分包卡片 -->
     </div>
@@ -777,10 +733,10 @@
   <div class="pricing-table-wrap" style="margin-top:48px">
     <div class="pricing-header">
       <h3 data-i18n="pricing.model_pricing">Seedance 模型积分定价</h3>
-      <p data-i18n="pricing.points_per_second">每秒消耗积分数�?/p>
+      <p data-i18n="pricing.points_per_second">每秒消耗积分数量</p>
     </div>
     <div id="model-pricing-tables">
-      <div style="color:var(--t3);text-align:center;padding:24px;font-size:13px;">加载�?..</div>
+      <div style="color:var(--t3);text-align:center;padding:24px;font-size:13px;">加载中...</div>
     </div>
   </div>
 </section>
@@ -788,31 +744,31 @@
 <section style="background:var(--bg2)">
   <div class="section-label" data-i18n="faq.label">常见问题</div>
   <h2 class="section-title" data-i18n="faq.title">常见问题解答</h2>
-  <p class="section-desc" data-i18n="faq.desc">关于 Seedance 2.0 的一切�?/p>
+  <p class="section-desc" data-i18n="faq.desc">关于 Seedance 2.0 的一切。</p>
   <div class="faq-list">
     <div class="faq-item">
-      <div class="faq-q"><span data-i18n="faq.q1">最多可以上传多少个参考文件？</span> <span class="faq-arrow">�?/span></div>
-      <div class="faq-a" data-i18n="faq.a1">最多可上传 12 个文件：最�?9 张图片�? 段视频（�?5秒）�?3 个音频（�?5秒）�?/div>
+      <div class="faq-q"><span data-i18n="faq.q1">最多可以上传多少个参考文件？</span> <span class="faq-arrow">▾</span></div>
+      <div class="faq-a" data-i18n="faq.a1">最多可上传 12 个文件：最多 9 张图片、3 段视频（≤15秒）和 3 个音频（≤15秒）。</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q"><span data-i18n="faq.q2">支持多长的视频？</span> <span class="faq-arrow">�?/span></div>
-      <div class="faq-a" data-i18n="faq.a2">Seedance 2.0 支持 4 �?15 秒的视频生成，默认为 5 秒�?/div>
+      <div class="faq-q"><span data-i18n="faq.q2">支持多长的视频？</span> <span class="faq-arrow">▾</span></div>
+      <div class="faq-a" data-i18n="faq.a2">Seedance 2.0 支持 4 到 15 秒的视频生成，默认为 5 秒。</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q"><span data-i18n="faq.q3">生成的视频有水印吗？</span> <span class="faq-arrow">�?/span></div>
-      <div class="faq-a" data-i18n="faq.a3">无水印，您对生成的内容拥有完整所有权�?/div>
+      <div class="faq-q"><span data-i18n="faq.q3">生成的视频有水印吗？</span> <span class="faq-arrow">▾</span></div>
+      <div class="faq-a" data-i18n="faq.a3">无水印，您对生成的内容拥有完整所有权。</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q"><span data-i18n="faq.q4">支持哪些图片/视频格式�?/span> <span class="faq-arrow">�?/span></div>
-      <div class="faq-a" data-i18n="faq.a4">图片：PNG、JPG、JPEG、WEBP。视频：MP4、MOV、WEBM。音频：MP3、WAV、AAC�?/div>
+      <div class="faq-q"><span data-i18n="faq.q4">支持哪些图片/视频格式？</span> <span class="faq-arrow">▾</span></div>
+      <div class="faq-a" data-i18n="faq.a4">图片：PNG、JPG、JPEG、WEBP。视频：MP4、MOV、WEBM。音频：MP3、WAV、AAC。</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q"><span data-i18n="faq.q5">积分如何计算�?/span> <span class="faq-arrow">�?/span></div>
-      <div class="faq-a" data-i18n="faq.a5">按生成视频的每秒消耗积分，费率取决于所选模型和分辨率。积分永不过期�?/div>
+      <div class="faq-q"><span data-i18n="faq.q5">积分如何计算？</span> <span class="faq-arrow">▾</span></div>
+      <div class="faq-a" data-i18n="faq.a5">按生成视频的每秒消耗积分，费率取决于所选模型和分辨率。积分永不过期。</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q"><span data-i18n="faq.q6">如何联系客服�?/span> <span class="faq-arrow">�?/span></div>
-      <div class="faq-a" data-i18n="faq.a6">发送邮件至 support@sedgo.ai，工作日通常�?24 小时内回复�?/div>
+      <div class="faq-q"><span data-i18n="faq.q6">如何联系客服？</span> <span class="faq-arrow">▾</span></div>
+      <div class="faq-a" data-i18n="faq.a6">发送邮件至 support@sedgo.ai，工作日通常在 24 小时内回复。</div>
     </div>
   </div>
 </section>
@@ -820,58 +776,24 @@
 
 
 <footer>
-  <div class="footer-grid">
-    <!-- 品牌 -->
-    <div>
-      <a class="footer-logo" href="#">
-        <div class="nav-logo-icon">S</div>
-        <span style="font-size:15px;font-weight:700;color:var(--t1)">SedGo AI</span>
-      </a>
-      <p class="footer-brand-desc" data-i18n="footer.brand_desc">AI 驱动的新一代视频生成平�?/p>
-      <p class="footer-brand-desc" style="color:var(--t3);" data-i18n="footer.company_name">辽宁励途科技有限公司</p>
-    </div>
-    <!-- 快速链�?-->
-    <div>
-      <div class="footer-col-title" data-i18n="footer.quick_links">快速链�?/div>
-      <div class="footer-links">
-        <a href="#" data-i18n="footer.txt2vid">文生视频</a>
-        <a href="#" data-i18n="footer.img2vid">图生视频</a>
-        <a href="/pages/terms.html" data-i18n="footer.terms">服务条款</a>
-        <a href="/pages/privacy.html" data-i18n="footer.privacy">隐私政策</a>
-        <a href="/pages/refund.html" data-i18n="footer.refund">退款政�?/a>
-        <a href="/pages/support.html" data-i18n="footer.contact">联系我们</a>
-      </div>
-    </div>
-    <!-- 联系方式 -->
-    <div>
-      <div class="footer-col-title" data-i18n="footer.contact_us">联系我们</div>
-      <div class="footer-contact-item">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-        <a href="mailto:support@sedgo.ai" data-i18n="footer.contact_email">support@sedgo.ai</a>
-      </div>
-    </div>
+  <a class="footer-logo" href="#">
+    <div class="nav-logo-icon">S</div>
+    <span style="font-size:15px;font-weight:700;color:var(--t1)">SedGo AI</span>
+  </a>
+  <div class="footer-links">
+    <a href="#" data-i18n="footer.txt2vid">文生视频</a>
+    <a href="#" data-i18n="footer.img2vid">图生视频</a>
+    <a href="/pages/terms.html" data-i18n="footer.terms">服务条款</a>
+    <a href="/pages/privacy.html" data-i18n="footer.privacy">隐私政策</a>
+    <a href="/pages/refund.html" data-i18n="footer.refund">退款政策</a>
+    <a href="/pages/support.html" data-i18n="footer.contact">联系我们</a>
   </div>
-  <div class="footer-bottom">
-    <span class="footer-copy" data-i18n="footer.copyright">©2026辽宁励途科技有限公司.All rights reserved</span>
-    <div class="footer-legal">
-      <a href="/pages/terms.html" style="color:var(--t3);text-decoration:none;" data-i18n="footer.terms">服务条款</a>
-      <span>·</span>
-      <a href="/pages/privacy.html" style="color:var(--t3);text-decoration:none;" data-i18n="footer.privacy">隐私政策</a>
-    </div>
-  </div>
+  <span class="footer-copy">© 2026 SedGo.ai</span>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.12.2/i18next.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-http-backend/2.5.2/i18nextHttpBackend.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-browser-languagedetector/7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="/static/js/i18n-config.js?v=10"></script>
-<script src="/static/js/index.js?v=30"></script>
-<style>
-  .drama-project-card:hover { border-color: rgba(255,255,255,0.15) !important; transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-  .drama-card-enter-btn:hover { background: rgba(255,255,255,0.12) !important; }
-  .drama-filter-btn.active { background: rgba(255,71,87,0.15) !important; border-color: #FF4757 !important; color: #FF4757 !important; }
-  .drama-filter-btn:hover { border-color: var(--t2) !important; }
-</style>
+<script src="/static/js/index.js?v=31?v=6"></script>
 </body>
 </html>
