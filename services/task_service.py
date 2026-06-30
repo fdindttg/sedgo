@@ -222,40 +222,45 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
             return None
 
     # Step 1: resolve a publicly accessible URL for CreateAsset
-    # Prefer public_base_url (direct web URL) over Files API upload
+    # Prefer Files API upload over public_base_url (direct web URL), since BytePlus server may not be able to access external URLs
     _effective_public_base = public_base_url or PUBLIC_BASE_URL
-    if _effective_public_base and local_url.startswith("/"):
-        public_url = f"{_effective_public_base.rstrip('/')}/{local_url.lstrip('/')}"
-        logger.info(f"[asset] Using public_base_url for CreateAsset: {public_url[:80]}")
-    else:
-        logger.info(f"[asset] No public_base_url configured (channel={bool(public_base_url)}, env={bool(PUBLIC_BASE_URL)}), falling back to Files API upload")
-        # Fall back: upload via Files API
+    
+    # Try Files API first
+    public_url = None
+    try:
         mime = mimetypes.guess_type(str(file_path))[0] or "application/octet-stream"
         base = api_base_url.rstrip("/")
         if not base.endswith("/api/v3"):
             base = base + "/api/v3"
         files_url = f"{base}/files"
-        try:
-            with open(file_path, "rb") as f:
-                resp = requests.post(
-                    files_url,
-                    headers={"Authorization": f"Bearer {api_key}"},
-                    files={"file": (file_path.name, f, mime)},
-                    data={"purpose": "assistants"},
-                    timeout=300,
-                )
-            if resp.status_code != 200:
-                logger.error(f"[asset] Files API upload failed {resp.status_code}: {resp.text[:500]}")
-                return None
+        with open(file_path, "rb") as f:
+            resp = requests.post(
+                files_url,
+                headers={"Authorization": f"Bearer {api_key}"},
+                files={"file": (file_path.name, f, mime)},
+                data={"purpose": "assistants"},
+                timeout=300,
+            )
+        if resp.status_code == 200:
             file_obj = resp.json()
             public_url = file_obj.get("url") or file_obj.get("data", {}).get("url", "")
-            if not public_url:
-                logger.error(f"[asset] Files API returned no URL: {file_obj}")
-                return None
-            logger.info(f"[asset] File uploaded to Files API, url={public_url[:80]}...")
-        except Exception as e:
-            logger.error(f"[asset] Files API upload error: {e}")
-            return None
+            if public_url:
+                logger.info(f"[asset] File uploaded to Files API, url={public_url[:120]}...")
+            else:
+                logger.error(f"[asset] Files API returned no URL: {JSON.stringify(file_obj)}")
+                public_url = None
+        else:
+            logger.error(f"[asset] Files API upload failed {resp.status_code}: {resp.text[:1000]}")
+            public_url = None
+    except Exception as e:
+        logger.error(f"[asset] Files API upload error: {e}, stack={e.stack}")
+        public_url = None
+    
+    # NOTE: Do NOT fall back to public_base_url because BytePlus server cannot access external URLs
+    # If Files API failed, return None immediately
+    if not public_url:
+        logger.error(f"[asset] Files API upload failed and no fallback available for {file_path}")
+        return None
 
     # Step 2: CreateAsset — use the passed-in AK/SK for signing
     try:
