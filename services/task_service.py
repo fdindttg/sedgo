@@ -736,7 +736,7 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
                         if _ak and _sk:
                             asset_uri = _try_upload_to_asset(trimmed_path, "Audio")
                         if not asset_uri:
-                            resolved_aud = _resolve_media_url(trimmed_path)
+                            resolved_aud = _resolve_media_url("/" + trimmed_path)
                         try:
                             os.remove(trimmed_path)
                         except Exception:
@@ -749,9 +749,7 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
         if vid_url.startswith("/static/uploads/") and (_ak and _sk):
             asset_uri = _try_upload_to_asset(vid_url, "Video")
         if not asset_uri:
-            resolved = vid_url
-            if resolved.startswith("/") and _public_base_url:
-                resolved = f"{_public_base_url.rstrip('/')}/{resolved.lstrip('/')}"
+            resolved = _resolve_media_url(vid_url)
         else:
             resolved = asset_uri
         content.append({"type": "video_url", "video_url": {"url": resolved.replace('`','').strip()}, "role": "reference_video"})
