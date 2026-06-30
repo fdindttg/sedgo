@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import tempfile
+import traceback
 import subprocess
 import threading
 import base64
@@ -253,7 +254,7 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
             logger.error(f"[asset] Files API upload failed {resp.status_code}: {resp.text[:1000]}")
             public_url = None
     except Exception as e:
-        logger.error(f"[asset] Files API upload error: {e}, stack={e.stack}")
+        logger.error(f"[asset] Files API upload error: {e}, traceback=traceback.format_exc()")
         public_url = None
     
     # NOTE: Do NOT fall back to public_base_url because BytePlus server cannot access external URLs
