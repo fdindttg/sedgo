@@ -248,7 +248,7 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
             if public_url:
                 logger.info(f"[asset] File uploaded to Files API, url={public_url[:120]}...")
             else:
-                logger.error(f"[asset] Files API returned no URL: {JSON.stringify(file_obj)}")
+                logger.error(f"[asset] Files API returned no URL: {json.dumps(file_obj)}")
                 public_url = None
         else:
             logger.error(f"[asset] Files API upload failed {resp.status_code}: {resp.text[:1000]}")
