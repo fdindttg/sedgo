@@ -1955,7 +1955,11 @@ if (fileInput) {
       });
       const data = await res.json();
       if (data.success) {
-        uploadedFiles.push({ name: file.name, file_id: data.data.id, url: data.data.url, type: file.type.startsWith('video') ? 'video' : (file.type.startsWith('audio') ? 'audio' : 'image') });
+        uploadedFiles.push({ name: file.name, file_id: data.data.id, url: (data.data.url||'').replace(/`/g,'').trim(), type: file.type.startsWith('video') ? 'video' : (file.type.startsWith('audio') ? 'audio' : 'image') });
+        if (file.type.startsWith('audio')) {
+          const audio = new Audio(URL.createObjectURL(file));
+          audio.addEventListener('loadedmetadata', function(){ var d=audio.duration; URL.revokeObjectURL(audio.src); if(d>15){alert('Audio "'+file.name+'" is '+Math.round(d)+'s. Max 15s.');} }, {once:true});
+        }
       } else {
         alert(t('js.upload_failed') + (data.message || t('js.unknown_error')));
       }
@@ -3125,9 +3129,9 @@ async function generateVideo() {
         duration_seconds: params.duration,
         generate_audio: true,
         watermark: false,
-        reference_images: (referenceFiles['video'] || []).filter(f => f.type === 'image').map(f => f.url),
-        reference_videos: (referenceFiles['video'] || []).filter(f => f.type === 'video').map(f => f.url),
-        reference_audios: (referenceFiles['video'] || []).filter(f => f.type === 'audio').map(f => f.url),
+        reference_images: (referenceFiles['video'] || []).filter(f => f.type === 'image').map(f => (f.url||'').replace(/`/g,'').trim()),
+        reference_videos: (referenceFiles['video'] || []).filter(f => f.type === 'video').map(f => (f.url||'').replace(/`/g,'').trim()),
+        reference_audios: (referenceFiles['video'] || []).filter(f => f.type === 'audio').map(f => (f.url||'').replace(/`/g,'').trim()),
       };
       
       // 添加真人素材参数（参考 BytePlus 文档：https://docs.byteplus.com/en/docs/ModelArk/2333589）

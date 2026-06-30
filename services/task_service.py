@@ -625,7 +625,7 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
             resolved_aud = f"{_public_base_url.rstrip('/')}/{aud_url.lstrip('/')}" if aud_url.startswith("/") and _public_base_url else _resolve_media_url(aud_url)
         else:
             resolved_aud = asset_uri
-        content.append({"type": "audio_url", "audio_url": {"url": resolved_aud.strip()}, "role": "reference_audio"})
+        content.append({"type": "audio_url", "audio_url": {"url": resolved_aud.replace('`','').strip()}, "role": "reference_audio"})
 
     # 参考视频（Seedance 2.0 要求视频必须走素材库，不能直传 URL）
     for vid_url in (task_config.get("reference_videos") or []):
@@ -638,7 +638,7 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
                 resolved = f"{_public_base_url.rstrip('/')}/{resolved.lstrip('/')}"
         else:
             resolved = asset_uri
-        content.append({"type": "video_url", "video_url": {"url": resolved.strip()}, "role": "reference_video"})
+        content.append({"type": "video_url", "video_url": {"url": resolved.replace('`','').strip()}, "role": "reference_video"})
 
         # 校验：音频参考不能是唯一的参考输入
     audios = task_config.get("reference_audios") or []
