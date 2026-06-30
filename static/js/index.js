@@ -2386,9 +2386,6 @@ function createTaskCard(task) {
           <span class="task-status status-${task.status.toLowerCase()}">${getStatusText(task.status)}</span>
         </div>
         <div style="display:flex;gap:6px;margin-top:4px;">
-          ${isTerminalFail && !task.is_composition ? `
-            <button class="retry-btn" onclick="event.stopPropagation();retryTask(${tid})">${t('js.retry_generate')}</button>
-          ` : ''}
           <button class="retry-btn" style="background:rgba(239,68,68,.15);color:#f87171;border-color:rgba(239,68,68,.3);" onclick="event.stopPropagation();deleteTask(${tid},${isImageTask})">🗑 删除</button>
         </div>
       </div>
@@ -2852,7 +2849,6 @@ function openTaskDetail(taskId) {
       </div>
     ` : (task.status === 'FAILED' || task.status === 'CANCELLED' || task.status === 'ERROR') ? `
       <div class="modal-actions">
-        <button class="modal-action-btn danger" onclick="retryTask('${task.id}');closeModal()">${t('js.retry_generate')}</button>
       </div>
     ` : ''}
   `;
@@ -3103,7 +3099,7 @@ async function generateVideo() {
       if (!model) return 12;
       const modelLower = model.toLowerCase();
       if (modelLower.includes('2.0') || modelLower.includes('seedance2') || modelLower.includes('dreamina-seedance-2')) {
-        return 15;
+        return 30;
       }
       return 15;
     }
