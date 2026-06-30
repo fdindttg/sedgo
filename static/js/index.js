@@ -780,7 +780,8 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // ── Episode count change → update cost ──
-  document.getElementById('dramaEpisodeCount').addEventListener('change', function() {
+  var epCountEl = document.getElementById('dramaEpisodeCount');
+  if (epCountEl) epCountEl.addEventListener('change', function() {
     updateDramaCostDisplay();
   });
 
