@@ -640,7 +640,14 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
             resolved = asset_uri
         content.append({"type": "video_url", "video_url": {"url": resolved}, "role": "reference_video"})
 
-    # 使用接入点ID作为模型参数（BytePlus API要求使用接入点ID）
+        # 校验：音频参考不能是唯一的参考输入
+    audios = task_config.get("reference_audios") or []
+    images = task_config.get("reference_images") or []
+    videos = task_config.get("reference_videos") or []
+    if audios and not images and not videos:
+        raise ValueError("音频参考必须配合至少一张图片或一段视频使用")
+
+# 使用接入点ID作为模型参数（BytePlus API要求使用接入点ID）
     model = endpoint.endpoint_id
     logger.info(f"[DEBUG] Using endpoint ID as model: {model}")
 
