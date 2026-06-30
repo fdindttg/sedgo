@@ -1236,7 +1236,7 @@ def _extract_last_frame(video_url: str, output_dir: str = None) -> str | None:
 
 
 def _concat_videos(segment_urls: list[str], output_path: str) -> bool:
-    """下载所有片段并用 ffmpeg 拼接成单文件（带交叉淡入过渡效果），返回是否成功"""
+    """下载所有片段并用 ffmpeg 拼接成单文件，返回是否成功。优先尝试 xfade，失败则回退到简单 concat。"""
     ffmpeg = _get_ffmpeg_exe()
     tmpdir = tempfile.mkdtemp(prefix="sedgo_concat_")
     try:
@@ -1249,51 +1249,80 @@ def _concat_videos(segment_urls: list[str], output_path: str) -> bool:
                 for chunk in resp.iter_content(65536):
                     f.write(chunk)
             local_files.append(local_path)
-            logger.info(f"[concat] downloaded segment {i}: {len(open(local_path,'rb').read())} bytes")
+            logger.info(f"[concat] downloaded segment {i}: {os.path.getsize(local_path)} bytes")
 
         if len(local_files) == 1:
             shutil.copy(local_files[0], output_path)
             logger.info(f"[concat] only 1 segment, copied directly")
             return True
 
+        # 获取所有片段时长，缓存避免重复调用
+        durations = [_get_video_duration(p) for p in local_files]
+        logger.info(f"[concat] segment durations: {durations}")
+
         fade_duration = 0.5
+        can_xfade = all(d > fade_duration for d in durations)
 
+        # 尝试 xfade 过渡
+        if can_xfade:
+            success = _concat_with_xfade(ffmpeg, local_files, durations, fade_duration, output_path)
+            if success:
+                return True
+            logger.warning("[concat] xfade failed, falling back to simple concat")
+
+        # 回退：简单 concat（无需特殊滤镜）
+        return _concat_simple(ffmpeg, local_files, output_path)
+
+    except Exception as e:
+        logger.error(f"[concat] error: {e}")
+        return False
+    finally:
+        shutil.rmtree(tmpdir, ignore_errors=True)
+
+
+def _concat_with_xfade(ffmpeg: str, local_files: list, durations: list, fade_duration: float, output_path: str) -> bool:
+    """使用 xfade/acrossfade 滤镜拼接（带交叉淡入过渡效果）"""
+    try:
         inputs = []
-        filters = []
-        outputs = []
-
-        for i, seg in enumerate(local_files):
+        for seg in local_files:
             inputs.extend(["-i", seg])
-            filters.append(f"[{i}:v][{i}:a]")
 
         filters_str = ""
+        last_out_vid = ""
+        last_out_aud = ""
+
         for i in range(len(local_files) - 1):
+            cur_v_label = f"v{i}"
+            cur_a_label = f"a{i}"
+            next_v_label = f"v{i+1}"
+            next_a_label = f"a{i+1}"
+            out_v_label = f"vout{i+1}"
+            out_a_label = f"aout{i+1}"
+
             if i == 0:
-                filters_str += f"[{i}:v]trim=duration={_get_video_duration(local_files[i]) - fade_duration},setpts=PTS-STARTPTS[v{i}];"
-                filters_str += f"[{i}:a]atrim=duration={_get_video_duration(local_files[i]) - fade_duration},asetpts=PTS-STARTPTS[a{i}];"
+                trim_dur = durations[i] - fade_duration
+                filters_str += f"[{i}:v]trim=duration={trim_dur:.4f},setpts=PTS-STARTPTS[{cur_v_label}];"
+                filters_str += f"[{i}:a]atrim=duration={trim_dur:.4f},asetpts=PTS-STARTPTS[{cur_a_label}];"
             else:
-                filters_str += f"[{i}:v]setpts=PTS-STARTPTS[v{i}];"
-                filters_str += f"[{i}:a]asetpts=PTS-STARTPTS[a{i}];"
+                filters_str += f"[{last_out_vid}]setpts=PTS-STARTPTS[{cur_v_label}];"
+                filters_str += f"[{last_out_aud}]asetpts=PTS-STARTPTS[{cur_a_label}];"
 
-            filters_str += f"[{i+1}:v]trim=start=0:duration={_get_video_duration(local_files[i+1])},setpts=PTS-STARTPTS[v{i+1}];"
-            filters_str += f"[{i+1}:a]atrim=start=0:duration={_get_video_duration(local_files[i+1])},asetpts=PTS-STARTPTS[a{i+1}];"
+            filters_str += f"[{i+1}:v]trim=duration={durations[i+1]:.4f},setpts=PTS-STARTPTS[{next_v_label}];"
+            filters_str += f"[{i+1}:a]atrim=duration={durations[i+1]:.4f},asetpts=PTS-STARTPTS[{next_a_label}];"
 
-            filters_str += f"[v{i}][v{i+1}]xfade=transition=fade:duration={fade_duration}:offset={_get_video_duration(local_files[i]) - fade_duration}[vout{i+1}];"
-            filters_str += f"[a{i}][a{i+1}]acrossfade=d={fade_duration}[aout{i+1}];"
+            offset = (durations[i] - fade_duration) if i == 0 else "0"
+            filters_str += f"[{cur_v_label}][{next_v_label}]xfade=transition=fade:duration={fade_duration}:offset={offset}[{out_v_label}];"
+            filters_str += f"[{cur_a_label}][{next_a_label}]acrossfade=d={fade_duration}[{out_a_label}];"
 
-        last_idx = len(local_files) - 1
-        filters_str += f"[{last_idx}:v]setpts=PTS-STARTPTS[v{last_idx}];"
-        filters_str += f"[{last_idx}:a]asetpts=PTS-STARTPTS[a{last_idx}];"
-
-        if len(local_files) > 1:
-            filters_str += f"[vout{last_idx}][aout{last_idx}]"
+            last_out_vid = out_v_label
+            last_out_aud = out_a_label
 
         cmd = [
             ffmpeg, "-y",
             *inputs,
             "-filter_complex", filters_str,
-            "-map", "[vout{}]".format(last_idx) if len(local_files) > 1 else "[0:v]",
-            "-map", "[aout{}]".format(last_idx) if len(local_files) > 1 else "[0:a]",
+            "-map", f"[{last_out_vid}]",
+            "-map", f"[{last_out_aud}]",
             "-c:v", "libx264",
             "-c:a", "aac",
             "-preset", "fast",
@@ -1303,15 +1332,53 @@ def _concat_videos(segment_urls: list[str], output_path: str) -> bool:
 
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
         if result.returncode != 0:
-            logger.error(f"[concat] ffmpeg failed: {result.stderr[-500:]}")
+            stderr_tail = result.stderr[-800:] if result.stderr else ''
+            logger.error(f"[concat] xfade failed: {stderr_tail}")
             return False
-        logger.info(f"[concat] merged {len(local_files)} segments with crossfade → {output_path}")
+        logger.info(f"[concat] merged {len(local_files)} segments with xfade -> {output_path}")
         return True
     except Exception as e:
-        logger.error(f"[concat] error: {e}")
+        logger.error(f"[concat] xfade error: {e}")
         return False
-    finally:
-        shutil.rmtree(tmpdir, ignore_errors=True)
+
+
+def _concat_simple(ffmpeg: str, local_files: list, output_path: str) -> bool:
+    """使用 concat 滤镜简单拼接（无过渡效果，兼容所有 ffmpeg 版本）"""
+    try:
+        inputs = []
+        for seg in local_files:
+            inputs.extend(["-i", seg])
+
+        n = len(local_files)
+        concat_parts = []
+        for i in range(n):
+            concat_parts.append(f"[{i}:v][{i}:a]")
+        concat_inputs = "".join(concat_parts)
+        filter_str = f"{concat_inputs}concat=n={n}:v=1:a=1[v][a]"
+
+        cmd = [
+            ffmpeg, "-y",
+            *inputs,
+            "-filter_complex", filter_str,
+            "-map", "[v]",
+            "-map", "[a]",
+            "-c:v", "libx264",
+            "-c:a", "aac",
+            "-preset", "fast",
+            "-crf", "23",
+            output_path,
+        ]
+
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+        if result.returncode != 0:
+            stderr_tail = result.stderr[-800:] if result.stderr else ''
+            logger.error(f"[concat] simple concat failed: {stderr_tail}")
+            return False
+        logger.info(f"[concat] merged {n} segments with simple concat -> {output_path}")
+        return True
+    except Exception as e:
+        logger.error(f"[concat] simple concat error: {e}")
+        return False
 
 
 def create_video_composition(db: Session, user_id: int, task_config: dict) -> VideoComposition:
