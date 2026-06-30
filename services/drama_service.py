@@ -507,14 +507,16 @@ def build_export_manifest(
 # 数据库操作辅助函数
 # ═══════════════════════════════════════════════════════════════════
 
-def create_project(db: Session, user_id: int, title: str, genre: str, logline: str, total_episodes: int = 10) -> DramaProject:
+def create_project(db: Session, user_id: int, title: str, genre: str, logline: str, total_episodes: int = 10, settings: dict = None) -> DramaProject:
     """创建短剧项目"""
+    import json
     project = DramaProject(
         user_id=user_id,
         title=title,
         genre=genre,
         logline=logline,
         total_episodes=total_episodes,
+        settings=json.dumps(settings, ensure_ascii=False) if settings else None,
     )
     db.add(project)
     db.commit()

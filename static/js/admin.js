@@ -99,13 +99,11 @@ function switchPage(page) {
   document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
   const sitem = document.querySelector('.sidebar-item[data-page="' + page + '"]');
   if (sitem) sitem.classList.add('active');
-  const titles = { dashboard:'仪表盘', users:'用户管理', plans:'套餐管理', subscriptions:'订阅记录', channels:'渠道管理', points:'积分配置', tasks:'任务监控', billing:'账单管理', payments:'支付与设置', contacts:'工单管理' };
+  const titles = { dashboard:'仪表盘', users:'用户管理', channels:'渠道管理', points:'积分配置', tasks:'任务监控', billing:'账单管理', payments:'支付与设置', contacts:'工单管理' };
   document.getElementById('topbarTitle').textContent = titles[page] || page;
 
   if (page === 'dashboard') loadDashboard();
   else if (page === 'users') loadUsers();
-  else if (page === 'plans') loadPlans();
-  else if (page === 'subscriptions') loadSubscriptions();
   else if (page === 'channels') loadChannels();
   else if (page === 'points') { loadPricingConfig(); }
   else if (page === 'tasks') loadTasks(1);
@@ -164,23 +162,30 @@ async function loadUsers(page) {
       const statusText = { active:'正常', inactive:'停用', banned:'封禁' }[u.status] || u.status;
       const roleBadge = u.role === 'admin' ? 'badge-info' : 'badge-neutral';
       const roleText = u.role === 'admin' ? '管理员' : '用户';
+      const userTypeMap = { trial: '试用', internal: '内部', regular: '正式' };
+      const userType = u.user_type || 'regular';
+      const typeBadge = { trial: 'badge-warning', internal: 'badge-info', regular: 'badge-success' }[userType] || 'badge-neutral';
       html += `<tr>
         <td>${u.id}</td><td>${u.email || '-'}</td><td>${u.display_name || '-'}</td>
         <td><span class="badge ${roleBadge}">${roleText}</span></td>
+        <td><span class="badge ${typeBadge}">${userTypeMap[userType] || userType}</span></td>
         <td><span class="badge ${statusBadge}">${statusText}</span></td>
         <td>${u.points_balance || 0}</td>
-        <td>${u.subscription?.plan_name || '-'}</td>
+        <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${(u.remark || '').replace(/"/g, '&quot;')}">${u.remark || '-'}</td>
         <td>${(u.created_at || '').slice(0,10)}</td>
         <td>
           <a class="action-link" onclick="openPointsModal(${u.id}, ${u.points_balance || 0})">积分</a>
-          <a class="action-link" onclick="openSubscriptionModal(${u.id})">订阅</a>
+          <a class="action-link" onclick="openPasswordModal(${u.id}, '${(u.email || u.display_name || '').replace(/'/g, "\\'")}')">改密</a>
+          <a class="action-link" onclick="openUserTypeModal(${u.id}, '${(u.email || u.display_name || '').replace(/'/g, "\\'")}', '${userType}')">改类型</a>
+          <a class="action-link" onclick="openRemarkModal(${u.id}, '${(u.email || u.display_name || '').replace(/'/g, "\\'")}', '${(u.remark || '').replace(/'/g, "\\'")}')">备注</a>
           <a class="action-link" onclick="toggleUserStatus(${u.id},'${u.status}','${u.status==='active'?'inactive':'active'}')">${u.status==='active'?'停用':'启用'}</a>
           <a class="action-link danger" onclick="toggleUserStatus(${u.id},'${u.status}','banned')">封禁</a>
           <a class="action-link" onclick="toggleUserRole(${u.id},'${u.role}')">${u.role==='admin'?'降级':'提升'}</a>
+          <a class="action-link danger" onclick="deleteUser(${u.id},'${u.email || ''}')">删除</a>
         </td>
       </tr>`;
     });
-    if (!html) html = '<tr><td colspan="9" class="empty-state"><div class="empty-state-text">暂无用户数据</div></td></tr>';
+    if (!html) html = '<tr><td colspan="10" class="empty-state"><div class="empty-state-text">暂无用户数据</div></td></tr>';
     document.getElementById('userTableBody').innerHTML = html;
     renderPagination('userPagination', d.total, userPage, 20, loadUsers);
   } catch (e) { console.error(e); }
@@ -204,6 +209,16 @@ async function toggleUserRole(id, curRole) {
   } catch (e) { showToast(e.message, 'error'); }
 }
 
+async function deleteUser(id, email) {
+  if (!confirm(`确认删除用户 ${email || id}？\n\n将同时删除该用户的：\n- 积分记录\n- 任务记录\n- API密钥\n- 短剧项目\n\n此操作不可撤销！`)) return;
+  if (!confirm('再次确认：删除后数据不可恢复！')) return;
+  try {
+    await api(`/users/${id}`, { method: 'DELETE' });
+    showToast('用户已删除', 'success');
+    loadUsers();
+  } catch (e) { showToast(e.message, 'error'); }
+}
+
 function renderPagination(elId, total, page, pageSize, loadFn) {
   const totalPages = Math.ceil(total / pageSize) || 1;
   let html = `<button onclick="${loadFn.name}(${page-1})" ${page<=1?'disabled':''}>上一页</button>`;
@@ -211,154 +226,6 @@ function renderPagination(elId, total, page, pageSize, loadFn) {
   html += `<button onclick="${loadFn.name}(${page+1})" ${page>=totalPages?'disabled':''}>下一页</button>`;
   document.getElementById(elId).innerHTML = html;
 }
-
-// Plans
-async function loadPlans() {
-  try {
-    const data = await api('/plans');
-    let html = '';
-    data.forEach(p => {
-      html += `<tr>
-        <td>${p.id}</td><td>${p.name}</td><td>${(p.price_cents/100).toFixed(2)}</td><td>${p.duration_days}</td>
-        <td>${p.points_per_month}</td><td>${p.max_batch_size}</td><td>${p.max_resolution}</td>
-        <td><span class="badge ${p.is_active?'badge-success':'badge-neutral'}">${p.is_active?'启用':'停用'}</span></td>
-        <td>${p.sort_order}</td>
-        <td>
-          <a class="action-link" onclick='editPlan(${p.id}, decodeURIComponent("${encodeURIComponent(JSON.stringify(p))}"))'>编辑</a>
-          <a class="action-link danger" onclick="deletePlan(${p.id})">删除</a>
-        </td>
-      </tr>`;
-    });
-    if (!html) html = '<tr><td colspan="10" class="empty-state"><div class="empty-state-text">暂无套餐</div></td></tr>';
-    document.getElementById('planTableBody').innerHTML = html;
-  } catch (e) { console.error(e); }
-}
-
-let _usdToPointsRate = 100; // 默认汇率
-
-// 加载汇率配置
-async function loadUsdToPointsRate() {
-  try {
-    const cfg = await api('/pricing-config');
-    _usdToPointsRate = cfg.usd_to_points || 100;
-  } catch (e) {
-    console.error('Failed to load USD to points rate:', e);
-  }
-}
-
-// 根据价格计算积分
-function calculatePointsFromPrice(priceCents) {
-  const priceUsd = priceCents / 100;
-  return Math.round(priceUsd * _usdToPointsRate);
-}
-
-function openPlanModal(plan) {
-  document.getElementById('planModal').classList.add('open');
-  if (plan) {
-    document.getElementById('planModalTitle').textContent = '编辑套餐';
-    document.getElementById('planEditId').value = plan.id;
-    document.getElementById('planName').value = plan.name || '';
-    document.getElementById('planDesc').value = plan.description || '';
-    document.getElementById('planPrice').value = plan.price_cents || 0;
-    document.getElementById('planDays').value = plan.duration_days || 30;
-    document.getElementById('planPoints').value = plan.points_per_month || 0;
-    document.getElementById('planBatch').value = plan.max_batch_size || 1;
-    document.getElementById('planConcurrent').value = plan.max_concurrent_tasks || 1;
-    document.getElementById('planRes').value = plan.max_resolution || '720p';
-    document.getElementById('planSort').value = plan.sort_order || 0;
-  } else {
-    document.getElementById('planModalTitle').textContent = '新建套餐';
-    document.getElementById('planEditId').value = '';
-    document.getElementById('planName').value = '';
-    document.getElementById('planDesc').value = '';
-    document.getElementById('planPrice').value = 0;
-    document.getElementById('planDays').value = 30;
-    document.getElementById('planPoints').value = 0;
-    document.getElementById('planBatch').value = 1;
-    document.getElementById('planConcurrent').value = 1;
-    document.getElementById('planRes').value = '720p';
-    document.getElementById('planSort').value = 0;
-  }
-}
-
-function closePlanModal() { document.getElementById('planModal').classList.remove('open'); }
-
-async function savePlan() {
-  const id = document.getElementById('planEditId').value;
-  const body = {
-    name: document.getElementById('planName').value,
-    description: document.getElementById('planDesc').value,
-    price_cents: parseInt(document.getElementById('planPrice').value) || 0,
-    duration_days: parseInt(document.getElementById('planDays').value) || 30,
-    max_batch_size: parseInt(document.getElementById('planBatch').value) || 1,
-    max_concurrent_tasks: parseInt(document.getElementById('planConcurrent').value) || 1,
-    max_resolution: document.getElementById('planRes').value,
-    sort_order: parseInt(document.getElementById('planSort').value) || 0,
-    is_active: true,
-  };
-  try {
-    if (id) {
-      await api(`/plans/${id}`, { method: 'PUT', body: JSON.stringify(body) });
-    } else {
-      await api('/plans', { method: 'POST', body: JSON.stringify(body) });
-    }
-    showToast(id ? '套餐已更新' : '套餐已创建', 'success');
-    closePlanModal();
-    loadPlans();
-  } catch (e) { showToast(e.message, 'error'); }
-}
-
-function editPlan(id, str) {
-  const p = JSON.parse(str);
-  p.id = id;
-  openPlanModal(p);
-}
-
-async function deletePlan(id) {
-  if (!confirm('确认删除该套餐？')) return;
-  try {
-    await api(`/plans/${id}`, { method: 'DELETE' });
-    showToast('套餐已删除', 'success');
-    loadPlans();
-  } catch (e) { showToast(e.message, 'error'); }
-}
-
-// Subscriptions
-let subPage = 1;
-async function loadSubscriptions(page) {
-  if (page) subPage = page;
-  try {
-    const d = await api(`/subscriptions?page=${subPage}&page_size=20`);
-    let html = '';
-    d.items.forEach(s => {
-      const statusBadge = { active:'badge-success', expired:'badge-warning', cancelled:'badge-neutral', trial:'badge-info' }[s.status] || 'badge-neutral';
-      const statusText = { active:'有效', expired:'已过期', cancelled:'已取消', trial:'试用' }[s.status] || s.status;
-      html += `<tr>
-        <td>${s.id}</td><td>${s.user_email || s.user_id}</td><td>${s.plan_name || '-'}</td>
-        <td><span class="badge ${statusBadge}">${statusText}</span></td>
-        <td>${(s.started_at||'').slice(0,10)}</td><td>${(s.expires_at||'').slice(0,10)}</td>
-        <td>${s.auto_renew ? '是' : '否'}</td>
-        <td>
-          ${s.status==='active' ? `<a class="action-link danger" onclick="cancelSub(${s.id})">取消</a>` : '-'}
-        </td>
-      </tr>`;
-    });
-    if (!html) html = '<tr><td colspan="8" class="empty-state"><div class="empty-state-text">暂无订阅记录</div></td></tr>';
-    document.getElementById('subTableBody').innerHTML = html;
-    renderPagination('subPagination', d.total, subPage, 20, loadSubscriptions);
-  } catch (e) { console.error(e); }
-}
-
-async function openSubModal() {
-  document.getElementById('subModal').classList.add('open');
-  const plans = await api('/plans');
-  let opts = '<option value="">选择套餐</option>';
-  plans.filter(p => p.is_active).forEach(p => {
-    opts += `<option value="${p.id}">${p.name} (${p.duration_days}天)</option>`;
-  });
-  document.getElementById('subPlanId').innerHTML = opts;
-}
-function closeSubModal() { document.getElementById('subModal').classList.remove('open'); }
 
 function openPointsModal(userId, balance) {
   document.getElementById('pointsUserId').value = userId;
@@ -395,73 +262,72 @@ async function savePoints() {
   } catch (e) { showToast(e.message, 'error'); }
 }
 
-async function openSubscriptionModal(userId) {
-  document.getElementById('userSubUserId').value = userId;
-  document.getElementById('userSubDuration').value = '';
-  
-  try {
-    const plans = await api('/plans');
-    let opts = '<option value="">选择套餐</option>';
-    plans.filter(p => p.is_active).forEach(p => {
-      opts += `<option value="${p.id}">${p.name} (${p.duration_days}天)</option>`;
-    });
-    document.getElementById('userSubPlanId').innerHTML = opts;
-  } catch (e) {
-    console.error('Failed to load plans:', e);
-  }
-  
-  document.getElementById('userSubModal').classList.add('open');
+function openPasswordModal(userId, userInfo) {
+  document.getElementById('passwordUserId').value = userId;
+  document.getElementById('passwordUserInfo').value = userInfo;
+  document.getElementById('newPassword').value = '';
+  document.getElementById('passwordModal').classList.add('open');
 }
+function closePasswordModal() { document.getElementById('passwordModal').classList.remove('open'); }
 
-function closeUserSubModal() { document.getElementById('userSubModal').classList.remove('open'); }
-
-async function saveUserSub() {
-  const userId = parseInt(document.getElementById('userSubUserId').value);
-  const planId = parseInt(document.getElementById('userSubPlanId').value);
-  const billingCycle = document.getElementById('userSubCycle').value;
-  const duration = parseInt(document.getElementById('userSubDuration').value);
-  const status = document.getElementById('userSubStatus').value;
-  
-  if (!userId) {
-    showToast('用户ID无效', 'error');
+async function savePassword() {
+  const userId = document.getElementById('passwordUserId').value;
+  const newPassword = document.getElementById('newPassword').value;
+  if (!newPassword || newPassword.length < 6) {
+    showToast('密码至少6位', 'error');
     return;
   }
-  
   try {
-    const body = {};
-    if (planId) body.plan_id = planId;
-    if (billingCycle) body.billing_cycle = billingCycle;
-    if (duration) body.duration = duration;
-    if (status) body.status = status;
-    
-    await api(`/users/${userId}/subscription`, { method: 'PUT', body: JSON.stringify(body) });
-    showToast('订阅已更新', 'success');
-    closeUserSubModal();
+    await api(`/users/${userId}/password`, {
+      method: 'PUT',
+      body: JSON.stringify({ new_password: newPassword }),
+    });
+    showToast('密码已修改', 'success');
+    closePasswordModal();
+  } catch (e) { showToast(e.message, 'error'); }
+}
+
+function openUserTypeModal(userId, userInfo, currentType) {
+  document.getElementById('userTypeUserId').value = userId;
+  document.getElementById('userTypeUserInfo').value = userInfo;
+  document.getElementById('userTypeSelect').value = currentType || 'regular';
+  document.getElementById('userTypeModal').classList.add('open');
+}
+function closeUserTypeModal() { document.getElementById('userTypeModal').classList.remove('open'); }
+
+async function saveUserType() {
+  const userId = document.getElementById('userTypeUserId').value;
+  const userType = document.getElementById('userTypeSelect').value;
+  try {
+    await api(`/users/${userId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ user_type: userType }),
+    });
+    showToast('类型已更新', 'success');
+    closeUserTypeModal();
     loadUsers();
   } catch (e) { showToast(e.message, 'error'); }
 }
 
-async function saveSub() {
-  const user_id = parseInt(document.getElementById('subUserId').value);
-  const plan_id = parseInt(document.getElementById('subPlanId').value);
-  const duration_days = parseInt(document.getElementById('subDaysDays').value) || undefined;
-  if (!user_id || !plan_id) { showToast('请填写用户ID和选择套餐', 'error'); return; }
-  try {
-    const body = { user_id, plan_id };
-    if (duration_days) body.duration_days = duration_days;
-    await api('/subscriptions', { method: 'POST', body: JSON.stringify(body) });
-    showToast('订阅已创建', 'success');
-    closeSubModal();
-    loadSubscriptions();
-  } catch (e) { showToast(e.message, 'error'); }
+function openRemarkModal(userId, userInfo, currentRemark) {
+  document.getElementById('remarkUserId').value = userId;
+  document.getElementById('remarkUserInfo').value = userInfo;
+  document.getElementById('remarkInput').value = currentRemark || '';
+  document.getElementById('remarkModal').classList.add('open');
 }
+function closeRemarkModal() { document.getElementById('remarkModal').classList.remove('open'); }
 
-async function cancelSub(id) {
-  if (!confirm('确认取消该订阅？')) return;
+async function saveRemark() {
+  const userId = document.getElementById('remarkUserId').value;
+  const remark = document.getElementById('remarkInput').value;
   try {
-    await api(`/subscriptions/${id}/cancel`, { method: 'POST' });
-    showToast('订阅已取消', 'success');
-    loadSubscriptions();
+    await api(`/users/${userId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ remark: remark }),
+    });
+    showToast('备注已更新', 'success');
+    closeRemarkModal();
+    loadUsers();
   } catch (e) { showToast(e.message, 'error'); }
 }
 
@@ -1048,7 +914,6 @@ async function loadPointsStats() {
       <div class="stat-card"><div class="stat-label">总获取</div><div class="stat-value" style="color:var(--green)">+${d.total_earned}</div></div>
       <div class="stat-card"><div class="stat-label">总消耗</div><div class="stat-value" style="color:var(--red)">-${d.total_consumed}</div></div>
       <div class="stat-card"><div class="stat-label">管理员调整</div><div class="stat-value" style="color:var(--accent)">${d.total_adjusted > 0 ? '+' : ''}${d.total_adjusted}</div></div>
-      <div class="stat-card"><div class="stat-label">订阅赠送</div><div class="stat-value" style="color:var(--green)">+${d.total_subscription}</div></div>
     `;
     
     const chartData = d.daily_stats.map(ds => ({
@@ -1108,16 +973,7 @@ async function forceDeleteTask(id) {
 document.addEventListener('DOMContentLoaded', async () => {
   if (authToken) {
     showApp();
-    await loadUsdToPointsRate();
     
-    // 绑定价格输入变化事件，实时计算积分
-    const priceInput = document.getElementById('planPrice');
-    if (priceInput) {
-      priceInput.addEventListener('input', () => {
-        const priceCents = parseInt(priceInput.value) || 0;
-        document.getElementById('planPoints').value = calculatePointsFromPrice(priceCents);
-      });
-    }
   } else {
     showLogin();
   }
@@ -1126,34 +982,84 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Billing
 let billingPage = 1;
 
+async function loadBillingSummary() {
+  try {
+    const s = await api('/billing/summary');
+    document.getElementById('billingSummaryStats').innerHTML = `
+      <div class="stat-card"><div class="stat-label">总积分发放</div><div class="stat-value" style="color:#22c55e;">${s.total_added.toLocaleString()}</div></div>
+      <div class="stat-card"><div class="stat-label">总积分消耗</div><div class="stat-value" style="color:#ef4444;">${s.total_consumed.toLocaleString()}</div></div>
+      <div class="stat-card"><div class="stat-label">净余额</div><div class="stat-value" style="color:${s.net_balance >= 0 ? '#22c55e' : '#ef4444'};">${s.net_balance.toLocaleString()}</div></div>
+    `;
+    document.getElementById('billingBreakdown').innerHTML = `
+      <span>管理员调整: <strong style="color:#f59e0b;">${s.admin_adjust_points.toLocaleString()}</strong></span>
+      <span>积分充值: <strong style="color:#22c55e;">${s.earn_points.toLocaleString()}</strong></span>
+      <span>过期回收: <strong style="color:#ef4444;">${s.expired_points.toLocaleString()}</strong></span>
+    `;
+  } catch (e) { console.error('loadBillingSummary error:', e); }
+}
+
 async function loadBilling(page) {
   billingPage = page || 1;
   const search = (document.getElementById('billingSearch') || {}).value || '';
   try {
-    const d = await api(`/billing?page=${billingPage}&page_size=20`);
-    const statusMap = { active: '有效', expired: '已过期', cancelled: '已取消', pending: '待处理' };
-    const cycleMap = { monthly: '月付', annual: '年付' };
+    loadBillingSummary();
+    const d = await api(`/billing?page=${billingPage}&page_size=20&search=${encodeURIComponent(search)}`);
+    const userStatusMap = { active: '正常', inactive: '停用', banned: '封禁' };
+    const userStatusCls = { active: 'badge-success', inactive: 'badge-warning', banned: 'badge-danger' };
     let items = d.items || [];
-    if (search) items = items.filter(b => (b.user_email || '').includes(search));
     let html = '';
     items.forEach(b => {
-      const statusCls = b.status === 'active' ? 'badge-success' : 'badge-error';
+      const uStatus = b.user_status || 'active';
+      const uStatusCls = userStatusCls[uStatus] || 'badge-neutral';
+      const userType = b.user_type || 'regular';
+      const userTypeMap = { trial: '试用', internal: '内部', regular: '正式' };
+      const typeBadge = { trial: 'badge-warning', internal: 'badge-info', regular: 'badge-success' }[userType] || 'badge-neutral';
+      const addCls = b.points_added > 0 ? 'color:#22c55e;' : '';
+      const consumeCls = b.points_consumed > 0 ? 'color:#ef4444;' : '';
+      const net = (b.points_added || 0) - (b.points_consumed || 0);
+      const netCls = net >= 0 ? 'color:#22c55e;' : 'color:#ef4444;';
       html += `<tr>
-        <td>${b.id}</td>
+        <td>${b.user_id}</td>
         <td><div>${b.user_email || ''}</div><div style="font-size:11px;color:var(--t3)">${b.user_name || ''}</div></td>
-        <td>${b.plan_name || ''}</td>
-        <td>${cycleMap[b.billing_cycle] || b.billing_cycle || '-'}</td>
-        <td><span class="badge ${statusCls}">${statusMap[b.status] || b.status}</span></td>
-        <td>${b.price_cents ? '¥' + (b.price_cents / 100).toFixed(2) : '-'}</td>
-        <td>${b.points_per_month || 0}</td>
-        <td>${(b.started_at || '').slice(0, 10) || '-'}</td>
-        <td>${(b.expires_at || '').slice(0, 10) || '-'}</td>
+        <td><span class="badge ${uStatusCls}" title="账户状态">${userStatusMap[uStatus] || uStatus}</span></td>
+        <td><span class="badge ${typeBadge}">${userTypeMap[userType] || userType}</span></td>
+        <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${(b.remark || '').replace(/"/g, '&quot;')}">${b.remark || '-'}</td>
+        <td style="${addCls}font-weight:600;">+${(b.points_added || 0).toLocaleString()}</td>
+        <td style="${consumeCls}font-weight:600;">-${(b.points_consumed || 0).toLocaleString()}</td>
+        <td style="${netCls}font-weight:600;">${net >= 0 ? '+' : ''}${net.toLocaleString()}</td>
+        <td style="font-weight:600;">${b.points_balance != null ? b.points_balance.toLocaleString() : '-'}</td>
       </tr>`;
     });
     if (!html) html = '<tr><td colspan="9" class="empty-state"><div class="empty-state-text">暂无账单数据</div></td></tr>';
     document.getElementById('billingTableBody').innerHTML = html;
     renderPagination('billingPagination', d.total, billingPage, 20, loadBilling);
   } catch (e) { console.error(e); }
+}
+
+function exportBilling() {
+  const token = authToken;
+  const a = document.createElement('a');
+  a.href = API_BASE + '/billing/export';
+  a.download = 'billing_export.csv';
+  // 通过 URL 参数无法传 Authorization header，改用 fetch + blob
+  fetch(API_BASE + '/billing/export', {
+    headers: { 'Authorization': 'Bearer ' + (token || '') }
+  }).then(res => {
+    if (!res.ok) throw new Error('Export failed');
+    return res.blob();
+  }).then(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'billing_export.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('导出成功', 'success');
+  }).catch(e => {
+    showToast('导出失败: ' + e.message, 'error');
+  });
 }
 
 // 窗口大小变化时关闭侧边栏

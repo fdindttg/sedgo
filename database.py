@@ -69,6 +69,12 @@ class UserStatus(str, enum.Enum):
     BANNED = "banned"
 
 
+class UserType(str, enum.Enum):
+    TRIAL = "trial"       # 试用
+    INTERNAL = "internal" # 内部
+    REGULAR = "regular"   # 正式
+
+
 class SubscriptionStatus(str, enum.Enum):
     ACTIVE = "active"
     EXPIRED = "expired"
@@ -104,6 +110,8 @@ class User(Base):
     avatar_url = Column(String(500), nullable=True)
     role = Column(SAEnum(UserRole), default=UserRole.USER, nullable=False)
     status = Column(SAEnum(UserStatus), default=UserStatus.ACTIVE, nullable=False)
+    user_type = Column(String(20), default='regular', nullable=False)
+    remark = Column(String(500), nullable=True)
     email_verified = Column(Boolean, default=False)
     last_login_at = Column(DateTime, nullable=True)
     asset_group_id = Column(String(100), nullable=True)
@@ -487,6 +495,7 @@ class DramaProject(Base):
     genre = Column(String(50), nullable=True)  # 类型：逆袭/重生/霸总/甜宠/穿越/古装
     logline = Column(Text, nullable=True)  # 一句话梗概
     total_episodes = Column(Integer, default=10)
+    settings = Column(Text, nullable=True)  # JSON: project-level settings (model, resolution, ratio, duration, ref_mode, subtitle_removal, use_real_people)
     cover_url = Column(Text, nullable=True)
     status = Column(SAEnum(DramaStatus), default=DramaStatus.DRAFT, nullable=False)
     created_at = Column(DateTime, default=beijing_now)

@@ -60,12 +60,6 @@
       <button class="sidebar-item" data-page="users" onclick="switchPage('users')">
         <span>👥</span> 用户管理
       </button>
-      <button class="sidebar-item" data-page="plans" onclick="switchPage('plans')">
-        <span>📦</span> 套餐管理
-      </button>
-      <button class="sidebar-item" data-page="subscriptions" onclick="switchPage('subscriptions')">
-        <span>📝</span> 订阅记录
-      </button>
       <button class="sidebar-item" data-page="channels" onclick="switchPage('channels')">
         <span>🔌</span> 渠道管理
       </button>
@@ -134,54 +128,13 @@
         <table class="data-table">
           <thead>
             <tr>
-              <th>ID</th><th>邮箱</th><th>昵称</th><th>角色</th><th>状态</th><th>积分</th><th>套餐</th><th>注册时间</th><th>操作</th>
+              <th>ID</th><th>邮箱</th><th>昵称</th><th>角色</th><th>类型</th><th>状态</th><th>积分</th><th>备注</th><th>注册时间</th><th>操作</th>
             </tr>
           </thead>
           <tbody id="userTableBody"></tbody>
         </table>
       </div>
       <div class="pagination" id="userPagination"></div>
-    </div>
-
-    <!-- Plans -->
-    <div class="page-content" id="page-plans">
-      <div class="page-title">套餐管理</div>
-      <div class="page-desc">管理订阅套餐方案</div>
-      <div class="toolbar">
-        <button class="toolbar-btn" onclick="openPlanModal()">+ 新建套餐</button>
-      </div>
-      <div class="table-container">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>ID</th><th>名称</th><th>价格(美分)</th><th>周期(天)</th>
-              <th>月积分</th><th>批量上限</th><th>分辨率</th><th>状态</th><th>排序</th><th>操作</th>
-            </tr>
-          </thead>
-          <tbody id="planTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Subscriptions -->
-    <div class="page-content" id="page-subscriptions">
-      <div class="page-title">订阅记录</div>
-      <div class="page-desc">查看和管理用户订阅</div>
-      <div class="toolbar">
-        <button class="toolbar-btn" onclick="openSubModal()">+ 新增订阅</button>
-      </div>
-      <div class="table-container">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>ID</th><th>用户</th><th>套餐</th><th>状态</th>
-              <th>开始时间</th><th>到期时间</th><th>续费</th><th>操作</th>
-            </tr>
-          </thead>
-          <tbody id="subTableBody"></tbody>
-        </table>
-      </div>
-      <div class="pagination" id="subPagination"></div>
     </div>
 
     <!-- Channels -->
@@ -408,16 +361,35 @@
     <!-- Billing -->
     <div class="page-content" id="page-billing">
       <div class="page-title">账单管理</div>
-      <div class="page-desc">查看所有用户的订阅账单记录</div>
+      <div class="page-desc">查看积分发放与消耗明细</div>
+      
+      <!-- 积分汇总卡片 -->
+      <div class="stats-grid" id="billingSummaryStats" style="margin-bottom:20px;">
+        <div class="stat-card"><div class="stat-label">总积分发放</div><div class="stat-value" style="color:#22c55e;">-</div></div>
+        <div class="stat-card"><div class="stat-label">总积分消耗</div><div class="stat-value" style="color:#ef4444;">-</div></div>
+        <div class="stat-card"><div class="stat-label">净余额</div><div class="stat-value">-</div></div>
+      </div>
+      
+      <!-- 积分来源明细 -->
+      <div style="background:var(--bg2);border-radius:12px;padding:16px 20px;border:1px solid var(--bg4);margin-bottom:20px;">
+        <div style="font-size:14px;font-weight:600;margin-bottom:12px;">积分来源明细</div>
+        <div id="billingBreakdown" style="display:flex;gap:24px;flex-wrap:wrap;font-size:13px;color:var(--t2);">
+          <span>管理员调整: <strong style="color:#f59e0b;">-</strong></span>
+          <span>积分充值: <strong style="color:#22c55e;">-</strong></span>
+          <span>过期回收: <strong style="color:#ef4444;">-</strong></span>
+        </div>
+      </div>
+
       <div class="toolbar">
         <input type="text" id="billingSearch" placeholder="搜索用户邮箱..." style="padding:8px 12px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;color:var(--t1);font-size:13px;min-width:200px;" oninput="loadBilling(1)">
         <button class="toolbar-btn" onclick="loadBilling(1)">刷新</button>
+        <button class="toolbar-btn" onclick="exportBilling()" style="background:var(--accent);color:#fff;">📥 导出CSV</button>
       </div>
       <div class="table-container">
         <table class="data-table">
           <thead>
             <tr>
-              <th>ID</th><th>用户</th><th>方案</th><th>周期</th><th>状态</th><th>金额</th><th>积分/月</th><th>开始日期</th><th>到期日期</th>
+              <th>用户ID</th><th>用户</th><th style="width:70px">状态</th><th>类型</th><th>备注</th><th>已发放</th><th>已消耗</th><th>净增积分</th><th>余额</th>
             </tr>
           </thead>
           <tbody id="billingTableBody"></tbody>
@@ -568,32 +540,6 @@
   </div>
 </div>
 
-<!-- 弹窗：套餐编辑 -->
-<div class="modal-overlay" id="planModal">
-  <div class="modal">
-    <h3 id="planModalTitle">新建套餐</h3>
-    <input type="hidden" id="planEditId" />
-    <label>名称 *</label><input type="text" id="planName" placeholder="套餐名称" />
-    <label>描述</label><input type="text" id="planDesc" placeholder="套餐描述" />
-    <label>价格（美分）</label><input type="number" id="planPrice" value="0" />
-    <label>周期（天）</label><input type="number" id="planDays" value="30" />
-    <label>每月积分（自动计算）</label><input type="text" id="planPoints" value="0" readonly />
-    <label>批量生成上限</label><input type="number" id="planBatch" value="1" />
-    <label>最大并发任务</label><input type="number" id="planConcurrent" value="1" />
-    <label>最大分辨率</label>
-    <select id="planRes">
-      <option value="480p">480p</option>
-      <option value="720p" selected>720p</option>
-      <option value="1080p">1080p</option>
-    </select>
-    <label>排序</label><input type="number" id="planSort" value="0" />
-    <div class="modal-actions">
-      <button class="toolbar-btn outline" onclick="closePlanModal()">取消</button>
-      <button class="toolbar-btn" onclick="savePlan()">保存</button>
-    </div>
-  </div>
-</div>
-
 <!-- 弹窗：渠道编辑 -->
 <div class="modal-overlay" id="channelModal">
   <div class="modal">
@@ -677,21 +623,6 @@
   </div>
 </div>
 
-<!-- 弹窗：订阅 -->
-<div class="modal-overlay" id="subModal">
-  <div class="modal">
-    <h3>新增订阅</h3>
-    <label>用户ID</label><input type="number" id="subUserId" placeholder="用户ID" />
-    <label>套餐</label>
-    <select id="subPlanId"><option value="">选择套餐</option></select>
-    <label>时长（天，留空使用套餐默认）</label><input type="number" id="subDaysDays" placeholder="可选" />
-    <div class="modal-actions">
-      <button class="toolbar-btn outline" onclick="closeSubModal()">取消</button>
-      <button class="toolbar-btn" onclick="saveSub()">保存</button>
-    </div>
-  </div>
-</div>
-
 <!-- 弹窗：积分调整 -->
 <div class="modal-overlay" id="pointsModal">
   <div class="modal">
@@ -707,34 +638,55 @@
   </div>
 </div>
 
-<!-- 弹窗：修改订阅 -->
-<div class="modal-overlay" id="userSubModal">
+<!-- 弹窗：修改密码 -->
+<div class="modal-overlay" id="passwordModal">
   <div class="modal">
-    <h3>修改订阅</h3>
-    <input type="hidden" id="userSubUserId" />
-    <label>套餐</label>
-    <select id="userSubPlanId"><option value="">选择套餐</option></select>
-    <label>计费周期</label>
-    <select id="userSubCycle">
-      <option value="monthly">月付</option>
-      <option value="annual">年付</option>
-    </select>
-    <label>时长（天）</label><input type="number" id="userSubDuration" placeholder="留空则根据计费周期自动计算" />
-    <label>状态</label>
-    <select id="userSubStatus">
-      <option value="ACTIVE">激活</option>
-      <option value="CANCELLED">已取消</option>
-      <option value="EXPIRED">已过期</option>
+    <h3>修改密码</h3>
+    <input type="hidden" id="passwordUserId" />
+    <label>用户</label><input type="text" id="passwordUserInfo" readonly />
+    <label>新密码 *</label><input type="password" id="newPassword" placeholder="至少6位" />
+    <div class="modal-actions">
+      <button class="toolbar-btn outline" onclick="closePasswordModal()">取消</button>
+      <button class="toolbar-btn" onclick="savePassword()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 弹窗：修改用户类型 -->
+<div class="modal-overlay" id="userTypeModal">
+  <div class="modal">
+    <h3>修改用户类型</h3>
+    <input type="hidden" id="userTypeUserId" />
+    <label>用户</label><input type="text" id="userTypeUserInfo" readonly />
+    <label>类型</label>
+    <select id="userTypeSelect">
+      <option value="trial">试用</option>
+      <option value="internal">内部</option>
+      <option value="regular">正式</option>
     </select>
     <div class="modal-actions">
-      <button class="toolbar-btn outline" onclick="closeUserSubModal()">取消</button>
-      <button class="toolbar-btn" onclick="saveUserSub()">保存</button>
+      <button class="toolbar-btn outline" onclick="closeUserTypeModal()">取消</button>
+      <button class="toolbar-btn" onclick="saveUserType()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 弹窗：修改备注 -->
+<div class="modal-overlay" id="remarkModal">
+  <div class="modal">
+    <h3>修改备注</h3>
+    <input type="hidden" id="remarkUserId" />
+    <label>用户</label><input type="text" id="remarkUserInfo" readonly />
+    <label>备注</label><input type="text" id="remarkInput" placeholder="输入备注信息" />
+    <div class="modal-actions">
+      <button class="toolbar-btn outline" onclick="closeRemarkModal()">取消</button>
+      <button class="toolbar-btn" onclick="saveRemark()">保存</button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<script src="/static/js/admin.js?v=4"></script>
+<script src="/static/js/admin.js?v=7"></script>
 </body>
 </html>

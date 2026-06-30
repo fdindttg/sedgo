@@ -48,6 +48,9 @@ DEFAULT_FILE_URL = "https://ark.ap-southeast.bytepluses.com/api/v3/files"
 DEFAULT_TASK_URL = "https://ark.ap-southeast.bytepluses.com/api/v3/contents/generations/tasks"
 DEFAULT_LIST_URL = "https://ark.ap-southeast.bytepluses.com/api/v3/files/list"
 
+# ============== 服务器公网URL（素材库上传需要可公网访问的文件URL） ==============
+PUBLIC_BASE_URL = os.getenv("SD_PUBLIC_BASE_URL", "")
+
 # ============== 批处理配置 ==============
 BATCH_MAX_SIZE = int(os.getenv("SD_BATCH_MAX_SIZE", "20"))
 BATCH_POLL_INTERVAL = int(os.getenv("SD_BATCH_POLL_INTERVAL", "3"))

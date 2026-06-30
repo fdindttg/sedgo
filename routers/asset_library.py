@@ -1,5 +1,6 @@
 """资产库管理路由 - 对接火山引擎 BytePlus 真实素材库 API"""
 import json
+import os
 import requests
 from typing import Optional
 
@@ -19,6 +20,17 @@ _SERVICE = "ark"
 _HOST = "open.ap-southeast-1.byteplusapi.com"
 _VERSION = "2024-01-01"
 _FILE_URL = "https://ark.ap-southeast.bytepluses.com/api/v3/files"
+
+# AK/SK: 优先从环境变量读取，运行时可通过 set_asset_credentials() 覆盖
+_AK = os.getenv("SD_BYTEPLUS_AK", "")
+_SK = os.getenv("SD_BYTEPLUS_SK", "")
+
+
+def set_asset_credentials(ak: str, sk: str):
+    """设置素材库 API 使用的 AK/SK（运行时覆盖）"""
+    global _AK, _SK
+    _AK = ak or _AK
+    _SK = sk or _SK
 
 
 def _call_api(action: str, body: dict) -> dict:

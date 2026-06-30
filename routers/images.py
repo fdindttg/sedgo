@@ -192,20 +192,27 @@ async def _do_generate_image(
     }
     
     # 如果有参考图片，使用 image 参数（字符串/数组）
-    # 本地图片转 base64，避免 BytePlus 服务器下载超时
     if request.reference_images:
+        from config import PUBLIC_BASE_URL
+        _public_base = channel.public_base_url or PUBLIC_BASE_URL
         ref_urls = []
         for img_url in request.reference_images:
             if img_url.startswith("/"):
-                local_path = pathlib.Path(img_url.lstrip("/"))
-                if local_path.exists():
-                    mime = mimetypes.guess_type(str(local_path))[0] or "image/png"
-                    data = base64.b64encode(local_path.read_bytes()).decode()
-                    resolved = f"data:{mime};base64,{data}"
-                    logger.info(f"[image] Encoded local image to base64 ({len(data)} chars): {img_url}")
+                # 优先用公网 URL（BytePlus 需要可访问的 HTTP URL）
+                if _public_base:
+                    resolved = f"{_public_base.rstrip('/')}/{img_url.lstrip('/')}"
+                    logger.info(f"[image] Using public URL for reference image: {resolved[:80]}")
                 else:
-                    logger.warning(f"[image] Local image not found: {img_url}, using URL")
-                    resolved = img_url
+                    # 无公网 URL：本地文件转 base64 data URI
+                    local_path = pathlib.Path(img_url.lstrip("/"))
+                    if local_path.exists():
+                        mime = mimetypes.guess_type(str(local_path))[0] or "image/png"
+                        data = base64.b64encode(local_path.read_bytes()).decode()
+                        resolved = f"data:{mime};base64,{data}"
+                        logger.info(f"[image] Encoded local image to base64 ({len(data)} chars): {img_url}")
+                    else:
+                        logger.warning(f"[image] Local image not found and no public URL configured: {img_url}")
+                        resolved = img_url
             else:
                 resolved = img_url
             ref_urls.append(resolved)
@@ -234,7 +241,9 @@ async def _do_generate_image(
             error_msg = error_json.get("error", {}).get("message", error_json.get("error", {}).get("code", response.text))
         except Exception:
             error_msg = response.text[:200]
-        raise HTTPException(status_code=400, detail=f"图片生成失败: {error_msg}")
+        from services.error_utils import translate_error
+        friendly = translate_error(error_msg)
+        raise HTTPException(status_code=400, detail=friendly)
 
     try:
         result = response.json()

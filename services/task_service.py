@@ -11,6 +11,7 @@ import threading
 import base64
 import mimetypes
 import pathlib
+import shutil
 from datetime import datetime
 from sqlalchemy.orm import Session
 from database import (
@@ -27,6 +28,8 @@ from services.concurrency_service import (
     acquire_concurrency_token, release_concurrency_token,
     check_concurrency_limit, ConcurrencyLimitError
 )
+from config import PUBLIC_BASE_URL
+from services.error_utils import translate_error, is_real_person_error
 
 # Seedance单段视频最大时长（秒）
 # 根据 BytePlus 文档：
@@ -140,8 +143,9 @@ def _resolve_media_url(url: str) -> str:
 
 def _call_volcengine_api(ak: str, sk: str, action: str, body: dict) -> dict:
     """Call Volcengine Universal API (ark service) with AK/SK signing.
-    Always uses the canonical hardcoded AK/SK as fallback."""
+    Falls back to canonical module-level credentials on failure."""
     from routers.asset_library import _call_api as _asset_call_api
+    from routers.asset_library import set_asset_credentials as _set_creds
     from volcengine.base.Request import Request
     from volcengine.Credentials import Credentials
     from volcengine.auth.SignerV4 import SignerV4
@@ -149,6 +153,9 @@ def _call_volcengine_api(ak: str, sk: str, action: str, body: dict) -> dict:
     _FALLBACK_SK = ""
     use_ak = ak if ak else _FALLBACK_AK
     use_sk = sk if sk else _FALLBACK_SK
+    if not use_ak or not use_sk:
+        logger.warning(f"[asset] _call_volcengine_api called without valid AK/SK, falling back to module-level credentials")
+        return _asset_call_api(action, body)
     body_bytes = json.dumps(body, separators=(",", ":")).encode("utf-8")
     r = Request()
     r.method = "POST"
@@ -170,8 +177,9 @@ def _call_volcengine_api(ak: str, sk: str, action: str, body: dict) -> dict:
 
 def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
                               group_id: str, project_name: str, api_base_url: str,
-                              public_base_url: str = "") -> str | None:
-    """Upload a local image to BytePlus asset library.
+                              public_base_url: str = "",
+                              asset_type: str = "Image") -> str | None:
+    """Upload a local file (image/video) to BytePlus asset library.
 
     Flow:
       1. Resolve public URL (via public_base_url, else Files API)
@@ -179,10 +187,16 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
       3. Poll GetAsset until Active
       Returns asset URI string like 'asset://asset-xxx', or None on failure.
     """
+    # Ensure module-level asset credentials are set for fallback paths
+    from routers.asset_library import set_asset_credentials
+    set_asset_credentials(ak, sk)
+
     # Resolve local path
     local_path = local_url.lstrip("/") if local_url.startswith("/") else local_url
     file_path = pathlib.Path(local_path)
-    if not file_path.exists():
+
+    # 如果本地文件不存在但有 public_base_url，跳过本地检查直接用公网URL
+    if not file_path.exists() and not (public_base_url and local_url.startswith("/")):
         logger.warning(f"[asset] File not found: {file_path}")
         return None
 
@@ -209,12 +223,14 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
 
     # Step 1: resolve a publicly accessible URL for CreateAsset
     # Prefer public_base_url (direct web URL) over Files API upload
-    if public_base_url and local_url.startswith("/"):
-        public_url = f"{public_base_url.rstrip('/')}/{local_url.lstrip('/')}"
-        logger.info(f"[asset] Using public_base_url for asset: {public_url[:80]}")
+    _effective_public_base = public_base_url or PUBLIC_BASE_URL
+    if _effective_public_base and local_url.startswith("/"):
+        public_url = f"{_effective_public_base.rstrip('/')}/{local_url.lstrip('/')}"
+        logger.info(f"[asset] Using public_base_url for CreateAsset: {public_url[:80]}")
     else:
+        logger.info(f"[asset] No public_base_url configured (channel={bool(public_base_url)}, env={bool(PUBLIC_BASE_URL)}), falling back to Files API upload")
         # Fall back: upload via Files API
-        mime = mimetypes.guess_type(str(file_path))[0] or "image/jpeg"
+        mime = mimetypes.guess_type(str(file_path))[0] or "application/octet-stream"
         base = api_base_url.rstrip("/")
         if not base.endswith("/api/v3"):
             base = base + "/api/v3"
@@ -226,54 +242,54 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
                     headers={"Authorization": f"Bearer {api_key}"},
                     files={"file": (file_path.name, f, mime)},
                     data={"purpose": "assistants"},
-                    timeout=120,
+                    timeout=300,
                 )
             if resp.status_code != 200:
-                logger.error(f"[asset] Files API upload failed {resp.status_code}: {resp.text[:200]}")
+                logger.error(f"[asset] Files API upload failed {resp.status_code}: {resp.text[:500]}")
                 return None
             file_obj = resp.json()
             public_url = file_obj.get("url") or file_obj.get("data", {}).get("url", "")
             if not public_url:
                 logger.error(f"[asset] Files API returned no URL: {file_obj}")
                 return None
-            logger.info(f"[asset] File uploaded to Files API, url={public_url[:60]}...")
+            logger.info(f"[asset] File uploaded to Files API, url={public_url[:80]}...")
         except Exception as e:
             logger.error(f"[asset] Files API upload error: {e}")
             return None
 
-    # Step 2: CreateAsset — always use the canonical asset_library credentials
-    from routers.asset_library import _call_api as _asset_call_api
+    # Step 2: CreateAsset — use the passed-in AK/SK for signing
     try:
-        result = _asset_call_api("CreateAsset", {
+        logger.info(f"[asset] CreateAsset: AssetType={asset_type}, URL={public_url[:80]}, GroupId={group_id}")
+        result = _call_volcengine_api(ak, sk, "CreateAsset", {
             "GroupId": group_id,
             "URL": public_url,
-            "AssetType": "Image",
+            "AssetType": asset_type,
             "Name": file_path.name,
             "ProjectName": project_name,
             "Moderation": {
                 "Strategy": "Skip"
             },
         })
-        asset_id = result.get("Result", {}).get("Id") or result.get("Id")
+        asset_id = (result.get("Result") or {}).get("Id") or result.get("Id")
         if not asset_id:
-            err = result.get("ResponseMetadata", {}).get("Error", {})
-            logger.error(f"[asset] CreateAsset failed: {err}")
+            err = (result.get("Result") or result).get("ResponseMetadata", {}).get("Error", {}) or result.get("ResponseMetadata", {}).get("Error", {})
+            logger.error(f"[asset] CreateAsset failed: AssetType={asset_type}, error={err}")
             return None
         logger.info(f"[asset] CreateAsset succeeded: {asset_id}")
     except Exception as e:
         resp_text = e.response.text[:500] if hasattr(e, 'response') else 'N/A'
-        logger.error(f"[asset] CreateAsset error: {e}, response={resp_text}")
+        logger.error(f"[asset] CreateAsset error: AssetType={asset_type}, error={e}, response={resp_text}")
         return None
 
     # Step 3: poll GetAsset until Active (max 60s)
     for attempt in range(30):
         time.sleep(2)
         try:
-            info = _asset_call_api("GetAsset", {
+            info = _call_volcengine_api(ak, sk, "GetAsset", {
                 "Id": asset_id,
                 "ProjectName": project_name,
             })
-            status = (info.get("Result", {}).get("Status") or info.get("Status") or "").lower()
+            status = ((info.get("Result") or info).get("Status") or info.get("Status") or "").lower()
             logger.info(f"[asset] GetAsset {asset_id} status={status} (attempt {attempt+1})")
             if status == "active":
                 return f"asset://{asset_id}"
@@ -282,9 +298,7 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
                 err_code = err_info.get("Code", "")
                 err_msg = err_info.get("Message", "")
                 logger.error(f"[asset] Asset {asset_id} failed: {err_code} - {err_msg}")
-                if "Sensitive" in err_code or "sensitive" in err_msg.lower():
-                    raise ValueError("参考图片包含敏感内容，已被审核系统拒绝，请更换图片")
-                raise ValueError(f"素材处理失败({err_code}): {err_msg}")
+                raise ValueError(translate_error(err_msg or f"素材处理失败({err_code})"))
         except ValueError:
             raise
         except Exception as e:
@@ -539,29 +553,51 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
     # 根据 BytePlus Ark SDK 示例，参考图片需要添加 role: "reference_image" 属性
     # 参考：https://docs.byteplus.com/en/docs/ModelArk/2333589
 
-    # 参考图片
+    # 公共参数
     _use_real = task_config.get("use_real_people")
     _portrait_group_id = task_config.get("portrait_group_id") or channel.portrait_group_id or ""
     _project_name = channel.project_id or task_config.get("project_name", "default")
     _public_base_url = channel.public_base_url or ""
+    _api_key = decrypt_value(channel.api_key_encrypted) if channel.api_key_encrypted else ""
+    _ak = decrypt_value(channel.ak_encrypted) if channel.ak_encrypted else ""
+    _sk = decrypt_value(channel.sk_encrypted) if channel.sk_encrypted else ""
+    _api_base = channel.api_base_url or "https://ark.ap-southeast.bytepluses.com/api/v3"
+
+    def _try_upload_to_asset(url: str, asset_type: str) -> str | None:
+        """尝试上传到素材库。真人模式失败抛异常，非真人模式失败返回 None。"""
+        if not (_ak and _sk):
+            if _use_real:
+                raise ValueError("真人素材模式需要渠道配置 AK/SK")
+            logger.warning(f"[asset] No AK/SK configured, cannot upload {asset_type} to asset library: {url}")
+            return None
+        try:
+            result = _upload_to_asset_library(
+                url, _api_key, _ak, _sk,
+                _portrait_group_id, _project_name,
+                _api_base, _public_base_url,
+                asset_type=asset_type,
+            )
+            if result:
+                logger.info(f"[asset] Uploaded {asset_type} to asset library: {result}")
+                return result
+            elif _use_real:
+                raise ValueError(f"{asset_type}上传到素材库失败，无法在真人素材模式下继续: {url}")
+            else:
+                logger.warning(f"[asset] {asset_type} asset upload returned None, falling back to direct URL: {url}")
+                return None
+        except ValueError:
+            raise
+        except Exception as e:
+            if _use_real:
+                raise ValueError(f"{asset_type}上传到素材库失败: {e}") from e
+            logger.warning(f"[asset] {asset_type} asset upload error, falling back to direct URL: {e}")
+            return None
+
+    # 参考图片
     for img_url in (task_config.get("reference_images") or []):
         asset_uri = None
-        # 真人模式且图片是本地路径 → 必须上传到素材库获得 asset:// URI
-        if _use_real and img_url.startswith("/static/uploads/"):
-            _api_key = decrypt_value(channel.api_key_encrypted) if channel.api_key_encrypted else ""
-            _ak = decrypt_value(channel.ak_encrypted) if channel.ak_encrypted else ""
-            _sk = decrypt_value(channel.sk_encrypted) if channel.sk_encrypted else ""
-            if not (_ak and _sk):
-                raise ValueError("真人素材模式需要渠道配置 AK/SK")
-            asset_uri = _upload_to_asset_library(
-                img_url, _api_key, _ak, _sk,
-                _portrait_group_id, _project_name,
-                channel.api_base_url or "https://ark.ap-southeast.bytepluses.com/api/v3",
-                _public_base_url,
-            )
-            if not asset_uri:
-                raise ValueError(f"参考图片上传到素材库失败，无法在真人素材模式下继续: {img_url}")
-            logger.info(f"[asset] Uploaded reference image to asset library: {asset_uri}")
+        if img_url.startswith("/static/uploads/") and (_use_real or (_ak and _sk)):
+            asset_uri = _try_upload_to_asset(img_url, "Image")
         if not asset_uri:
             if img_url.startswith("/") and _public_base_url:
                 resolved_img = f"{_public_base_url.rstrip('/')}/{img_url.lstrip('/')}"
@@ -574,13 +610,29 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
             "image_url": {"url": resolved_img},
             "role": "reference_image"
         })
+
+    # 参考音频（Seedance 2.0 要求音频必须走素材库，不能直传 URL）
     for aud_url in (task_config.get("reference_audios") or []):
-        resolved_aud = f"{_public_base_url.rstrip('/')}/{aud_url.lstrip('/')}" if aud_url.startswith("/") and _public_base_url else _resolve_media_url(aud_url)
+        asset_uri = None
+        if aud_url.startswith("/static/uploads/") and (_ak and _sk):
+            asset_uri = _try_upload_to_asset(aud_url, "Audio")
+        if not asset_uri:
+            resolved_aud = f"{_public_base_url.rstrip('/')}/{aud_url.lstrip('/')}" if aud_url.startswith("/") and _public_base_url else _resolve_media_url(aud_url)
+        else:
+            resolved_aud = asset_uri
         content.append({"type": "audio_url", "audio_url": {"url": resolved_aud}})
+
+    # 参考视频（Seedance 2.0 要求视频必须走素材库，不能直传 URL）
     for vid_url in (task_config.get("reference_videos") or []):
-        resolved = vid_url
-        if resolved.startswith("/") and _public_base_url:
-            resolved = f"{_public_base_url.rstrip('/')}/{resolved.lstrip('/')}"
+        asset_uri = None
+        if vid_url.startswith("/static/uploads/") and (_ak and _sk):
+            asset_uri = _try_upload_to_asset(vid_url, "Video")
+        if not asset_uri:
+            resolved = vid_url
+            if resolved.startswith("/") and _public_base_url:
+                resolved = f"{_public_base_url.rstrip('/')}/{resolved.lstrip('/')}"
+        else:
+            resolved = asset_uri
         content.append({"type": "video_url", "video_url": {"url": resolved}, "role": "reference_video"})
 
     # 使用接入点ID作为模型参数（BytePlus API要求使用接入点ID）
@@ -696,11 +748,10 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
         err_msg = err.get('message', str(result)) if isinstance(err, dict) else str(result)
         logger.error(f"Channel {channel.name} task creation failed. payload={payload} response={result}")
         
-        # 处理敏感信息错误
-        if "sensitive" in err_msg.lower():
-            raise ValueError("生成的内容可能包含敏感信息，请调整提示词后重试")
+        # 翻译为友好提示
+        friendly = translate_error(err_msg)
         
-        # 如果是接入点不存在错误，且正在使用真人素材模式，尝试降级到其他支持 r2v 的接入点
+        # 如果是接入点不存在错误，且正在使用真人素材模式，尝试降级
         if task_config.get("use_real_people") and ("does not exist" in err_msg.lower() or "not found" in err_msg.lower()) and is_r2v_supported(endpoint.models or []):
             logger.info(f"[DEBUG] Endpoint {endpoint_id} not found or failed, trying fallback to other r2v-supported endpoints")
             
@@ -737,7 +788,7 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
                         continue
         
         if "id" not in result:
-            raise ValueError(err_msg)
+            raise ValueError(friendly)
 
     task = TaskRecord(
         user_id=user_id,
@@ -902,9 +953,8 @@ def create_task(db: Session, user_id: int, task_config: dict, channel_id: int = 
         err_msg = str(e)
         logger.info(f"Caught ValueError in create_task: {err_msg}")
         logger.info(f"Error message lowercased: {err_msg.lower()}")
-        # 检测是否是真人检测错误（BytePlus API 返回的包含真人错误）
-        # 错误信息示例: "The request failed because the input image may contain real person"
-        if "real person" in err_msg.lower() or "privacyinformation" in err_msg.lower():
+        # 检测是否是真人检测错误（匹配英文原文和中文翻译）
+        if is_real_person_error(err_msg):
             logger.info(f"Detected real person error: {err_msg}. Enabling real people mode and retrying.")
             # 在原请求中添加 use_real_people 参数重试
             task = try_create_task(channels, use_real_people=True)
@@ -993,13 +1043,17 @@ def poll_task(db: Session, task: TaskRecord) -> None:
                 task.tokens_consumed = usage["completion_tokens"]
         elif new_status == TaskStatus.FAILED or new_status == TaskStatus.CANCELLED:
             error_obj = payload.get("error") or {}
-            task.error_msg = (
+            raw_err = (
                 error_obj.get("message")
                 or payload.get("error_msg")
                 or result.get("error_msg")
                 or result.get("message")
-                or ("已取消" if new_status == TaskStatus.CANCELLED else "生成失败")
+                or ""
             )
+            if new_status == TaskStatus.CANCELLED:
+                task.error_msg = "已取消"
+            else:
+                task.error_msg = translate_error(raw_err) if raw_err else "生成失败"
 
         db.commit()
 
@@ -1103,8 +1157,81 @@ def _split_video_segments(video_path: str, max_duration: int = 15) -> list[str]:
     return seg_files if seg_files else [video_path]
 
 
+def _extract_last_frame(video_url: str, output_dir: str = None) -> str | None:
+    """从视频URL提取最后一帧并保存为图片，返回相对URL（如 /outputs/frame_xxx.jpg）"""
+    ffmpeg = _get_ffmpeg_exe()
+    tmpdir = tempfile.mkdtemp(prefix="sedgo_frame_")
+    
+    try:
+        # 下载视频
+        local_video = os.path.join(tmpdir, "source.mp4")
+        
+        # 支持本地相对URL和远程URL
+        if video_url.startswith("/"):
+            # 本地相对URL
+            base_dir = os.path.dirname(os.path.dirname(__file__))
+            local_video_source = os.path.join(base_dir, video_url.lstrip("/"))
+            if os.path.exists(local_video_source):
+                shutil.copy(local_video_source, local_video)
+            else:
+                logger.error(f"[extract_frame] local video not found: {local_video_source}")
+                return None
+        else:
+            # 远程URL
+            resp = requests.get(video_url, timeout=120, stream=True)
+            resp.raise_for_status()
+            with open(local_video, "wb") as f:
+                for chunk in resp.iter_content(65536):
+                    f.write(chunk)
+        
+        # 获取视频时长
+        duration = _get_video_duration(local_video)
+        if duration <= 0:
+            logger.error(f"[extract_frame] failed to get video duration")
+            return None
+        
+        # 取最后0.5秒的帧（确保是视频末尾的帧）
+        frame_time = max(0, duration - 0.5)
+        
+        if output_dir is None:
+            output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "outputs")
+        os.makedirs(output_dir, exist_ok=True)
+        
+        # 生成唯一的帧文件名
+        frame_filename = f"frame_{int(time.time()*1000)}.jpg"
+        frame_path = os.path.join(output_dir, frame_filename)
+        
+        # 使用ffmpeg提取帧
+        cmd = [
+            ffmpeg, "-y",
+            "-ss", str(frame_time),
+            "-i", local_video,
+            "-frames:v", "1",
+            "-q:v", "2",  # 高质量JPEG
+            frame_path
+        ]
+        
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        
+        if result.returncode != 0:
+            logger.error(f"[extract_frame] ffmpeg failed: {result.stderr[-500:]}")
+            return None
+        
+        logger.info(f"[extract_frame] extracted frame from {video_url} → {frame_path}")
+        
+        # 返回相对URL（用于前端和后端访问）
+        return f"/outputs/{frame_filename}"
+    
+    except Exception as e:
+        logger.error(f"[extract_frame] error: {e}")
+        return None
+    finally:
+        # 清理临时目录
+        shutil.rmtree(tmpdir, ignore_errors=True)
+
+
 def _concat_videos(segment_urls: list[str], output_path: str) -> bool:
-    """下载所有片段并用 ffmpeg concat 拼接成单文件，返回是否成功"""
+    """下载所有片段并用 ffmpeg 拼接成单文件（带交叉淡入过渡效果），返回是否成功"""
     ffmpeg = _get_ffmpeg_exe()
     tmpdir = tempfile.mkdtemp(prefix="sedgo_concat_")
     try:
@@ -1119,29 +1246,66 @@ def _concat_videos(segment_urls: list[str], output_path: str) -> bool:
             local_files.append(local_path)
             logger.info(f"[concat] downloaded segment {i}: {len(open(local_path,'rb').read())} bytes")
 
-        list_file = os.path.join(tmpdir, "concat_list.txt")
-        with open(list_file, "w", encoding="utf-8") as f:
-            for p in local_files:
-                f.write(f"file '{p}'\n")
+        if len(local_files) == 1:
+            shutil.copy(local_files[0], output_path)
+            logger.info(f"[concat] only 1 segment, copied directly")
+            return True
+
+        fade_duration = 0.5
+
+        inputs = []
+        filters = []
+        outputs = []
+
+        for i, seg in enumerate(local_files):
+            inputs.extend(["-i", seg])
+            filters.append(f"[{i}:v][{i}:a]")
+
+        filters_str = ""
+        for i in range(len(local_files) - 1):
+            if i == 0:
+                filters_str += f"[{i}:v]trim=duration={_get_video_duration(local_files[i]) - fade_duration},setpts=PTS-STARTPTS[v{i}];"
+                filters_str += f"[{i}:a]atrim=duration={_get_video_duration(local_files[i]) - fade_duration},asetpts=PTS-STARTPTS[a{i}];"
+            else:
+                filters_str += f"[{i}:v]setpts=PTS-STARTPTS[v{i}];"
+                filters_str += f"[{i}:a]asetpts=PTS-STARTPTS[a{i}];"
+
+            filters_str += f"[{i+1}:v]trim=start=0:duration={_get_video_duration(local_files[i+1])},setpts=PTS-STARTPTS[v{i+1}];"
+            filters_str += f"[{i+1}:a]atrim=start=0:duration={_get_video_duration(local_files[i+1])},asetpts=PTS-STARTPTS[a{i+1}];"
+
+            filters_str += f"[v{i}][v{i+1}]xfade=transition=fade:duration={fade_duration}:offset={_get_video_duration(local_files[i]) - fade_duration}[vout{i+1}];"
+            filters_str += f"[a{i}][a{i+1}]acrossfade=d={fade_duration}[aout{i+1}];"
+
+        last_idx = len(local_files) - 1
+        filters_str += f"[{last_idx}:v]setpts=PTS-STARTPTS[v{last_idx}];"
+        filters_str += f"[{last_idx}:a]asetpts=PTS-STARTPTS[a{last_idx}];"
+
+        if len(local_files) > 1:
+            filters_str += f"[vout{last_idx}][aout{last_idx}]"
 
         cmd = [
             ffmpeg, "-y",
-            "-f", "concat", "-safe", "0",
-            "-i", list_file,
-            "-c", "copy",
+            *inputs,
+            "-filter_complex", filters_str,
+            "-map", "[vout{}]".format(last_idx) if len(local_files) > 1 else "[0:v]",
+            "-map", "[aout{}]".format(last_idx) if len(local_files) > 1 else "[0:a]",
+            "-c:v", "libx264",
+            "-c:a", "aac",
+            "-preset", "fast",
+            "-crf", "23",
             output_path,
         ]
+
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
         if result.returncode != 0:
             logger.error(f"[concat] ffmpeg failed: {result.stderr[-500:]}")
             return False
-        logger.info(f"[concat] merged {len(local_files)} segments → {output_path}")
+        logger.info(f"[concat] merged {len(local_files)} segments with crossfade → {output_path}")
         return True
     except Exception as e:
         logger.error(f"[concat] error: {e}")
         return False
     finally:
-        import shutil
         shutil.rmtree(tmpdir, ignore_errors=True)
 
 
@@ -1201,6 +1365,7 @@ def create_video_composition(db: Session, user_id: int, task_config: dict) -> Vi
     db.add(composition)
     db.flush()
 
+    # 串行生成方案：只创建第一个片段任务，其余片段在后台线程中串行创建
     for i, dur in enumerate(seg_durations):
         segment = VideoSegment(
             composition_id=composition.id,
@@ -1212,81 +1377,103 @@ def create_video_composition(db: Session, user_id: int, task_config: dict) -> Vi
         db.add(segment)
         db.flush()
 
-        seg_cfg = {
-            "model": model,
-            "prompt": prompt,
-            "duration_seconds": dur,
-            "resolution": resolution,
-            "ratio": ratio,
-            "generate_audio": task_config.get("generate_audio", True),
-            "watermark": task_config.get("watermark", False),
-            "reference_images": task_config.get("reference_images") or [],
-            "reference_videos": task_config.get("reference_videos") or [],
-        }
-        
-        # 如果任务配置中有真人素材参数，也添加到片段配置中
-        if task_config.get("use_real_people"):
-            seg_cfg["use_real_people"] = True
-            if task_config.get("avatar_id"):
-                seg_cfg["avatar_id"] = task_config["avatar_id"]
-            if task_config.get("real_human_portrait_id"):
-                seg_cfg["real_human_portrait_id"] = task_config["real_human_portrait_id"]
-            if task_config.get("action_id"):
-                seg_cfg["action_id"] = task_config["action_id"]
-            if task_config.get("background_id"):
-                seg_cfg["background_id"] = task_config["background_id"]
-            if task_config.get("voice_id"):
-                seg_cfg["voice_id"] = task_config["voice_id"]
-        
-        try:
-            # 直接调用底层函数，跳过积分扣除
-            channel = db.query(Channel).filter(
-                Channel.id == db.query(Endpoint).filter(
-                    Endpoint.endpoint_id == model, Endpoint.is_active == True
-                ).first().channel_id,
-                Channel.is_active == True,
-            ).first() if model else None
-            if not channel:
-                from services.task_service import get_active_channel
-                channel = get_active_channel(db)
-            task_rec = create_task_with_channel(db, user_id, seg_cfg, channel, 0)
-            if task_rec:
-                segment.task_record_id = task_rec.id
-                segment.status = TaskStatus.PROCESSING
-            else:
-                raise ValueError("create_task_with_channel returned None")
-        except Exception as e:
-            err_msg = str(e)
-            # 检测是否是真人检测错误，尝试启用真人素材模式重试
-            # 根据 BytePlus 文档：https://docs.byteplus.com/en/docs/ModelArk/2333589
-            if "real person" in err_msg.lower() or "privacyinformation" in err_msg.lower():
-                logger.info(f"[composition {composition.id}] segment {i} detected real person error, retrying with real people mode")
-                # 真人素材不需要专用接入点，所有视频生成模型都可以处理
-                # 根据 BytePlus 文档：https://docs.byteplus.com/en/docs/ModelArk/2333589
+        # 只为第一个片段（segment_index=0）创建任务
+        if i == 0:
+            seg_cfg = {
+                "model": model,
+                "prompt": prompt,
+                "duration_seconds": dur,
+                "resolution": resolution,
+                "ratio": ratio,
+                "generate_audio": task_config.get("generate_audio", True),
+                "watermark": task_config.get("watermark", False),
+                "reference_images": task_config.get("reference_images") or [],
+                "reference_videos": task_config.get("reference_videos") or [],
+                "reference_audios": task_config.get("reference_audios") or [],
+            }
+            
+            # 如果任务配置中有真人素材参数，也添加到片段配置中
+            if task_config.get("use_real_people"):
                 seg_cfg["use_real_people"] = True
-                try:
-                    task_rec = create_task_with_channel(db, user_id, seg_cfg, channel, 0)
+                if task_config.get("avatar_id"):
+                    seg_cfg["avatar_id"] = task_config["avatar_id"]
+                if task_config.get("real_human_portrait_id"):
+                    seg_cfg["real_human_portrait_id"] = task_config["real_human_portrait_id"]
+                if task_config.get("action_id"):
+                    seg_cfg["action_id"] = task_config["action_id"]
+                if task_config.get("background_id"):
+                    seg_cfg["background_id"] = task_config["background_id"]
+                if task_config.get("voice_id"):
+                    seg_cfg["voice_id"] = task_config["voice_id"]
+            
+            task_rec = None
+            
+            def try_create_segment(channels_list, use_real_people=False):
+                """尝试创建片段任务，支持切换到真人素材模式"""
+                global channel_round_robin_counter
+                current_seg_cfg = seg_cfg.copy()
+                if use_real_people:
+                    current_seg_cfg["use_real_people"] = True
+                    logger.info(f"[composition {composition.id}] segment {i} enabling real people mode")
+                
+                start_index = channel_round_robin_counter % len(channels_list)
+                
+                for j in range(len(channels_list)):
+                    index = (start_index + j) % len(channels_list)
+                    channel = channels_list[index]
+                    
+                    logger.info(f"[composition {composition.id}] segment {i} trying channel {channel.name} (index: {index})")
+                    
+                    try:
+                        task = create_task_with_channel(db, user_id, current_seg_cfg, channel, 0)
+                        if task:
+                            channel_round_robin_counter = index + 1
+                            return task
+                    except Exception as ch_err:
+                        logger.warning(f"[composition {composition.id}] segment {i} channel {channel.name} failed: {ch_err}")
+                
+                return None
+            
+            channels = db.query(Channel).filter(Channel.is_active == True).order_by(Channel.priority.desc()).all()
+            if not channels:
+                logger.error(f"[composition {composition.id}] no active channels available")
+                composition.status = TaskStatus.FAILED
+                composition.error_msg = "系统当前无可用渠道，请稍后再试"
+                db.commit()
+                earn_points(db, user_id, total_points, PointsType.EARN, "Refund: no channels available")
+                db.commit()
+                return composition
+            
+            try:
+                task_rec = try_create_segment(channels)
+                if task_rec:
+                    segment.task_record_id = task_rec.id
+                    segment.status = TaskStatus.PROCESSING
+                else:
+                    raise ValueError("All channels failed to create segment task")
+            except Exception as e:
+                err_msg = str(e)
+                if is_real_person_error(err_msg):
+                    logger.info(f"[composition {composition.id}] segment {i} detected real person error, retrying with real people mode")
+                    task_rec = try_create_segment(channels, use_real_people=True)
                     if task_rec:
                         segment.task_record_id = task_rec.id
                         segment.status = TaskStatus.PROCESSING
                         db.commit()
-                        continue  # 继续处理下一个片段
-                except Exception as retry_err:
-                    err_msg = str(retry_err)
-            
-            logger.error(f"[composition {composition.id}] segment {i} failed: {err_msg}")
-            segment.status = TaskStatus.FAILED
-            composition.status = TaskStatus.FAILED
-            composition.error_msg = f"片段{i+1}创建失败: {err_msg}"
-            db.commit()
-            # 退还积分
-            earn_points(db, user_id, total_points, PointsType.EARN, "Refund: composition segment failed")
-            db.commit()
-            return composition
+                        continue
+                
+                logger.error(f"[composition {composition.id}] segment {i} failed: {err_msg}")
+                segment.status = TaskStatus.FAILED
+                composition.status = TaskStatus.FAILED
+                composition.error_msg = f"片段{i+1}创建失败: {err_msg}"
+                db.commit()
+                earn_points(db, user_id, total_points, PointsType.EARN, "Refund: composition segment failed")
+                db.commit()
+                return composition
 
     db.commit()
-    # 启动后台线程处理片段轮询和拼接
-    t = threading.Thread(target=_composition_worker, args=(composition.id,), daemon=True)
+    # 启动后台线程处理片段轮询和拼接（串行生成+传递参考图）
+    t = threading.Thread(target=_composition_worker_serial, args=(composition.id, prompt, model, resolution, ratio, task_config, user_id), daemon=True)
     t.start()
     return composition
 
@@ -1385,6 +1572,203 @@ def _composition_worker(composition_id: int) -> None:
         db.close()
 
 
+def _composition_worker_serial(composition_id: int, prompt: str, model: str, resolution: str, ratio: str, task_config: dict, user_id: int) -> None:
+    """后台线程：串行生成片段，传递参考图保持连续性"""
+    from database import SessionLocal
+    db = SessionLocal()
+    
+    try:
+        reference_frame = None  # 前一片段的最后一帧
+        
+        while True:
+            composition = db.query(VideoComposition).filter(
+                VideoComposition.id == composition_id
+            ).first()
+            if not composition or composition.status in (TaskStatus.SUCCESS, TaskStatus.FAILED):
+                break
+            
+            segments = db.query(VideoSegment).filter(
+                VideoSegment.composition_id == composition_id
+            ).order_by(VideoSegment.segment_index).all()
+            
+            if not segments:
+                break
+            
+            total = len(segments)
+            completed = sum(1 for s in segments if s.status == TaskStatus.SUCCESS)
+            failed = sum(1 for s in segments if s.status == TaskStatus.FAILED)
+            
+            if failed > 0:
+                composition.status = TaskStatus.FAILED
+                composition.error_msg = f"{failed}/{total} 个片段生成失败"
+                db.commit()
+                break
+            
+            if completed == total:
+                # 全部完成，开始拼接
+                composition.progress = 95
+                db.commit()
+                
+                segment_urls = [s.video_url for s in segments]
+                outputs_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "outputs")
+                os.makedirs(outputs_dir, exist_ok=True)
+                output_path = os.path.join(outputs_dir, f"composition_{composition_id}.mp4")
+                
+                ok = _concat_videos(segment_urls, output_path)
+                if ok:
+                    composition.final_video_url = f"/outputs/composition_{composition_id}.mp4"
+                    composition.status = TaskStatus.SUCCESS
+                    composition.progress = 100
+                else:
+                    composition.status = TaskStatus.FAILED
+                    composition.error_msg = "视频拼接失败（ffmpeg 错误）"
+                db.commit()
+                break
+            
+            # 找到当前需要处理的片段（第一个PROCESSING或PENDING状态的片段）
+            current_seg = None
+            for seg in segments:
+                if seg.status == TaskStatus.PROCESSING:
+                    current_seg = seg
+                    break
+                elif seg.status == TaskStatus.PENDING and not seg.task_record_id:
+                    current_seg = seg
+                    break
+            
+            if not current_seg:
+                # 没有待处理的片段，等待状态更新
+                time.sleep(3)
+                continue
+            
+            # 如果是PROCESSING状态，轮询等待完成
+            if current_seg.status == TaskStatus.PROCESSING and current_seg.task_record_id:
+                task = db.query(TaskRecord).filter(TaskRecord.id == current_seg.task_record_id).first()
+                if not task:
+                    current_seg.status = TaskStatus.FAILED
+                    composition.status = TaskStatus.FAILED
+                    composition.error_msg = f"片段{current_seg.segment_index+1}任务记录丢失"
+                    db.commit()
+                    break
+                
+                poll_task(db, task)
+                db.refresh(task)
+                
+                if task.status == TaskStatus.SUCCESS:
+                    current_seg.status = TaskStatus.SUCCESS
+                    current_seg.video_url = task.video_url
+                    db.commit()
+                    
+                    # 提取最后一帧作为下一个片段的参考图（如果不是最后一个片段）
+                    if current_seg.segment_index < len(segments) - 1:
+                        reference_frame = _extract_last_frame(task.video_url)
+                        logger.info(f"[composition {composition_id}] segment {current_seg.segment_index} completed, extracted reference frame: {reference_frame}")
+                
+                elif task.status in (TaskStatus.FAILED, TaskStatus.CANCELLED):
+                    current_seg.status = TaskStatus.FAILED
+                    composition.status = TaskStatus.FAILED
+                    composition.error_msg = f"片段{current_seg.segment_index+1}生成失败"
+                    db.commit()
+                    break
+            
+            # 如果是PENDING状态且没有task_record_id，创建任务
+            elif current_seg.status == TaskStatus.PENDING and not current_seg.task_record_id:
+                seg_prompt = prompt
+                if reference_frame:
+                    seg_prompt = f"{prompt}, continue from the previous scene, same characters and background, seamless transition"
+                
+                seg_cfg = {
+                    "model": model,
+                    "prompt": seg_prompt,
+                    "duration_seconds": current_seg.duration,
+                    "resolution": resolution,
+                    "ratio": ratio,
+                    "generate_audio": task_config.get("generate_audio", True),
+                    "watermark": task_config.get("watermark", False),
+                    "reference_videos": task_config.get("reference_videos") or [],
+                    "reference_audios": task_config.get("reference_audios") or [],
+                }
+                
+                # 如果有参考帧（前一片段的最后一帧），添加到reference_images
+                if reference_frame:
+                    seg_cfg["reference_images"] = [reference_frame]
+                    logger.info(f"[composition {composition_id}] segment {current_seg.segment_index} using reference frame: {reference_frame}")
+                else:
+                    seg_cfg["reference_images"] = task_config.get("reference_images") or []
+                
+                # 真人素材参数
+                if task_config.get("use_real_people"):
+                    seg_cfg["use_real_people"] = True
+                    if task_config.get("avatar_id"):
+                        seg_cfg["avatar_id"] = task_config["avatar_id"]
+                    if task_config.get("real_human_portrait_id"):
+                        seg_cfg["real_human_portrait_id"] = task_config["real_human_portrait_id"]
+                    if task_config.get("action_id"):
+                        seg_cfg["action_id"] = task_config["action_id"]
+                    if task_config.get("background_id"):
+                        seg_cfg["background_id"] = task_config["background_id"]
+                    if task_config.get("voice_id"):
+                        seg_cfg["voice_id"] = task_config["voice_id"]
+                
+                # 创建任务（使用多渠道轮询）
+                channels = db.query(Channel).filter(Channel.is_active == True).order_by(Channel.priority.desc()).all()
+                if not channels:
+                    composition.status = TaskStatus.FAILED
+                    composition.error_msg = "系统当前无可用渠道"
+                    db.commit()
+                    break
+                
+                task_rec = None
+                for channel in channels:
+                    try:
+                        task_rec = create_task_with_channel(db, user_id, seg_cfg, channel, 0)
+                        if task_rec:
+                            logger.info(f"[composition {composition_id}] segment {current_seg.segment_index} created on channel {channel.name}")
+                            break
+                    except Exception as ch_err:
+                        logger.warning(f"[composition {composition_id}] segment {current_seg.segment_index} channel {channel.name} failed: {ch_err}")
+                        # 检查真人错误
+                        if is_real_person_error(str(ch_err)):
+                            logger.info(f"[composition {composition_id}] segment {current_seg.segment_index} retrying with real people mode")
+                            seg_cfg["use_real_people"] = True
+                            try:
+                                task_rec = create_task_with_channel(db, user_id, seg_cfg, channel, 0)
+                                if task_rec:
+                                    break
+                            except Exception as r_err:
+                                logger.warning(f"[composition {composition_id}] segment {current_seg.segment_index} real people mode also failed: {r_err}")
+                
+                if task_rec:
+                    current_seg.task_record_id = task_rec.id
+                    current_seg.status = TaskStatus.PROCESSING
+                    db.commit()
+                else:
+                    current_seg.status = TaskStatus.FAILED
+                    composition.status = TaskStatus.FAILED
+                    composition.error_msg = f"片段{current_seg.segment_index+1}创建失败：所有渠道不可用"
+                    db.commit()
+                    break
+            
+            # 更新进度
+            completed = sum(1 for s in segments if s.status == TaskStatus.SUCCESS)
+            composition.progress = int((completed / total) * 90) if total else 0
+            db.commit()
+            
+            time.sleep(5)
+    
+    except Exception as e:
+        logger.exception(f"[composition_worker_serial {composition_id}] crashed")
+        try:
+            comp = db.query(VideoComposition).filter(VideoComposition.id == composition_id).first()
+            if comp and comp.status == TaskStatus.PROCESSING:
+                comp.status = TaskStatus.FAILED
+                comp.error_msg = f"后台处理异常: {e}"
+                db.commit()
+        except Exception:
+            pass
+    finally:
+        db.close()
+
+
 def recover_stuck_compositions() -> None:
     """服务启动时，为所有仍在 PROCESSING 状态的 composition 重启后台线程"""
     from database import SessionLocal
@@ -1395,7 +1779,30 @@ def recover_stuck_compositions() -> None:
         ).all()
         for comp in stuck:
             logger.info(f"[recover] restarting worker for composition {comp.id}")
-            t = threading.Thread(target=_composition_worker, args=(comp.id,), daemon=True)
+            
+            # 提取第一个segment的model信息
+            segments = db.query(VideoSegment).filter(
+                VideoSegment.composition_id == comp.id
+            ).order_by(VideoSegment.segment_index).all()
+            
+            if segments and segments[0].task_record_id:
+                task_rec = db.query(TaskRecord).filter(TaskRecord.id == segments[0].task_record_id).first()
+                model = task_rec.endpoint_id if task_rec else "seedance2.0-fast"
+            else:
+                model = "seedance2.0-fast"
+            
+            # 重新构建task_config
+            task_config = {
+                "generate_audio": True,
+                "watermark": False,
+                "use_real_people": False,
+            }
+            
+            t = threading.Thread(
+                target=_composition_worker_serial,
+                args=(comp.id, comp.prompt or "", model, comp.resolution, comp.ratio, task_config, comp.user_id),
+                daemon=True
+            )
             t.start()
     except Exception:
         logger.exception("recover_stuck_compositions failed")
@@ -1564,6 +1971,7 @@ def poll_video_composition(db: Session, composition_id: int) -> dict:
         "status": status_str,
         "composition_id": composition.id,
         "video_url": composition.final_video_url,
+        "prompt": composition.prompt,
         "progress": composition.progress or 0,
         "total_duration": composition.total_duration,
         "completed_segments": completed,

@@ -22,9 +22,7 @@ function switchPage(page) {
 
   const pageTitles = {
     works: { title: t('profile.page.works.title') || '我的创作', desc: t('profile.page.works.desc') || '管理和浏览您所有已生成的影片和图片' },
-    subscription: { title: t('profile.page.subscription.title') || '订阅', desc: t('profile.page.subscription.desc') || '管理您的订阅方案和账单信息' },
-    credits: { title: t('profile.page.credits.title') || '积分历史', desc: t('profile.page.credits.desc') || '查看所有积分获取和使用记录' },
-    orders: { title: t('profile.page.orders.title') || '订单记录', desc: t('profile.page.orders.desc') || '查看所有付款订单的历史记录' },
+    orders: { title: t('profile.points_mgmt.title') || '积分管理', desc: t('profile.points_mgmt.desc') || '查看积分变动记录和充值积分' },
     profile: { title: t('profile.page.profile.title') || '个人资料', desc: t('profile.page.profile.desc') || '管理您的账户信息和偏好设置' },
     contact: { title: t('profile.page.contact.title') || '提交工单', desc: t('profile.page.contact.desc') || '遇到问题或有建议？提交工单，我们将尽快处理。' },
     dramas: { title: '我的短剧', desc: '浏览和管理您所有已生成的短剧作品' },
@@ -35,9 +33,7 @@ function switchPage(page) {
   document.getElementById('pageDesc').textContent = info.desc;
 
   if (page === 'works') loadWorks();
-  if (page === 'credits') loadCredits(1);
-  if (page === 'orders') loadOrders(1);
-  if (page === 'subscription') loadSubscription();
+  if (page === 'orders') loadCredits(1);
   if (page === 'dramas') loadDramaWorks();
   if (page === 'contact' && window._currentUser) {
     const el = document.getElementById('contactEmail');
@@ -242,7 +238,7 @@ async function deleteWork(taskId, isImage) {
   }
 }
 
-// ── Credits ────────────────────────────────────────────────────────────
+// ── Points Management ─────────────────────────────────────────────────
 
 let _creditsPage = 1;
 const _creditsPageSize = 20;
@@ -264,7 +260,6 @@ async function loadCredits(page) {
       const typeLabels = {
         consume: t('js.type_consume') || '消耗',
         earn: t('js.type_earn') || '获取',
-        subscription: t('js.type_subscription') || '订阅',
         admin_adjust: t('js.type_admin_adjust') || '管理员调整',
       };
       tbody.innerHTML = data.items.map(r => {
@@ -288,114 +283,6 @@ async function loadCredits(page) {
   }
 }
 
-// ── Orders ─────────────────────────────────────────────────────────────
-
-async function loadOrders(page) {
-  const tbody = document.getElementById('ordersTbody');
-  const pageInfo = document.getElementById('ordersPageInfo');
-  if (!tbody) return;
-  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--t3)">' + (t('profile.loading') || '加载中...') + '</td></tr>';
-  try {
-    const res = await fetch('/api/subscriptions/my', { headers: { 'Authorization': 'Bearer ' + apiKey() } });
-    const data = await res.json();
-    const sub = data.subscription;
-    if (!sub) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--t3)">' + (t('profile.orders_empty') || '暂无订单记录') + '</td></tr>';
-      if (pageInfo) pageInfo.textContent = t('profile.orders_count') || '0 笔订单';
-      return;
-    }
-    const statusMap = {
-      active: t('js.sub_active') || '有效',
-      expired: t('js.sub_expired') || '已过期',
-      cancelled: t('js.sub_cancelled') || '已取消',
-      pending: t('js.sub_pending') || '待处理',
-    };
-    const cycleMap = {
-      monthly: t('js.billing_monthly') || '月付',
-      annual: t('js.billing_annual') || '年付',
-    };
-    tbody.innerHTML = `<tr>
-      <td>${sub.created_at ? sub.created_at.replace('T', ' ').slice(0, 10) : '-'}</td>
-      <td>${sub.plan_name || sub.plan_id || '-'}</td>
-      <td>${cycleMap[sub.billing_cycle] || sub.billing_cycle || (t('js.billing_monthly') || '月付')}</td>
-      <td><span style="color:${sub.status === 'active' ? '#4ade80' : '#f87171'}">${statusMap[sub.status] || sub.status}</span></td>
-      <td>${sub.price_cents ? '$' + (sub.price_cents / 100).toFixed(2) : '-'}</td>
-    </tr>`;
-    if (pageInfo) pageInfo.textContent = t('profile.orders_one') || '1 笔订单';
-  } catch (e) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--t3)">' + (t('profile.load_fail') || '加载失败') + '</td></tr>';
-  }
-}
-
-// ── Subscription ───────────────────────────────────────────────────────
-
-async function loadSubscription() {
-  const container = document.getElementById('subscriptionContent');
-  if (!container) return;
-  try {
-    const [subRes, plansRes] = await Promise.all([
-      fetch('/api/subscriptions/my', { headers: { 'Authorization': 'Bearer ' + apiKey() } }),
-      fetch('/api/subscriptions/plans'),
-    ]);
-    const subData = await subRes.json();
-    const plans = await plansRes.json();
-    const sub = subData.subscription;
-    const user = window._currentUser || {};
-
-    let currentHtml = '';
-    if (sub && sub.status === 'active') {
-      currentHtml = `<div style="background:var(--bg2);border-radius:12px;padding:20px;border:1px solid var(--bg4);margin-bottom:24px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <div style="font-size:16px;font-weight:700;color:var(--t1);">${t('js.current_plan') || '当前方案'}：${sub.plan_name || (t('js.unknown') || '未知')}</div>
-            <div style="font-size:13px;color:var(--t3);margin-top:4px;">${t('js.expires_at') || '有效期至'}：${sub.expires_at ? sub.expires_at.slice(0, 10) : '-'}</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:24px;font-weight:700;color:var(--primary);">${user.points_balance || 0}</div>
-            <div style="font-size:12px;color:var(--t3);">${t('js.remaining_points') || '剩余积分'}</div>
-          </div>
-        </div>
-      </div>`;
-    } else {
-      currentHtml = `<div style="background:var(--bg2);border-radius:12px;padding:20px;border:1px solid var(--bg4);margin-bottom:24px;text-align:center;">
-        <div style="font-size:32px;margin-bottom:8px;">👑</div>
-        <div style="font-size:15px;font-weight:600;color:var(--t1);margin-bottom:4px;">${t('profile.subscription.no_plan') || '您目前没有订阅任何方案'}</div>
-        <div style="font-size:13px;color:var(--t3);">${t('js.upgrade_hint') || '立即升级以获取更多积分和功能'}</div>
-      </div>`;
-    }
-
-    const plansHtml = plans.filter(p => p.price_cents > 0).map(p => {
-      const monthlyPrice = (p.price_cents / 100).toFixed(0);
-      const annualTotalCents = p.annual_discount > 0
-        ? Math.round(p.price_cents * 12 * (100 - p.annual_discount) / 100)
-        : null;
-      const annualMonthly = annualTotalCents ? (annualTotalCents / 100 / 12).toFixed(0) : null;
-      const isCurrent = sub && sub.plan_id == p.id;
-      return `<div style="background:var(--bg2);border-radius:12px;padding:20px;border:2px solid ${isCurrent ? 'var(--primary)' : 'var(--bg4)'};flex:1;min-width:200px;max-width:280px;">
-        <div style="font-size:15px;font-weight:700;color:var(--t1);margin-bottom:8px;">${p.name}</div>
-        <div style="font-size:28px;font-weight:700;color:var(--primary);">$${monthlyPrice}<span style="font-size:13px;color:var(--t3);">/mo</span></div>
-        ${annualMonthly ? `<div style="font-size:12px;color:#4ade80;margin-top:2px;">Annual $${annualMonthly}/mo（Save ${p.annual_discount}%）</div>` : ''}
-        <div style="font-size:13px;color:var(--t2);margin:12px 0;">${p.points_per_month} ${t('profile.subscription.points_per_month') || '积分/月'}</div>
-        <div style="font-size:12px;color:var(--t3);margin-bottom:4px;">${t('profile.subscription.max_resolution') || '最高分辨率'}：${p.max_resolution}</div>
-        <div style="font-size:12px;color:var(--t3);margin-bottom:16px;">${t('profile.subscription.concurrent_tasks') || '并发任务'}：${p.max_concurrent_tasks}</div>
-        ${isCurrent
-          ? `<button class="btn-secondary" style="width:100%;font-size:13px;" disabled>${t('profile.subscription.current_plan_btn') || '当前方案'}</button>`
-          : `<button class="btn-primary" style="width:100%;font-size:13px;" onclick="subscribePlan(${p.id},'monthly')">${t('profile.subscription.monthly_subscribe') || '月付订阅'}</button>
-             ${annualMonthly ? `<button class="btn-secondary" style="width:100%;font-size:13px;margin-top:8px;" onclick="subscribePlan(${p.id},'annual')">${t('profile.subscription.annual_subscribe') || '年付订阅'}</button>` : ''}`
-        }
-      </div>`;
-    }).join('');
-
-    container.innerHTML = currentHtml + `<h3 style="font-size:15px;font-weight:600;margin-bottom:16px;">${t('profile.choose_plan') || '选择方案'}</h3>
-      <div style="display:flex;gap:16px;flex-wrap:wrap;">${plansHtml}</div>`;
-  } catch (e) {
-    if (container) container.innerHTML = '<div style="color:var(--t3)">' + (t('profile.load_fail') || '加载失败') + '</div>';
-  }
-}
-
-async function subscribePlan(planId, billingCycle) {
-  openPaymentModal('subscription', { plan_id: planId, billing_cycle: billingCycle });
-}
 
 // ── Profile ────────────────────────────────────────────────────────────
 
@@ -600,24 +487,19 @@ function _ensurePaymentModal() {
 async function openPaymentModal(paymentType, opts = {}) {
   const modal = _ensurePaymentModal();
 
-  if (paymentType === 'points') {
-    document.getElementById('pmTitle').textContent = t('profile.credits_topup') || '充值积分';
-    document.getElementById('pmPackages').style.display = 'block';
-    const grid = document.getElementById('pmPackageGrid');
-    const packages = await _getPointsPackages();
-    grid.innerHTML = packages.map(p => `
-      <button onclick="selectPointsPackage('${p.key}')" id="pkg-${p.key}"
-        style="padding:10px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;color:var(--t1);cursor:pointer;text-align:center;">
-        <div style="font-weight:600;">${p.points.toLocaleString()} ${t('js.points_unit') || '积分'}</div>
-        <div style="font-size:12px;color:var(--t3);">$${(p.price_cents / 100).toFixed(0)}</div>
-      </button>`).join('');
-    if (opts.package_key) {
-      await selectPointsPackage(opts.package_key);
-      return;
-    }
-  } else {
-    document.getElementById('pmTitle').textContent = t('profile.buy_plan') || '购买套餐';
-    document.getElementById('pmPackages').style.display = 'none';
+  document.getElementById('pmTitle').textContent = t('profile.credits_topup') || '充值积分';
+  document.getElementById('pmPackages').style.display = 'block';
+  const grid = document.getElementById('pmPackageGrid');
+  const packages = await _getPointsPackages();
+  grid.innerHTML = packages.map(p => `
+    <button onclick="selectPointsPackage('${p.key}')" id="pkg-${p.key}"
+      style="padding:10px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;color:var(--t1);cursor:pointer;text-align:center;">
+      <div style="font-weight:600;">${p.points.toLocaleString()} ${t('js.points_unit') || '积分'}</div>
+      <div style="font-size:12px;color:var(--t3);">$${(p.price_cents / 100).toFixed(0)}</div>
+    </button>`).join('');
+  if (opts.package_key) {
+    await selectPointsPackage(opts.package_key);
+    return;
   }
 
   document.getElementById('pmAmount').textContent = t('js.generating') || '生成中...';
@@ -625,10 +507,6 @@ async function openPaymentModal(paymentType, opts = {}) {
   document.getElementById('pmStatus').textContent = t('profile.payment.generating') || '生成订单中...';
   document.getElementById('pmSuccess').style.display = 'none';
   modal.style.display = 'flex';
-
-  if (paymentType === 'subscription') {
-    await _createOrder({ payment_type: 'subscription', plan_id: opts.plan_id, billing_cycle: opts.billing_cycle });
-  }
 }
 
 let _selectedPkg = null;
@@ -701,7 +579,6 @@ function _startPollStatus() {
         document.getElementById('pmTimer').style.display = 'none';
         document.getElementById('pmSuccess').style.display = 'block';
         await loadUserData();
-        if (typeof loadSubscription === 'function') loadSubscription();
       } else if (data.status === 'expired' || data.status === 'cancelled') {
         _clearPollTimer();
         document.getElementById('pmStatus').textContent = (t('profile.payment.order_status') || '订单已') + (data.status === 'expired' ? (t('profile.payment.expired') || '过期') : (t('profile.payment.cancelled') || '取消'));

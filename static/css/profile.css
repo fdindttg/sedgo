@@ -19,9 +19,13 @@
       color: var(--t1);
       min-height: 100vh;
       display: flex;
+      flex-wrap: wrap;
     }
-
-    /* Sidebar */
+    .profile-page-wrapper {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
     .sidebar {
       width: 200px;
       background: var(--bg2);
@@ -665,4 +669,59 @@
 }
 .drama-action-btn:hover {
   background: rgba(255,255,255,0.05);
+}
+
+/* Footer */
+footer {
+  width: 100%;
+  background: var(--bg2); border-top: 1px solid var(--bg4);
+  padding: 48px 32px 24px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 40px;
+  margin: 0 auto 32px;
+  max-width: 1200px;
+}
+.footer-col-title {
+  font-size: 14px; font-weight: 700; color: var(--t2);
+  text-transform: uppercase; letter-spacing: 2px;
+  margin-bottom: 14px;
+}
+.footer-logo { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; margin-bottom: 8px; }
+.footer-brand-desc { font-size: 14px; color: var(--t3); line-height: 1.6; margin-bottom: 4px; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 4px; }
+.footer-links a {
+  font-size: 13px; color: var(--t3); text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 4px 10px; border-radius: 6px; transition: .15s;
+  display: inline-block;
+}
+.footer-links a:hover { color: var(--t2); background: var(--bg3); }
+.footer-contact-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 14px; color: var(--t3); line-height: 1.8;
+}
+.footer-contact-item a { color: var(--accent); text-decoration: none; }
+.footer-contact-item a:hover { text-decoration: underline; }
+.footer-bottom {
+  border-top: 1px solid var(--bg4);
+  padding-top: 16px;
+  display: flex; flex-wrap: wrap;
+  justify-content: space-between; align-items: center;
+  gap: 8px;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+.footer-copy { font-size: 14px; color: var(--t3); text-transform: uppercase; letter-spacing: 1px; }
+.footer-legal { font-size: 13px; color: var(--t3); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; }
+.footer-legal a { color: var(--t3); text-decoration: none; }
+.footer-legal a:hover { color: var(--t2); }
+.footer-legal span { opacity: 0.4; }
+
+@media (max-width: 768px) {
+  footer { padding: 36px 16px 20px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 28px; margin-bottom: 24px; }
+  .footer-links { gap: 2px; }
+  .footer-bottom { flex-direction: column; text-align: center; }
 }

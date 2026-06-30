@@ -11,7 +11,7 @@
 
 import json
 import logging
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from pydantic import BaseModel
@@ -47,16 +47,19 @@ router = APIRouter(prefix="/api/drama", tags=["短剧工作室"])
 
 class ProjectCreate(BaseModel):
     title: str
+    description: str = ""
     genre: str = "逆袭"
-    logline: str = ""
     total_episodes: int = 10
+    settings: Optional[dict] = None
 
 
 class ProjectUpdate(BaseModel):
     title: Optional[str] = None
+    description: Optional[str] = None
     genre: Optional[str] = None
     logline: Optional[str] = None
     total_episodes: Optional[int] = None
+    settings: Optional[dict] = None
 
 
 class ScriptGenerateRequest(BaseModel):
@@ -84,6 +87,33 @@ class SceneSelectRequest(BaseModel):
     video_url: str
 
 
+class EpisodeUpdate(BaseModel):
+    """编辑剧集"""
+    title: Optional[str] = None
+    hook: Optional[str] = None
+    cliffhanger: Optional[str] = None
+
+
+class SceneUpdate(BaseModel):
+    """编辑分镜场景"""
+    prompt_text: Optional[str] = None
+    camera_instruction: Optional[str] = None
+    location: Optional[str] = None
+    time_period: Optional[str] = None
+    characters: Optional[list[str]] = None
+    duration: Optional[int] = None
+
+
+class CreateSceneRequest(BaseModel):
+    """新增分镜场景"""
+    scene_number: int
+    prompt_text: str = ""
+    camera_instruction: str = ""
+    location: str = ""
+    time_period: str = ""
+    duration: int = 5
+
+
 # ═══════════════════════════════════════════════════════════════════
 # 项目 CRUD
 # ═══════════════════════════════════════════════════════════════════
@@ -104,7 +134,8 @@ def create_drama_project(
     if data.genre not in SHORT_DRAMA_GENRES:
         raise HTTPException(status_code=400, detail=f"不支持的短剧类型：{data.genre}，可选：{SHORT_DRAMA_GENRES}")
     
-    project = create_project(db, user.id, data.title, data.genre, data.logline, data.total_episodes)
+    project = create_project(db, user.id, data.title, data.genre, data.description, data.total_episodes, 
+                             settings=data.settings)
     
     return {
         "id": project.id,
@@ -112,6 +143,7 @@ def create_drama_project(
         "genre": project.genre,
         "logline": project.logline,
         "total_episodes": project.total_episodes,
+        "settings": project.settings,
         "status": project.status.value,
         "created_at": project.created_at.isoformat() if project.created_at else None,
     }
@@ -134,6 +166,7 @@ def list_drama_projects(
             "genre": p.genre,
             "logline": p.logline,
             "total_episodes": p.total_episodes,
+            "settings": p.settings,
             "episode_count": len(p.episodes) if p.episodes else 0,
             "status": p.status.value,
             "created_at": p.created_at.isoformat() if p.created_at else None,
@@ -166,6 +199,7 @@ def get_drama_project(
         "genre": project.genre,
         "logline": project.logline,
         "total_episodes": project.total_episodes,
+        "settings": project.settings,
         "status": project.status.value,
         "episodes": [{
             "id": ep.id,
@@ -201,12 +235,16 @@ def update_drama_project(
     
     if data.title is not None:
         project.title = data.title
+    if data.description is not None:
+        project.logline = data.description
     if data.genre is not None:
         project.genre = data.genre
     if data.logline is not None:
         project.logline = data.logline
     if data.total_episodes is not None:
         project.total_episodes = data.total_episodes
+    if data.settings is not None:
+        project.settings = json.dumps(data.settings, ensure_ascii=False)
     
     db.commit()
     return {"success": True, "message": "项目已更新"}
@@ -357,6 +395,33 @@ def get_episode_detail(
         } for s in scenes],
         "created_at": episode.created_at.isoformat() if episode.created_at else None,
     }
+
+
+@router.put("/episodes/{episode_id}")
+def update_episode(
+    episode_id: int,
+    data: EpisodeUpdate,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """编辑剧集信息"""
+    episode = db.query(DramaEpisode).filter(DramaEpisode.id == episode_id).first()
+    if not episode:
+        raise HTTPException(status_code=404, detail="剧集不存在")
+    
+    project = db.query(DramaProject).filter(DramaProject.id == episode.project_id).first()
+    if not project or project.user_id != user.id:
+        raise HTTPException(status_code=403, detail="无权访问")
+    
+    if data.title is not None:
+        episode.title = data.title
+    if data.hook is not None:
+        episode.hook = data.hook
+    if data.cliffhanger is not None:
+        episode.cliffhanger = data.cliffhanger
+    
+    db.commit()
+    return {"success": True, "message": "剧集已更新"}
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -576,6 +641,103 @@ def select_scene_video(
     db.commit()
     
     return {"success": True, "message": "已选择视频"}
+
+
+@router.put("/scenes/{scene_id}")
+def update_scene(
+    scene_id: int,
+    data: SceneUpdate,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """编辑分镜场景"""
+    scene = db.query(DramaScene).filter(DramaScene.id == scene_id).first()
+    if not scene:
+        raise HTTPException(status_code=404, detail="场景不存在")
+    
+    episode = db.query(DramaEpisode).filter(DramaEpisode.id == scene.episode_id).first()
+    project = db.query(DramaProject).filter(DramaProject.id == episode.project_id).first()
+    if project.user_id != user.id:
+        raise HTTPException(status_code=403, detail="无权访问")
+    
+    if data.prompt_text is not None:
+        scene.prompt_text = data.prompt_text
+    if data.camera_instruction is not None:
+        scene.camera_instruction = data.camera_instruction
+    if data.location is not None:
+        scene.location = data.location
+    if data.time_period is not None:
+        scene.time_period = data.time_period
+    if data.characters is not None:
+        scene.characters = data.characters
+    if data.duration is not None:
+        scene.duration = data.duration
+    scene.status = DramaStatus.DRAFT
+    
+    db.commit()
+    return {"success": True, "message": "场景已更新"}
+
+
+@router.delete("/scenes/{scene_id}")
+def delete_scene(
+    scene_id: int,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """删除分镜场景"""
+    scene = db.query(DramaScene).filter(DramaScene.id == scene_id).first()
+    if not scene:
+        raise HTTPException(status_code=404, detail="场景不存在")
+    
+    episode = db.query(DramaEpisode).filter(DramaEpisode.id == scene.episode_id).first()
+    project = db.query(DramaProject).filter(DramaProject.id == episode.project_id).first()
+    if project.user_id != user.id:
+        raise HTTPException(status_code=403, detail="无权访问")
+    
+    db.delete(scene)
+    db.commit()
+    return {"success": True, "message": "场景已删除"}
+
+
+@router.post("/episodes/{episode_id}/scenes")
+def create_scene(
+    episode_id: int,
+    data: CreateSceneRequest,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """新增分镜场景"""
+    episode = db.query(DramaEpisode).filter(DramaEpisode.id == episode_id).first()
+    if not episode:
+        raise HTTPException(status_code=404, detail="剧集不存在")
+    
+    project = db.query(DramaProject).filter(DramaProject.id == episode.project_id).first()
+    if project.user_id != user.id:
+        raise HTTPException(status_code=403, detail="无权访问")
+    
+    scene = DramaScene(
+        episode_id=episode_id,
+        scene_number=data.scene_number,
+        prompt_text=data.prompt_text,
+        camera_instruction=data.camera_instruction,
+        location=data.location,
+        time_period=data.time_period,
+        duration=data.duration,
+        status=DramaStatus.DRAFT,
+    )
+    db.add(scene)
+    db.commit()
+    db.refresh(scene)
+    return {
+        "success": True,
+        "message": "场景已添加",
+        "scene": {
+            "id": scene.id,
+            "scene_number": scene.scene_number,
+            "prompt_text": scene.prompt_text,
+            "duration": scene.duration,
+        }
+    }
 
 
 @router.get("/episodes/{episode_id}/export")

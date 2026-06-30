@@ -25,8 +25,26 @@ LIST_FILES_URL = DEFAULT_LIST_URL
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
+    # Migrations: add columns before _seed_defaults (which queries User)
+    with engine.connect() as conn:
+        try:
+            conn.exec_driver_sql(
+                "ALTER TABLE users ADD COLUMN user_type VARCHAR(20) DEFAULT 'regular'"
+            )
+            conn.commit()
+            print("[Migrate] Added user_type column to users")
+        except Exception:
+            pass  # Column already exists
+        try:
+            conn.exec_driver_sql(
+                "ALTER TABLE users ADD COLUMN remark VARCHAR(500)"
+            )
+            conn.commit()
+            print("[Migrate] Added remark column to users")
+        except Exception:
+            pass  # Column already exists
     _seed_defaults()
-    # Migrations: add merged_video_url to drama_episodes if not exists
+    # Migrations: other columns
     with engine.connect() as conn:
         try:
             conn.exec_driver_sql(
@@ -34,6 +52,14 @@ async def lifespan(app: FastAPI):
             )
             conn.commit()
             print("[Migrate] Added merged_video_url column to drama_episodes")
+        except Exception:
+            pass  # Column already exists
+        try:
+            conn.exec_driver_sql(
+                "ALTER TABLE drama_projects ADD COLUMN settings TEXT"
+            )
+            conn.commit()
+            print("[Migrate] Added settings column to drama_projects")
         except Exception:
             pass  # Column already exists
     # 启动高并发任务轮询服务

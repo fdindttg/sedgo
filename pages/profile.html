@@ -30,6 +30,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
+  <div class="profile-page-wrapper">
   <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-header">
@@ -41,9 +42,7 @@
     <ul class="sidebar-menu">
       <li><a href="#" class="active" data-page="works"><span>📹</span> <span data-i18n="profile.menu.works">我的创作</span></a></li>
       <li><a href="#" data-page="dramas"><span>🎬</span> <span>我的短剧</span></a></li>
-      <li><a href="#" data-page="subscription"><span>💎</span> <span data-i18n="profile.menu.subscription">订阅</span></a></li>
-      <li><a href="#" data-page="credits"><span>💰</span> <span data-i18n="profile.menu.credits">信用历史</span></a></li>
-      <li><a href="#" data-page="orders"><span>📋</span> <span data-i18n="profile.menu.orders">订单记录</span></a></li>
+      <li><a href="#" data-page="orders"><span>💰</span> <span data-i18n="profile.menu.points">积分管理</span></a></li>
       <li><a href="#" data-page="profile"><span>👤</span> <span data-i18n="profile.menu.profile">个人资料</span></a></li>
       <li><a href="#" data-page="contact"><span>🎫</span> <span data-i18n="profile.menu.contact">提交工单</span></a></li>
       <li><a href="#" class="logout" onclick="doLogout()"><span>🚪</span> <span data-i18n="profile.menu.logout">登出</span></a></li>
@@ -123,23 +122,15 @@
         </div>
       </div>
 
-      <!-- Subscription Page -->
-      <div id="page-subscription" class="page-content" style="display: none;">
-        <div class="section-header">
-
-          <div class="section-actions">
-            <button onclick="openTopupModal()" style="padding:8px 16px;background:var(--primary,#7c3aed);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:13px;" data-i18n="profile.credits_topup">₮ 充值积分</button>
-          </div>
-        </div>
-        <div id="subscriptionContent">
-          <div style="text-align:center;padding:40px;color:var(--t3)" data-i18n="profile.loading">加载中...</div>
-        </div>
-      </div>
-
       <!-- Credits Page -->
-      <div id="page-credits" class="page-content" style="display: none;">
+      <!-- Points Management Page (积分管理) -->
+      <div id="page-orders" class="page-content" style="display: none;">
         <div class="section-header">
-
+          <div>
+            <h3 style="font-size:16px;font-weight:600;color:var(--t1);margin:0;" data-i18n="profile.points_mgmt.title">积分管理</h3>
+            <p style="font-size:13px;color:var(--t3);margin:4px 0 0;" data-i18n="profile.points_mgmt.desc">查看积分变动记录和充值积分</p>
+          </div>
+          <button class="btn-primary" onclick="openTopupModal()" style="padding:8px 18px;font-size:13px;border-radius:8px;" data-i18n="profile.points_mgmt.topup">积分充值</button>
         </div>
 
         <div class="table-container">
@@ -162,33 +153,6 @@
               <button class="pagination-btn" id="creditsPrevBtn" disabled onclick="loadCredits(_creditsPage-1)" data-i18n="profile.pagination.prev">上一页</button>
               <button class="pagination-btn" id="creditsNextBtn" disabled onclick="loadCredits(_creditsPage+1)" data-i18n="profile.pagination.next">下一页</button>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Orders Page -->
-      <div id="page-orders" class="page-content" style="display: none;">
-        <div class="section-header">
-
-        </div>
-
-        <div class="table-container">
-          <table class="table">
-            <thead>
-              <tr>
-                <th data-i18n="profile.table.date">日期</th>
-                <th data-i18n="profile.table.product">方案</th>
-                <th data-i18n="profile.pagination.per_page">周期</th>
-                <th data-i18n="profile.table.status">状态</th>
-                <th data-i18n="profile.table.amount">金额</th>
-              </tr>
-            </thead>
-            <tbody id="ordersTbody">
-              <tr><td colspan="5" style="text-align: center; color: var(--t3);" data-i18n="profile.loading">加载中...</td></tr>
-            </tbody>
-          </table>
-          <div class="pagination">
-            <div class="pagination-info" id="ordersPageInfo" data-i18n="profile.pagination.orders">0 笔订单</div>
           </div>
         </div>
       </div>
@@ -301,8 +265,10 @@
     </div>
   </main>
 
+  </div><!-- /.profile-page-wrapper -->
+
   <script src="/static/js/i18n-config.js"></script>
-  <script src="/static/js/profile.js?v=7"></script>
+  <script src="/static/js/profile.js?v=9"></script>
 
   <!-- 短剧详情弹窗 -->
   <div id="dramaDetailModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);overflow-y:auto;">
@@ -311,5 +277,43 @@
       <div id="dramaDetailContent"></div>
     </div>
   </div>
+ <footer>
+  <div class="footer-grid">
+    <div>
+      <a class="footer-logo" href="/">
+        <div class="nav-logo-icon">S</div>
+        <span style="font-size:15px;font-weight:700;color:var(--t1)">SedGo AI</span>
+      </a>
+      <p class="footer-brand-desc" data-i18n="footer.brand_desc">AI 驱动的新一代视频生成平台</p>
+      <p class="footer-brand-desc" style="color:var(--t3);" data-i18n="footer.company_name">辽宁励途科技有限公司</p>
+    </div>
+    <div>
+      <div class="footer-col-title" data-i18n="footer.quick_links">快速链接</div>
+      <div class="footer-links">
+        <a href="/" data-i18n="footer.txt2vid">文生视频</a>
+        <a href="/" data-i18n="footer.img2vid">图生视频</a>
+        <a href="/pages/terms.html" data-i18n="footer.terms">服务条款</a>
+        <a href="/pages/privacy.html" data-i18n="footer.privacy">隐私政策</a>
+        <a href="/pages/refund.html" data-i18n="footer.refund">退款政策</a>
+        <a href="/pages/support.html" data-i18n="footer.contact">联系我们</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title" data-i18n="footer.contact_us">联系我们</div>
+      <div class="footer-contact-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <a href="mailto:support@sedgo.ai" data-i18n="footer.contact_email">support@sedgo.ai</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy" data-i18n="footer.copyright">©2026辽宁励途科技有限公司.All rights reserved</span>
+    <div class="footer-legal">
+      <a href="/pages/terms.html" style="color:var(--t3);text-decoration:none;" data-i18n="footer.terms">服务条款</a>
+      <span>·</span>
+      <a href="/pages/privacy.html" style="color:var(--t3);text-decoration:none;" data-i18n="footer.privacy">隐私政策</a>
+    </div>
+  </div>
+</footer>
 </body>
 </html>

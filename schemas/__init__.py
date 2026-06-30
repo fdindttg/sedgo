@@ -75,6 +75,8 @@ class UserResponse(BaseModel):
 class AdminUserUpdate(BaseModel):
     status: Optional[str] = None
     role: Optional[str] = None
+    user_type: Optional[str] = None
+    remark: Optional[str] = None
 
 
 class SubscriptionPlanCreate(BaseModel):

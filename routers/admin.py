@@ -91,6 +91,8 @@ def api_admin_users(
             "display_name": u.display_name,
             "role": u.role.value,
             "status": u.status.value,
+            "user_type": u.user_type or "regular",
+            "remark": u.remark,
             "points_balance": get_user_points(db, u.id),
             "subscription": get_active_subscription(db, u.id),
             "created_at": u.created_at.isoformat() if u.created_at else None,
@@ -113,6 +115,89 @@ def api_admin_update_user(
         user.status = UserStatus(data.status)
     if data.role:
         user.role = UserRole(data.role)
+    if data.user_type:
+        from database import UserType
+        user.user_type = UserType(data.user_type)
+    if data.remark is not None:
+        user.remark = data.remark
+    db.commit()
+    return {"success": True}
+
+
+class AdminResetPassword(BaseModel):
+    new_password: str
+
+
+@router.put("/users/{user_id}/password")
+def api_admin_reset_password(
+    user_id: int,
+    data: AdminResetPassword,
+    admin: User = Depends(get_admin_user),
+    db: Session = Depends(get_db),
+):
+    from services.auth_service import hash_password
+
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if user.role == UserRole.ADMIN and user.id != admin.id:
+        raise HTTPException(status_code=400, detail="Cannot reset another admin's password")
+    if len(data.new_password) < 6:
+        raise HTTPException(status_code=400, detail="密码至少6位")
+    user.password_hash = hash_password(data.new_password)
+    db.commit()
+    return {"success": True}
+
+
+@router.delete("/users/{user_id}")
+def api_admin_delete_user(
+    user_id: int,
+    admin: User = Depends(get_admin_user),
+    db: Session = Depends(get_db),
+):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if user.role == UserRole.ADMIN:
+        raise HTTPException(status_code=400, detail="Cannot delete admin user")
+
+    # 手动删除所有关联数据（没有 CASCADE）
+    from database import (
+        UserSubscription, PointsRecord, TaskRecord, BatchTask, ApiKey,
+        VideoComposition, VideoSegment, PaymentOrder, AssetLibrary,
+        ContactMessage, ContactReply, DramaProject, DramaEpisode, UploadedFile
+    )
+    # 先删子记录
+    db.query(VideoSegment).filter(
+        VideoSegment.composition_id.in_(
+            db.query(VideoComposition.id).filter(VideoComposition.user_id == user_id)
+        )
+    ).delete(synchronize_session=False)
+    db.query(VideoComposition).filter(VideoComposition.user_id == user_id).delete(synchronize_session=False)
+    db.query(DramaEpisode).filter(
+        DramaEpisode.project_id.in_(
+            db.query(DramaProject.id).filter(DramaProject.user_id == user_id)
+        )
+    ).delete(synchronize_session=False)
+    db.query(DramaProject).filter(DramaProject.user_id == user_id).delete(synchronize_session=False)
+    db.query(ContactReply).filter(
+        ContactReply.ticket_id.in_(
+            db.query(ContactMessage.id).filter(ContactMessage.user_id == user_id)
+        )
+    ).delete(synchronize_session=False)
+    db.query(ContactMessage).filter(ContactMessage.user_id == user_id).delete(synchronize_session=False)
+
+    # 删主记录
+    db.query(UserSubscription).filter(UserSubscription.user_id == user_id).delete(synchronize_session=False)
+    db.query(PointsRecord).filter(PointsRecord.user_id == user_id).delete(synchronize_session=False)
+    db.query(TaskRecord).filter(TaskRecord.user_id == user_id).delete(synchronize_session=False)
+    db.query(BatchTask).filter(BatchTask.user_id == user_id).delete(synchronize_session=False)
+    db.query(ApiKey).filter(ApiKey.user_id == user_id).delete(synchronize_session=False)
+    db.query(PaymentOrder).filter(PaymentOrder.user_id == user_id).delete(synchronize_session=False)
+    db.query(AssetLibrary).filter(AssetLibrary.user_id == user_id).delete(synchronize_session=False)
+    db.query(UploadedFile).filter(UploadedFile.user_id == user_id).delete(synchronize_session=False)
+
+    db.delete(user)
     db.commit()
     return {"success": True}
 
@@ -1010,44 +1095,190 @@ def api_admin_get_user_points(
 def api_admin_billing(
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
+    search: Optional[str] = Query(None),
     admin: User = Depends(get_admin_user),
     db: Session = Depends(get_db),
 ):
-    from database import UserSubscription, SubscriptionPlan, SubscriptionStatus
-    query = db.query(UserSubscription, User, SubscriptionPlan).join(
-        User, UserSubscription.user_id == User.id
-    ).join(
-        SubscriptionPlan, UserSubscription.plan_id == SubscriptionPlan.id
-    ).order_by(UserSubscription.created_at.desc())
+    """账单管理：每用户一行，显示积分发放/消耗/余额，不再依赖订阅"""
+    from database import PointsRecord, PointsType
+    from services.point_service import get_user_points
 
-    total = query.count()
-    rows = query.offset((page - 1) * page_size).limit(page_size).all()
+    user_query = db.query(User)
+    if search:
+        user_query = user_query.filter(
+            User.email.contains(search) | User.display_name.contains(search)
+        )
+    total = user_query.count()
+    users = user_query.order_by(User.id.desc()).offset(
+        (page - 1) * page_size
+    ).limit(page_size).all()
 
     items = []
-    for sub, user, plan in rows:
-        billing_cycle = getattr(sub, 'billing_cycle', 'monthly')
-        if billing_cycle == 'annual' and plan.annual_discount > 0:
-            price_cents = int(plan.price_cents * 12 * (100 - plan.annual_discount) / 100)
-        else:
-            price_cents = plan.price_cents
+    for user in users:
+        # 发放：所有正数记录（充值、获取、管理员调整正数等）
+        points_added = db.query(func.coalesce(func.sum(PointsRecord.points), 0)).filter(
+            PointsRecord.user_id == user.id,
+            PointsRecord.points > 0,
+        ).scalar() or 0
+
+        # 消耗：所有负数记录（任务消耗、管理员扣减等），取绝对值汇总
+        points_consumed = db.query(func.coalesce(func.sum(func.abs(PointsRecord.points)), 0)).filter(
+            PointsRecord.user_id == user.id,
+            PointsRecord.points < 0,
+        ).scalar() or 0
+
+        balance = get_user_points(db, user.id)
 
         items.append({
-            "id": sub.id,
             "user_id": user.id,
             "user_email": user.email,
             "user_name": user.display_name,
-            "plan_id": plan.id,
-            "plan_name": plan.name,
-            "billing_cycle": billing_cycle,
-            "status": sub.status.value,
-            "price_cents": price_cents,
-            "points_per_month": plan.points_per_month,
-            "started_at": sub.started_at.isoformat() if sub.started_at else None,
-            "expires_at": sub.expires_at.isoformat() if sub.expires_at else None,
-            "created_at": sub.created_at.isoformat() if sub.created_at else None,
+            "user_status": user.status.value,
+            "user_type": user.user_type or "regular",
+            "remark": user.remark,
+            "points_added": int(points_added),
+            "points_consumed": int(points_consumed),
+            "points_balance": balance,
         })
 
     return {"items": items, "total": total, "page": page, "page_size": page_size}
+
+
+@router.get("/billing/export")
+def api_admin_billing_export(
+    admin: User = Depends(get_admin_user),
+    db: Session = Depends(get_db),
+):
+    """导出全部账单数据为 CSV"""
+    from database import PointsRecord, PointsType
+    from services.point_service import get_user_points
+    import csv, io
+
+    users = db.query(User).order_by(User.id.desc()).all()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    output.write('\ufeff')
+    writer.writerow([
+        '用户ID', '用户邮箱', '用户昵称', '账户状态', '用户类型', '备注',
+        '已发放积分', '已消耗积分', '净增积分', '积分余额',
+    ])
+
+    user_status_map = {'active': '正常', 'inactive': '停用', 'banned': '封禁'}
+    user_type_map = {'trial': '试用', 'internal': '内部', 'regular': '正式'}
+
+    for user in users:
+        points_added = db.query(func.coalesce(func.sum(PointsRecord.points), 0)).filter(
+            PointsRecord.user_id == user.id,
+            PointsRecord.points > 0,
+        ).scalar() or 0
+
+        points_consumed = db.query(func.coalesce(func.sum(func.abs(PointsRecord.points)), 0)).filter(
+            PointsRecord.user_id == user.id,
+            PointsRecord.points < 0,
+        ).scalar() or 0
+
+        balance = get_user_points(db, user.id)
+
+        writer.writerow([
+            user.id,
+            user.email or '',
+            user.display_name or '',
+            user_status_map.get(user.status.value, user.status.value),
+            user_type_map.get(user.user_type, user.user_type) if user.user_type else '正式',
+            user.remark or '',
+            int(points_added),
+            int(points_consumed),
+            int(points_added) - int(points_consumed),
+            balance,
+        ])
+
+    from fastapi.responses import Response
+    return Response(
+        content=output.getvalue().encode('utf-8-sig'),
+        media_type='text/csv; charset=utf-8',
+        headers={
+            'Content-Disposition': 'attachment; filename=billing_export.csv'
+        }
+    )
+
+
+@router.get("/billing/summary")
+def api_admin_billing_summary(
+    admin: User = Depends(get_admin_user),
+    db: Session = Depends(get_db),
+):
+    """账单统计汇总：总积分增加、总积分消耗、按类型分组"""
+    from database import PointsRecord, PointsType
+    from sqlalchemy import case
+
+    # 总积分增加（只统计正数）
+    total_added = db.query(func.coalesce(func.sum(PointsRecord.points), 0)).filter(
+        PointsRecord.points > 0,
+    ).scalar() or 0
+
+    # 总积分消耗
+    total_consumed = db.query(func.coalesce(func.sum(func.abs(PointsRecord.points)), 0)).filter(
+        PointsRecord.type == PointsType.CONSUME,
+    ).scalar() or 0
+
+    # 按类型分组：增加
+    earned_by_type = db.query(
+        PointsRecord.type,
+        func.coalesce(func.sum(PointsRecord.points), 0).label("total"),
+        func.count(PointsRecord.id).label("count"),
+    ).filter(
+        PointsRecord.points > 0,
+    ).group_by(PointsRecord.type).all()
+
+    # 按类型分组：消耗
+    consumed_by_type = db.query(
+        PointsRecord.type,
+        func.coalesce(func.sum(func.abs(PointsRecord.points)), 0).label("total"),
+        func.count(PointsRecord.id).label("count"),
+    ).filter(
+        PointsRecord.type == PointsType.CONSUME,
+    ).group_by(PointsRecord.type).all()
+
+    # 订阅发放积分
+    subscription_points = db.query(func.coalesce(func.sum(PointsRecord.points), 0)).filter(
+        PointsRecord.type == PointsType.SUBSCRIPTION,
+        PointsRecord.points > 0,
+    ).scalar() or 0
+
+    # 管理员调整
+    admin_adjust_points = db.query(func.coalesce(func.sum(PointsRecord.points), 0)).filter(
+        PointsRecord.type == PointsType.ADMIN_ADJUST,
+        PointsRecord.points > 0,
+    ).scalar() or 0
+
+    # 积分充值
+    earn_points_total = db.query(func.coalesce(func.sum(PointsRecord.points), 0)).filter(
+        PointsRecord.type == PointsType.EARN,
+        PointsRecord.points > 0,
+    ).scalar() or 0
+
+    # 过期积分
+    expired_points = db.query(func.coalesce(func.sum(func.abs(PointsRecord.points)), 0)).filter(
+        PointsRecord.type == PointsType.EXPIRE,
+    ).scalar() or 0
+
+    type_breakdown = {
+        "added": {},
+        "consumed": {"consume": int(total_consumed)},
+    }
+    for row in earned_by_type:
+        type_breakdown["added"][row.type.value] = int(row.total)
+
+    return {
+        "total_added": int(total_added),
+        "total_consumed": int(total_consumed),
+        "net_balance": int(total_added - total_consumed),
+        "admin_adjust_points": int(admin_adjust_points),
+        "earn_points": int(earn_points_total),
+        "expired_points": int(expired_points),
+        "type_breakdown": type_breakdown,
+    }
 
 
 # ── Ticket (工单) Admin APIs ────────────────────────────────────────────

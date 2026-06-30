@@ -118,9 +118,6 @@
   <div class="user-dropdown-item" onclick="showApiKeys()">
     <span>🔑</span> <span data-i18n="user.apiKeys">API 密钥</span>
   </div>
-  <div class="user-dropdown-item" onclick="showSubscription()">
-    <span>💎</span> <span data-i18n="user.subscription">订阅</span>
-  </div>
   <div class="user-dropdown-item danger" onclick="doLogout()">
     <span>🚪</span> <span data-i18n="user.logout">退出登录</span>
   </div>
@@ -212,19 +209,42 @@
 </section>
 
 <footer>
-  <a class="footer-logo" href="/">
-    <div class="nav-logo-icon">S</div>
-    <span style="font-size:15px;font-weight:700;color:var(--t1)">SedGo ai</span>
-  </a>
-  <div class="footer-links">
-    <a href="/#features" data-i18n="footer.txt2vid">文生视频</a>
-    <a href="/#features" data-i18n="footer.img2vid">图生视频</a>
-    <a href="/pages/terms.html" data-i18n="footer.terms">服务条款</a>
-    <a href="/pages/privacy.html" data-i18n="footer.privacy">隐私政策</a>
-    <a href="/pages/refund.html" data-i18n="footer.refund">退款政策</a>
-    <a href="/pages/support.html" data-i18n="footer.contact">联系我们</a>
+  <div class="footer-grid">
+    <div>
+      <a class="footer-logo" href="/">
+        <div class="nav-logo-icon">S</div>
+        <span style="font-size:15px;font-weight:700;color:var(--t1)">SedGo AI</span>
+      </a>
+      <p class="footer-brand-desc" data-i18n="footer.brand_desc">AI 驱动的新一代视频生成平台</p>
+      <p class="footer-brand-desc" style="color:var(--t3);" data-i18n="footer.company_name">辽宁励途科技有限公司</p>
+    </div>
+    <div>
+      <div class="footer-col-title" data-i18n="footer.quick_links">快速链接</div>
+      <div class="footer-links">
+        <a href="/" data-i18n="footer.txt2vid">文生视频</a>
+        <a href="/" data-i18n="footer.img2vid">图生视频</a>
+        <a href="/pages/terms.html" data-i18n="footer.terms">服务条款</a>
+        <a href="/pages/privacy.html" data-i18n="footer.privacy">隐私政策</a>
+        <a href="/pages/refund.html" data-i18n="footer.refund">退款政策</a>
+        <a href="/pages/support.html" data-i18n="footer.contact">联系我们</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title" data-i18n="footer.contact_us">联系我们</div>
+      <div class="footer-contact-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <a href="mailto:support@sedgo.ai" data-i18n="footer.contact_email">support@sedgo.ai</a>
+      </div>
+    </div>
   </div>
-  <span class="footer-copy">© 2026 SedGo.ai</span>
+  <div class="footer-bottom">
+    <span class="footer-copy" data-i18n="footer.copyright">©2026辽宁励途科技有限公司.All rights reserved</span>
+    <div class="footer-legal">
+      <a href="/pages/terms.html" style="color:var(--t3);text-decoration:none;" data-i18n="footer.terms">服务条款</a>
+      <span>·</span>
+      <a href="/pages/privacy.html" style="color:var(--t3);text-decoration:none;" data-i18n="footer.privacy">隐私政策</a>
+    </div>
+  </div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.12.2/i18next.min.js"></script>
