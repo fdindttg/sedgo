@@ -1956,25 +1956,7 @@ if (fileInput) {
       const data = await res.json();
       if (data.success) {
         uploadedFiles.push({ name: file.name, file_id: data.data.id, url: (data.data.url||'').replace(/`/g,'').trim(), type: file.type.startsWith('video') ? 'video' : (file.type.startsWith('audio') ? 'audio' : 'image') });
-        if (file.type.startsWith('audio') || file.type.startsWith('video')) {
-          const media = file.type.startsWith('video') ? document.createElement('video') : new Audio();
-          const url = URL.createObjectURL(file);
-          media.src = url;
-          await new Promise((resolve) => {
-            media.addEventListener('loadedmetadata', async function(){
-              const d = media.duration;
-              URL.revokeObjectURL(url);
-              if (d > 15) {
-                const typeLabel = file.type.startsWith('video') ? 'Video' : 'Audio';
-                alert(typeLabel + ' "' + file.name + '" is ' + Math.round(d) + 's. Both audio and video must be 15s.');
-                // Remove this file from uploadedFiles
-                uploadedFiles.pop();
-              }
-              resolve();
-            }, {once: true});
-            media.addEventListener('error', () => { URL.revokeObjectURL(url); resolve(); }, {once: true});
-          });
-        }
+
       } else {
         alert(t('js.upload_failed') + (data.message || t('js.unknown_error')));
       }
@@ -3527,26 +3509,6 @@ function initUploadZone(mode) {
               };
               v.onerror = () => resolve(null);
             });
-          }
-          // Check audio/video duration <= 15s
-          if (isAudio || isVideo) {
-            const media = isVideo ? document.createElement('video') : new Audio();
-            const durUrl = URL.createObjectURL(file);
-            media.src = durUrl;
-            await new Promise((resolve) => {
-              media.addEventListener('loadedmetadata', function(){
-                const d = media.duration;
-                URL.revokeObjectURL(durUrl);
-                if (d > 15) {
-                  const typeLabel = isVideo ? 'Video' : 'Audio';
-                  alert(typeLabel + ' "' + file.name + '" is ' + Math.round(d) + 's. Both audio and video must be 15s.');
-                  resolve(true);
-                } else {
-                  resolve(false);
-                }
-              }, {once: true});
-              media.addEventListener('error', function(){ URL.revokeObjectURL(durUrl); resolve(false); }, {once: true});
-            }).then((skip) => { if (skip) throw new Error('DURATION_SKIP'); });
           }
           referenceFiles[mode].push({
             name: file.name,

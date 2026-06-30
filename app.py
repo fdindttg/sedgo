@@ -534,6 +534,32 @@ async def api_upload_file(authorization: str = Header(None), file: UploadFile = 
         local_path.write_bytes(content)
         local_url = f"/static/uploads/{local_name}"
 
+        # 自动裁剪音频/视频时长：超过15秒裁到15秒
+        MAX_DURATION = 15.0
+        mime = (file.content_type or "").lower()
+        is_audio = mime.startswith("audio/") or suffix.lower() in (".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac")
+        is_video = mime.startswith("video/") or suffix.lower() in (".mp4", ".mov", ".avi", ".mkv", ".webm")
+        trimmed = False
+        if is_audio or is_video:
+            try:
+                from services.task_service import _get_video_duration, _trim_audio, _trim_video
+                dur = _get_video_duration(str(local_path))
+                if dur > MAX_DURATION:
+                    trim_func = _trim_audio if is_audio else _trim_video
+                    trimmed_path = trim_func(str(local_path), MAX_DURATION)
+                    if trimmed_path:
+                        import shutil as _shutil
+                        _shutil.move(trimmed_path, str(local_path))
+                        content = local_path.read_bytes()
+                        trimmed = True
+                    else:
+                        from services.logger_util import logger as _log
+                        _log.warning(f"[upload] Failed to trim {file.filename} ({dur:.1f}s)")
+            except Exception:
+                pass
+        if trimmed and not content:
+            content = local_path.read_bytes()
+
         # 上传到 BytePlus Files API
         headers = _get_byteplus_file_headers()
         file_id = ""

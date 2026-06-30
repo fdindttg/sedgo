@@ -164,6 +164,51 @@ def _trim_audio(audio_path: str, target_duration: float) -> str | None:
         return None
 
 
+
+def _trim_video(video_path: str, target_duration: float) -> str | None:
+    """用 ffmpeg 将视频裁剪到 target_duration 秒，返回裁剪后的文件路径，失败返回 None"""
+    ffmpeg = _get_ffmpeg_exe()
+    src = pathlib.Path(video_path)
+    ext = src.suffix or ".mp4"
+    trimmed = src.parent / f"trimmed_{src.stem}{ext}"
+    try:
+        cmd = [
+            ffmpeg, "-y", "-i", str(src),
+            "-t", str(round(target_duration, 2)),
+            "-c", "copy",
+            str(trimmed),
+        ]
+        result_sub = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        if result_sub.returncode == 0 and trimmed.exists():
+            logger.info(f"[trim_video] {src.name} trimmed from {_get_video_duration(str(src)):.1f}s to {target_duration}s")
+            return str(trimmed)
+        # -c copy may fail, retry with re-encode
+        cmd2 = [
+            ffmpeg, "-y", "-i", str(src),
+            "-t", str(round(target_duration, 2)),
+            "-c:v", "libx264", "-preset", "fast", "-c:a", "aac",
+            str(trimmed),
+        ]
+        result2 = subprocess.run(cmd2, capture_output=True, text=True, timeout=120)
+        if result2.returncode == 0 and trimmed.exists():
+            logger.info(f"[trim_video] {src.name} trimmed (re-encode) from {_get_video_duration(str(src)):.1f}s to {target_duration}s")
+            return str(trimmed)
+        logger.error(f"[trim_video] ffmpeg failed: {result2.stderr[-300:]}")
+        return None
+    except Exception as e:
+        logger.error(f"[trim_video] error: {e}")
+        return None
+
+
+def _get_media_duration(file_path: str) -> float:
+    """获取音视频文件时长（秒），失败返回 0"""
+    try:
+        return _get_video_duration(file_path)
+    except Exception:
+        return 0.0
+
+
+
 def _call_volcengine_api(ak: str, sk: str, action: str, body: dict) -> dict:
     """Call Volcengine Universal API (ark service) with AK/SK signing.
     Falls back to canonical module-level credentials on failure."""
