@@ -3131,6 +3131,7 @@ async function generateVideo() {
         watermark: false,
         reference_images: (referenceFiles['video'] || []).filter(f => f.type === 'image').map(f => f.url),
         reference_videos: (referenceFiles['video'] || []).filter(f => f.type === 'video').map(f => f.url),
+        reference_audios: (referenceFiles['video'] || []).filter(f => f.type === 'audio').map(f => f.url),
       };
       
       // 添加真人素材参数（参考 BytePlus 文档：https://docs.byteplus.com/en/docs/ModelArk/2333589）
