@@ -625,7 +625,7 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
             resolved_aud = f"{_public_base_url.rstrip('/')}/{aud_url.lstrip('/')}" if aud_url.startswith("/") and _public_base_url else _resolve_media_url(aud_url)
         else:
             resolved_aud = asset_uri
-        content.append({"type": "audio_url", "audio_url": {"url": resolved_aud}})
+        content.append({"type": "audio_url", "audio_url": {"url": resolved_aud}, "role": "reference_audio"})
 
     # 参考视频（Seedance 2.0 要求视频必须走素材库，不能直传 URL）
     for vid_url in (task_config.get("reference_videos") or []):
@@ -647,7 +647,7 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
     payload = {
         "model": model,
         "content": content,
-        "generate_audio": task_config.get("generate_audio", True),
+        "generate_audio": False if (task_config.get("reference_audios") or []) else task_config.get("generate_audio", True),
         "ratio": task_config.get("ratio", "16:9"),
         "duration": task_config.get("duration_seconds", 5),
         "resolution": task_config.get("resolution", "720p"),
@@ -1457,7 +1457,7 @@ def create_video_composition(db: Session, user_id: int, task_config: dict) -> Vi
                 "duration_seconds": dur,
                 "resolution": resolution,
                 "ratio": ratio,
-                "generate_audio": task_config.get("generate_audio", True),
+                "generate_audio": False if (task_config.get("reference_audios") or []) else task_config.get("generate_audio", True),
                 "watermark": task_config.get("watermark", False),
                 "reference_images": task_config.get("reference_images") or [],
                 "reference_videos": task_config.get("reference_videos") or [],
@@ -1754,7 +1754,7 @@ def _composition_worker_serial(composition_id: int, prompt: str, model: str, res
                     "duration_seconds": current_seg.duration,
                     "resolution": resolution,
                     "ratio": ratio,
-                    "generate_audio": task_config.get("generate_audio", True),
+                    "generate_audio": False if (task_config.get("reference_audios") or []) else task_config.get("generate_audio", True),
                     "watermark": task_config.get("watermark", False),
                     "reference_videos": task_config.get("reference_videos") or [],
                     "reference_audios": task_config.get("reference_audios") or [],
