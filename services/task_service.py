@@ -141,6 +141,28 @@ def _resolve_media_url(url: str) -> str:
     data = base64.b64encode(local_path.read_bytes()).decode()
     return f"data:{mime};base64,{data}"
 
+def _trim_audio(audio_path: str, target_duration: float) -> str | None:
+    """用 ffmpeg 将音频裁剪到 target_duration 秒，返回裁剪后的文件路径，失败返回 None"""
+    ffmpeg = _get_ffmpeg_exe()
+    src = pathlib.Path(audio_path)
+    trimmed = src.parent / f"trimmed_{src.stem}.mp3"
+    try:
+        cmd = [
+            ffmpeg, "-y", "-i", str(src),
+            "-t", str(round(target_duration, 2)),
+            "-c:a", "libmp3lame", "-q:a", "2",
+            str(trimmed),
+        ]
+        result_sub = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        if result_sub.returncode == 0 and trimmed.exists():
+            logger.info(f"[trim_audio] {src.name} trimmed from {_get_video_duration(str(src)):.1f}s to {target_duration}s")
+            return str(trimmed)
+        logger.error(f"[trim_audio] ffmpeg failed: {result_sub.stderr[-300:]}")
+        return None
+    except Exception as e:
+        logger.error(f"[trim_audio] error: {e}")
+        return None
+
 
 def _call_volcengine_api(ak: str, sk: str, action: str, body: dict) -> dict:
     """Call Volcengine Universal API (ark service) with AK/SK signing.
@@ -626,12 +648,22 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
             resolved_aud = f"{_public_base_url.rstrip('/')}/{aud_url.lstrip('/')}" if aud_url.startswith("/") and _public_base_url else _resolve_media_url(aud_url)
         else:
             resolved_aud = asset_uri
-        if aud_url.startswith("/static/uploads/"):
+        target_dur = task_config.get("duration_seconds", 15)
+        if not asset_uri and aud_url.startswith("/static/uploads/"):
             local_audio = pathlib.Path(aud_url.lstrip("/"))
             if local_audio.exists():
                 dur = _get_video_duration(str(local_audio))
-                if dur > 15.2:
-                    raise ValueError(f"音频 {local_audio.name} 时长 {dur:.1f}s，超过 API 限制 15.2s，请使用 15s 的音频")
+                if dur > target_dur:
+                    trimmed_path = _trim_audio(str(local_audio), target_dur)
+                    if trimmed_path:
+                        if _ak and _sk:
+                            asset_uri = _try_upload_to_asset(trimmed_path, "Audio")
+                        if not asset_uri:
+                            resolved_aud = _resolve_media_url(trimmed_path)
+                        try:
+                            os.remove(trimmed_path)
+                        except Exception:
+                            pass
         content.append({"type": "audio_url", "audio_url": {"url": resolved_aud.replace('`','').strip()}, "role": "reference_audio"})
 
     # 参考视频（Seedance 2.0 要求视频必须走素材库，不能直传 URL）
