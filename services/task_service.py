@@ -270,8 +270,9 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
             if not public_url:
                 file_id = file_obj.get("id") or file_obj.get("file_id")
                 if file_id:
-                    for poll_i in range(15):
-                        time.sleep(2)
+                    max_polls = 60
+                    for poll_i in range(max_polls):
+                        time.sleep(3)
                         try:
                             detail_url = f"{files_url}/{file_id}"
                             poll_resp = requests.get(detail_url, headers={"Authorization": f"Bearer {api_key}"}, timeout=30)
@@ -279,16 +280,20 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
                                 detail = poll_resp.json()
                                 st = (detail.get("status") or "").lower()
                                 logger.info(f"[asset] Files API poll {poll_i+1}: id={file_id}, status={st}")
-                                if st == "ready":
+                                if st in ("ready", "active"):
                                     public_url = detail.get("url") or (detail.get("data") or {}).get("url", "")
                                     if public_url:
-                                        logger.info(f"[asset] File ready, url={public_url[:120]}...")
+                                        logger.info(f"[asset] File {st}, url={public_url[:120]}...")
                                         break
                                 elif st in ("failed", "error"):
                                     logger.error(f"[asset] Files API file {file_id} failed")
                                     break
+                            else:
+                                logger.warning(f"[asset] Files API poll {poll_i+1}: HTTP {poll_resp.status_code}")
                         except Exception as poll_err:
                             logger.warning(f"[asset] Files API poll error: {poll_err}")
+                    if not public_url:
+                        raise TimeoutError(f"文件上传处理超时（{max_polls * 3}s），最后一轮状态={st}，请重新上传")
                 if not public_url:
                     logger.error(f"[asset] Files API returned no URL: {json.dumps(file_obj)}")
             else:
@@ -330,15 +335,18 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
         logger.error(f"[asset] CreateAsset error: AssetType={asset_type}, error={e}, response={resp_text}")
         return None
 
-    # Step 3: poll GetAsset until Active (max 60s)
-    for attempt in range(30):
-        time.sleep(2)
+    # Step 3: poll GetAsset until Active (max 30 retries  3s)
+    max_asset_polls = 30
+    last_status = ""
+    for attempt in range(max_asset_polls):
+        time.sleep(3)
         try:
             info = _call_volcengine_api(ak, sk, "GetAsset", {
                 "Id": asset_id,
                 "ProjectName": project_name,
             })
             status = ((info.get("Result") or info).get("Status") or info.get("Status") or "").lower()
+            last_status = status
             logger.info(f"[asset] GetAsset {asset_id} status={status} (attempt {attempt+1})")
             if status == "active":
                 return f"asset://{asset_id}"
@@ -353,8 +361,7 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
         except Exception as e:
             logger.warning(f"[asset] GetAsset poll error: {e}")
 
-    logger.error(f"[asset] Asset {asset_id} did not become Active within timeout")
-    return None
+    raise TimeoutError(f"素材处理超时（{max_asset_polls * 3}s），最后一轮状态={last_status}，请重新上传")
 
 
 
