@@ -267,11 +267,32 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
         if resp.status_code == 200:
             file_obj = resp.json()
             public_url = file_obj.get("url") or file_obj.get("data", {}).get("url", "")
-            if public_url:
-                logger.info(f"[asset] File uploaded to Files API, url={public_url[:120]}...")
+            if not public_url:
+                file_id = file_obj.get("id") or file_obj.get("file_id")
+                if file_id:
+                    for poll_i in range(15):
+                        time.sleep(2)
+                        try:
+                            detail_url = f"{files_url}/{file_id}"
+                            poll_resp = requests.get(detail_url, headers={"Authorization": f"Bearer {api_key}"}, timeout=30)
+                            if poll_resp.status_code == 200:
+                                detail = poll_resp.json()
+                                st = (detail.get("status") or "").lower()
+                                logger.info(f"[asset] Files API poll {poll_i+1}: id={file_id}, status={st}")
+                                if st == "ready":
+                                    public_url = detail.get("url") or (detail.get("data") or {}).get("url", "")
+                                    if public_url:
+                                        logger.info(f"[asset] File ready, url={public_url[:120]}...")
+                                        break
+                                elif st in ("failed", "error"):
+                                    logger.error(f"[asset] Files API file {file_id} failed")
+                                    break
+                        except Exception as poll_err:
+                            logger.warning(f"[asset] Files API poll error: {poll_err}")
+                if not public_url:
+                    logger.error(f"[asset] Files API returned no URL: {json.dumps(file_obj)}")
             else:
-                logger.error(f"[asset] Files API returned no URL: {json.dumps(file_obj)}")
-                public_url = None
+                logger.info(f"[asset] File uploaded to Files API, url={public_url[:120]}...")
         else:
             logger.error(f"[asset] Files API upload failed {resp.status_code}: {resp.text[:1000]}")
             public_url = None
@@ -627,10 +648,7 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
         if img_url.startswith("/static/uploads/") and (_use_real or (_ak and _sk)):
             asset_uri = _try_upload_to_asset(img_url, "Image")
         if not asset_uri:
-            if img_url.startswith("/") and _public_base_url:
-                resolved_img = f"{_public_base_url.rstrip('/')}/{img_url.lstrip('/')}"
-            else:
-                resolved_img = _resolve_media_url(img_url)
+            resolved_img = _resolve_media_url(img_url)
         else:
             resolved_img = asset_uri
         content.append({
@@ -645,7 +663,7 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
         if aud_url.startswith("/static/uploads/") and (_ak and _sk):
             asset_uri = _try_upload_to_asset(aud_url, "Audio")
         if not asset_uri:
-            resolved_aud = f"{_public_base_url.rstrip('/')}/{aud_url.lstrip('/')}" if aud_url.startswith("/") and _public_base_url else _resolve_media_url(aud_url)
+            resolved_aud = _resolve_media_url(aud_url)
         else:
             resolved_aud = asset_uri
         target_dur = task_config.get("duration_seconds", 15)
