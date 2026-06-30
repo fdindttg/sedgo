@@ -315,7 +315,9 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
             if not public_url:
                 file_id = file_obj.get("id") or file_obj.get("file_id")
                 if file_id:
-                    max_polls = 60
+                    max_polls = 15
+                    active_no_url_seen = 0
+                    last_st = ""
                     for poll_i in range(max_polls):
                         time.sleep(3)
                         try:
@@ -324,21 +326,26 @@ def _upload_to_asset_library(local_url: str, api_key: str, ak: str, sk: str,
                             if poll_resp.status_code == 200:
                                 detail = poll_resp.json()
                                 st = (detail.get("status") or "").lower()
-                                logger.info(f"[asset] Files API poll {poll_i+1}: id={file_id}, status={st}")
-                                if st in ("ready", "active"):
-                                    public_url = detail.get("url") or (detail.get("data") or {}).get("url", "")
-                                    if public_url:
-                                        logger.info(f"[asset] File {st}, url={public_url[:120]}...")
-                                        break
-                                elif st in ("failed", "error"):
+                                last_st = st
+                                logger.info(f"[asset] Files API poll {poll_i+1}/{max_polls}: id={file_id}, status={st}")
+                                public_url = detail.get("url") or (detail.get("data") or {}).get("url", "")
+                                if public_url:
+                                    logger.info(f"[asset] File {st}, url={public_url[:120]}...")
+                                    break
+                                if st in ("failed", "error"):
                                     logger.error(f"[asset] Files API file {file_id} failed")
                                     break
+                                if st == "active":
+                                    active_no_url_seen += 1
+                                    if active_no_url_seen >= 3:
+                                        logger.warning(f"[asset] File {st} but no URL after {active_no_url_seen} checks, giving up")
+                                        break
                             else:
                                 logger.warning(f"[asset] Files API poll {poll_i+1}: HTTP {poll_resp.status_code}")
                         except Exception as poll_err:
                             logger.warning(f"[asset] Files API poll error: {poll_err}")
                     if not public_url:
-                        raise TimeoutError(f"文件上传处理超时（{max_polls * 3}s），最后一轮状态={st}，请重新上传")
+                        raise TimeoutError(f"文件上传处理超时（~{max_polls * 3}s），最后一轮状态={last_st}，请重新上传")
                 if not public_url:
                     logger.error(f"[asset] Files API returned no URL: {json.dumps(file_obj)}")
             else:
@@ -684,7 +691,7 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
             elif _use_real:
                 raise ValueError(f"{asset_type}上传到素材库失败，无法在真人素材模式下继续: {url}")
             else:
-                logger.warning(f"[asset] {asset_type} asset upload returned None, falling back to direct URL: {url}")
+                logger.warning(f"[asset] {asset_type} asset upload returned None, will use base64 data URL")
                 return None
         except ValueError:
             raise
