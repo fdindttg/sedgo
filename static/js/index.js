@@ -3146,8 +3146,7 @@ async function generateVideo() {
       
       // 校验：音频参考不能是唯一的参考输入
       if ((requestBody.reference_audios || []).length > 0 && (requestBody.reference_images || []).length === 0 && (requestBody.reference_videos || []).length === 0) {
-        showNotification('Audio reference must be accompanied by at least one image or video
-音频参考必须配合至少一张图片或一段视频使用', 'error');
+        showNotification('Audio reference must be accompanied by at least one image or video\n音频参考必须配合至少一张图片或一段视频使用', 'error');
         btn.innerHTML = originalText;
         btn.disabled = false;
         return;
