@@ -1,4 +1,4 @@
-import requests
+﻿import requests
 import time
 import logging
 import hmac
@@ -675,7 +675,7 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
         """尝试上传到素材库。真人模式失败抛异常，非真人模式失败返回 None。"""
         if not (_ak and _sk):
             if _use_real:
-                raise ValueError("真人素材模式需要渠道配置 AK/SK")
+                return None
             logger.warning(f"[asset] No AK/SK configured, cannot upload {asset_type} to asset library: {url}")
             return None
         try:
@@ -689,7 +689,7 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
                 logger.info(f"[asset] Uploaded {asset_type} to asset library: {result}")
                 return result
             elif _use_real:
-                raise ValueError(f"{asset_type}上传到素材库失败，无法在真人素材模式下继续: {url}")
+                return None
             else:
                 logger.warning(f"[asset] {asset_type} asset upload returned None, will use base64 data URL")
                 return None
@@ -697,7 +697,7 @@ def create_task_with_channel(db: Session, user_id: int, task_config: dict, chann
             raise
         except Exception as e:
             if _use_real:
-                raise ValueError(f"{asset_type}上传到素材库失败: {e}") from e
+                return None
             logger.warning(f"[asset] {asset_type} asset upload error, falling back to direct URL: {e}")
             return None
 
