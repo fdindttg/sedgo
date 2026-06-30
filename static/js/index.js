@@ -1955,7 +1955,7 @@ if (fileInput) {
       });
       const data = await res.json();
       if (data.success) {
-        uploadedFiles.push({ name: file.name, file_id: data.data.id, url: data.data.url, type: file.type.startsWith('video') ? 'video' : 'image' });
+        uploadedFiles.push({ name: file.name, file_id: data.data.id, url: data.data.url, type: file.type.startsWith('video') ? 'video' : (file.type.startsWith('audio') ? 'audio' : 'image') });
       } else {
         alert(t('js.upload_failed') + (data.message || t('js.unknown_error')));
       }
@@ -1974,7 +1974,7 @@ if (fileInput) {
 function updatePromptTags() {
   const ta = document.getElementById('prompt-video');
   if (!ta) return;
-  let tags = uploadedFiles.map((f, i) => f.type === 'video' ? `@video${i+1}` : `@image${i+1}`).join(' ');
+  let tags = uploadedFiles.map((f, i) => f.type === 'video' ? `@video${i+1}` : (f.type === 'audio' ? `@audio${i+1}` : `@image${i+1}`)).join(' ');
   if (tags && !ta.value.includes('@')) ta.placeholder = `${t('gen.prompt_eg')} ${tags} ${t('gen.prompt_example')}`;
 }
 
@@ -3484,7 +3484,8 @@ function initUploadZone(mode) {
         const data = await res.json();
         if (data.success) {
           const fileUrl = data.data.local_url || data.data.url;
-          const isVideo = file.type.startsWith('video');
+          const isVideo=file.type.startsWith("video");
+          const isAudio=file.type.startsWith("audio");
           let thumbUrl = isVideo ? null : fileUrl;
           if (isVideo) {
             thumbUrl = await new Promise(resolve => {
@@ -3506,7 +3507,7 @@ function initUploadZone(mode) {
             file_id: data.data.id,
             url: fileUrl,
             thumbUrl,
-            type: isVideo ? 'video' : 'image',
+            type:isVideo?"video":(isAudio?"audio":"image"),
             index: referenceFiles[mode].length + 1
           });
         } else {
@@ -3768,7 +3769,7 @@ function updateReferenceTags(mode) {
   }
 
   tagsContainer.innerHTML = referenceFiles[mode].map((file, index) => {
-    const tag = file.type === 'video' ? `@video${index + 1}` : `@image${index + 1}`;
+    const tag = file.type==="video"?`@video${index+1}`:(file.type==="audio"?`@audio${index+1}`:`@image${index+1}`);
     const thumb = file.thumbUrl
       ? `<img class="ref-tag-thumb" src="${file.thumbUrl}" alt="${tag}">`
       : '';
@@ -3783,9 +3784,9 @@ function updateReferenceTags(mode) {
 
   if (textarea) {
     // rebuild all tags from current referenceFiles state
-    const allTags = referenceFiles[mode].map((f, i) => f.type === 'video' ? `@video${i+1}` : `@image${i+1}`);
+    const allTags = referenceFiles[mode].map((f, i) => f.type==="video"?`@video${i+1}`:(f.type==="audio"?`@audio${i+1}`:`@image${i+1}`));
     // remove old @imageN/@videoN tokens from textarea, then prepend fresh ones
-    let text = textarea.value.replace(/@(image|video)\d+/g, '').replace(/^\s+/, '');
+    let text = textarea.value.replace(/@(image|video|audio)\d+/g, '').replace(/^\s+/, '');
     const prefix = allTags.join(' ');
     textarea.value = prefix ? prefix + (text ? ' ' + text : '') : text;
   }
